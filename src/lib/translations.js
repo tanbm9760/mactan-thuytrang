@@ -22,7 +22,7 @@ export const translations = {
       rsvp: 'Xác nhận',
     },
     hero: {
-      subtitle: 'Save the date',
+      subtitle: 'Chúng mình sắp kết hôn',
       invite: 'Chúng mình sắp kết hôn',
       cta: 'Xác nhận tham dự',
       scroll: 'Cuộn xuống',
