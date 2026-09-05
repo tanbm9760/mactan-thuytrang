@@ -1,55 +1,62 @@
 import { useLanguage } from '../lib/i18n'
-import { chapterAssets } from '../lib/assets'
+import { coupleNames } from '../config'
+import { storyImage } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
-import Chapter from './Chapter'
-import { SplitWords } from './Reveal'
+import { RevealGroup, SplitWords } from './Reveal'
 
 /**
- * Ba chương truyện nối liền nhau, khép lại bằng một câu bắc cầu sang phần mời.
- * Ảnh của từng chương lấy từ src/assets/chapters/01, /02, /03 — thứ tự chương
- * trong translations phải khớp với thứ tự thư mục.
+ * Chuyện tình gói gọn trong một khối: một tấm ảnh khung vòm bên trái, lời kể
+ * bên phải. Trên điện thoại thì ảnh nằm trên, chữ nằm dưới.
  */
 export default function Story() {
   const { t } = useLanguage()
-  const chapters = t('story.chapters') ?? []
-  const keys = Object.keys(chapterAssets).sort()
-  const eyebrowRef = useReveal()
+  const imageRef = useReveal({ threshold: 0.1 })
+  const paragraphs = t('story.paragraphs') ?? []
 
   return (
-    <div id="story">
-      <div className="bg-background px-6 pt-24 pb-14 text-center md:pt-32 md:pb-20">
-        <p
-          ref={eyebrowRef}
-          className="reveal text-[11px] uppercase tracking-[0.4em] text-muted-foreground"
-        >
-          {t('story.eyebrow')}
-        </p>
-      </div>
-
-      {chapters.map((chapter, i) => {
-        const assets = chapterAssets[keys[i]] ?? { lead: null, photos: [] }
-        return (
-          <Chapter
-            key={chapter.numeral}
-            numeral={chapter.numeral}
-            title={chapter.title}
-            text={chapter.text}
-            lead={assets.lead}
-            photos={assets.photos}
-            flip={i % 2 === 1}
+    <section id="story" className="bg-background px-6 py-24 md:py-32">
+      <div className="mx-auto flex max-w-6xl flex-col items-stretch gap-12 md:flex-row md:gap-20">
+        <div className="relative w-full flex-1">
+          <div
+            ref={imageRef}
+            className="reveal-mask aspect-4/5 overflow-hidden rounded-t-full md:absolute md:inset-0 md:aspect-auto"
+          >
+            <img
+              src={storyImage}
+              alt={coupleNames}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-full object-cover object-[50%_30%]"
+            />
+          </div>
+          {/* vệt màu trang trí phía sau ảnh */}
+          <div
+            aria-hidden
+            className="absolute -right-6 -bottom-6 -z-10 h-32 w-32 rounded-full bg-sand opacity-70 blur-2xl"
           />
-        )
-      })}
+        </div>
 
-      {/* Câu bắc cầu: kết chuyện tình và mở sang lời mời */}
-      <div className="bg-background px-6 pb-24 md:pb-32">
-        <SplitWords
-          as="p"
-          text={t('story.closing')}
-          step={45}
-          className="mx-auto block max-w-2xl text-center font-serif text-2xl leading-snug text-primary md:text-4xl"
-        />
+        <div className="flex-1 space-y-6 text-center md:text-left">
+          <SplitWords
+            as="h2"
+            text={t('story.title')}
+            step={60}
+            className="block font-serif text-4xl text-primary md:text-5xl"
+          />
+          <p className="font-serif text-lg italic text-muted-foreground">{t('story.subtitle')}</p>
+          <div className="mx-auto h-px w-24 bg-gold/50 md:mx-0" />
+
+          {/* Đoạn văn dài luôn canh trái cho dễ đọc, kể cả trên điện thoại */}
+          <RevealGroup step={110} className="space-y-4 text-left leading-[1.85] text-muted-foreground">
+            {paragraphs.map((paragraph, i) => (
+              <p key={i}>{paragraph}</p>
+            ))}
+            <p className="pt-2 font-serif text-xl leading-snug text-primary italic md:text-2xl">
+              {t('story.closing')}
+            </p>
+          </RevealGroup>
+        </div>
       </div>
-    </div>
+    </section>
   )
 }

@@ -42,29 +42,23 @@ sửa [`src/lib/translations.js`](src/lib/translations.js) — khối `vi` cho t
 
 ## 3. Thay ảnh
 
-Thiệp được dựng như một câu chuyện ba chương, nên **thư mục ảnh chính là kịch bản**.
 Bỏ file vào đúng thư mục là xong, không phải khai báo gì thêm:
 
 ```
 src/assets/
-├── hero/            → ảnh mở đầu (lấy 1 file đầu tiên)
-├── chapters/
-│   ├── 01/          → CHƯƠNG I  · Chúng mình gặp nhau
-│   │   ├── 00-lead-XXX.webp   ← ảnh tràn viền mở chương (bắt buộc tên "00-lead-")
-│   │   ├── 01-XXX.webp        ← ba ảnh nhỏ bên dưới đoạn văn
-│   │   ├── 02-XXX.webp
-│   │   └── 03-XXX.webp
-│   ├── 02/          → CHƯƠNG II · Rồi mỗi người một ngả
-│   └── 03/          → CHƯƠNG III · Và tìm lại được nhau
-├── band/            → dải ảnh tràn viền trước phần xác nhận tham dự
-├── gallery/         → album cuối trang (chia thư mục con thành nhiều bộ)
-├── qr/              → mã QR chuyển khoản
-└── music/           → nhạc nền (.mp3)
+├── hero/       → ảnh mở đầu, ảnh NGANG (lấy 1 file đầu tiên)
+├── story/      → 1 ảnh ở phần "Chuyện của chúng mình", ảnh DỌC
+├── band/       → dải ảnh tràn viền trước phần xác nhận, ảnh NGANG
+├── gallery/    → album cuối trang (chia thư mục con thành nhiều bộ)
+├── qr/         → mã QR chuyển khoản
+└── music/      → nhạc nền (.mp3)
 ```
 
-**Chọn ảnh cho từng chương thế nào.** Ảnh mở chương phải là ảnh **ngang** và
-phải chừa chỗ tối ở góc dưới trái cho số chương và tên chương. Ba ảnh nhỏ nên
-là ảnh **dọc** vì chúng bị cắt theo tỉ lệ 4:5.
+**Ảnh hero** nên là ảnh ngang có vùng tối ở nửa dưới, vì tên hai bạn đặt ở đó.
+
+**Ảnh story** bị cắt thành khung vòm (nửa trên bo tròn), nên hãy chọn ảnh dọc
+có mặt hai người nằm gọn ở phần trên khung. Ảnh mà đỉnh đầu sát mép trên sẽ bị
+vòm cắt mất.
 
 **Album cuối trang.** Chia thư mục con để có nhiều bộ ảnh:
 
@@ -73,35 +67,30 @@ src/assets/gallery/studio/       → bộ 1
 src/assets/gallery/ngoai-canh/   → bộ 2
 ```
 
-Tên bộ **không hiện ra ngoài** — hai bộ chỉ ngăn nhau bằng một dấu mảnh. Tên
-khai trong `config.albums` chỉ dùng cho trình đọc màn hình, và để quyết định
-thứ tự hiện.
+Tên bộ **không hiện ra ngoài** - hai bộ chỉ ngăn nhau bằng một dấu mảnh. Tên
+khai trong `config.albums` chỉ dùng cho trình đọc màn hình và để quyết định thứ
+tự hiện. Thẻ ảnh trong album cao cố định, rộng tự do, nên ảnh ngang và ảnh dọc
+đều hiện đủ khung, không bị cắt.
 
 **Mã QR**: đặt tên file có chữ `groom` / `bride` (hoặc `trai` / `gai`).
 
 **Nhạc nền**: bỏ 1 file mp3 vào `src/assets/music/`, rồi bật `sections.music: true`.
 
 > Ảnh nên nén trước khi bỏ vào (dùng [squoosh.app](https://squoosh.app), xuất
-> `.webp`, chiều rộng ~1500px). Ảnh gốc từ máy ảnh 8–10 MB/tấm sẽ làm thiệp tải
+> `.webp`, chiều rộng ~1500px). Ảnh gốc từ máy ảnh 8-10 MB/tấm sẽ làm thiệp tải
 > rất chậm trên 4G.
 >
 > WebP không giữ EXIF, nên khi nén lại thì toạ độ GPS trong ảnh gốc cũng bị
-> loại bỏ — thiệp là link công khai.
+> loại bỏ - thiệp là link công khai.
 >
 > ⚠️ Nếu ảnh gốc là ảnh dọc chụp bằng máy ảnh, chúng thường được lưu nằm ngang
 > kèm thẻ EXIF xoay. Công cụ nén nào bỏ qua thẻ này sẽ cho ra ảnh nằm nghiêng.
 
-### Sửa lời kể của từng chương
+### Sửa lời kể
 
-Số chương, tên chương và đoạn văn nằm trong `story.chapters` của
-[`src/lib/translations.js`](src/lib/translations.js). Số chương trong mảng phải
-khớp với số thư mục trong `src/assets/chapters/` — chương thứ nhất lấy ảnh ở
-thư mục `01`, chương thứ hai lấy ở `02`, và cứ thế.
-
-Muốn thêm chương thứ tư: thêm một phần tử vào `story.chapters` (cả `vi` lẫn
-`en`) và tạo thư mục `src/assets/chapters/04/`.
-
-`story.closing` là câu bắc cầu khép lại chuyện tình và mở sang lời mời.
+Lời kể nằm ở `story.paragraphs` trong
+[`src/lib/translations.js`](src/lib/translations.js) - mỗi phần tử của mảng là
+một đoạn văn. `story.closing` là câu kết in nghiêng màu vàng đồng ở cuối.
 
 ---
 

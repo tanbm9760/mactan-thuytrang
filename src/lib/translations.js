@@ -45,36 +45,17 @@ export const translations = {
       daughter: 'Con gái',
     },
     story: {
-      eyebrow: 'Chuyện của chúng mình',
       title: 'Chuyện của chúng mình',
       subtitle: 'Bắt đầu từ những lần gặp gỡ tình cờ',
-      chapters: [
-        {
-          numeral: 'I',
-          title: 'Một lần tình cờ',
-          text: `Tháng 9 năm 2022, giữa rất nhiều người, chúng mình tình cờ gặp nhau khi cùng làm việc.
-
-Rồi thêm một lần tình cờ nữa, cả hai lại xuất hiện trong cùng một buổi hội nghị.`,
-        },
-        {
-          numeral: 'II',
-          title: 'Hóa ra vẫn luôn ở rất gần',
-          text: `Và cũng từ đó, mới biết rằng hóa ra chúng mình vẫn luôn ở rất gần nhau - gần đến mức chỉ cách nhau vài con đường, nhưng phải đến đúng thời điểm mới thật sự bước vào cuộc đời nhau.
-
-Từ những cuộc trò chuyện ban đầu, những lần gặp gỡ giản dị, chúng mình dần hiểu nhau hơn, thương nhau nhiều hơn, rồi tự nhiên trở thành một phần trong cuộc sống của nhau.
-
-Và tháng 12 năm 2022, chúng mình chính thức bắt đầu.`,
-        },
-        {
-          numeral: 'III',
-          title: 'Người đứng cạnh mình',
-          text: `Có lẽ tình yêu của chúng mình không bắt đầu bằng một khoảnh khắc quá ồn ào, mà được tạo nên từ rất nhiều điều nhỏ bé và những lần “vô tình” thật đẹp.
-
-Từ tháng 12 năm 2022 đến hôm nay, sau tất cả những ngày đã cùng nhau đi qua, chúng mình biết rằng người mình muốn đồng hành trong những năm tháng phía trước vẫn là người đang đứng cạnh mình lúc này.`,
-        },
+      paragraphs: [
+        'Tháng 9 năm 2022, giữa rất nhiều người, chúng mình tình cờ gặp nhau khi cùng làm việc. Rồi thêm một lần tình cờ nữa, cả hai lại xuất hiện trong cùng một buổi hội nghị.',
+        'Và cũng từ đó, mới biết rằng hóa ra chúng mình vẫn luôn ở rất gần nhau - gần đến mức chỉ cách nhau vài con đường, nhưng phải đến đúng thời điểm mới thật sự bước vào cuộc đời nhau.',
+        'Từ những cuộc trò chuyện ban đầu, những lần gặp gỡ giản dị, chúng mình dần hiểu nhau hơn, thương nhau nhiều hơn, rồi tự nhiên trở thành một phần trong cuộc sống của nhau. Và tháng 12 năm 2022, chúng mình chính thức bắt đầu.',
+        'Có lẽ tình yêu của chúng mình không bắt đầu bằng một khoảnh khắc quá ồn ào, mà được tạo nên từ rất nhiều điều nhỏ bé và những lần “vô tình” thật đẹp.',
+        'Từ tháng 12 năm 2022 đến hôm nay, sau tất cả những ngày đã cùng nhau đi qua, chúng mình biết rằng người mình muốn đồng hành trong những năm tháng phía trước vẫn là người đang đứng cạnh mình lúc này.',
       ],
       closing:
-        'Và hôm nay, câu chuyện bắt đầu từ những lần gặp gỡ tình cờ ấy chính thức bước sang một chương mới - chương mang tên “gia đình”.',
+        'Và hôm nay, câu chuyện ấy chính thức bước sang một chương mới - chương mang tên “gia đình”.',
     },
     details: {
       title: 'Thông tin buổi lễ',
@@ -192,36 +173,17 @@ Từ tháng 12 năm 2022 đến hôm nay, sau tất cả những ngày đã cùn
       daughter: 'Daughter of',
     },
     story: {
-      eyebrow: 'Our story',
       title: 'Our Story',
       subtitle: 'It began with a series of happy accidents',
-      chapters: [
-        {
-          numeral: 'I',
-          title: 'A chance meeting',
-          text: `In September 2022, among a great many people, we happened to meet while working together.
-
-Then, by chance again, we both turned up at the same conference.`,
-        },
-        {
-          numeral: 'II',
-          title: 'We had been close all along',
-          text: `That was when we found out we had been living close to each other all along - only a few streets apart - but it took the right moment for us to truly step into each other's lives.
-
-From those first conversations and simple meetings, we came to understand each other more, to love each other more, and quite naturally became part of each other's lives.
-
-And in December 2022, we began, for real.`,
-        },
-        {
-          numeral: 'III',
-          title: 'The one standing beside me',
-          text: `Perhaps our love did not begin with any loud, dramatic moment. It was made of many small things, and of a few beautiful accidents.
-
-From December 2022 until today, after everything we have walked through together, we know that the person we want beside us for the years ahead is the one standing beside us right now.`,
-        },
+      paragraphs: [
+        'In September 2022, among a great many people, we happened to meet while working together. Then, by chance again, we both turned up at the same conference.',
+        'That was when we found out we had been living close to each other all along - only a few streets apart - but it took the right moment for us to truly step into each other\'s lives.',
+        'From those first conversations and simple meetings, we came to understand each other more, to love each other more, and quite naturally became part of each other\'s lives. And in December 2022, we began, for real.',
+        'Perhaps our love did not begin with any loud, dramatic moment. It was made of many small things, and of a few beautiful accidents.',
+        'From December 2022 until today, after everything we have walked through together, we know that the person we want beside us for the years ahead is the one standing beside us right now.',
       ],
       closing:
-        'And today, the story that began with those chance meetings turns to a new chapter - one called “family”.',
+        'And today, that story turns to a new chapter - one called “family”.',
     },
     details: {
       title: 'The Details',

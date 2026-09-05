@@ -19,8 +19,8 @@ const heroFiles = import.meta.glob(
   '../assets/hero/**/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,avif,AVIF}',
   { eager: true, query: '?url', import: 'default' },
 )
-const chapterFiles = import.meta.glob(
-  '../assets/chapters/**/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,avif,AVIF}',
+const storyFiles = import.meta.glob(
+  '../assets/story/**/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,avif,AVIF}',
   { eager: true, query: '?url', import: 'default' },
 )
 const galleryFiles = import.meta.glob(
@@ -66,29 +66,7 @@ const firstOr = (files, fallback) => {
 }
 
 export const heroImage = firstOr(heroFiles, FALLBACK.hero)
-
-/**
- * Ảnh của từng chương truyện, gom theo thư mục con của src/assets/chapters/.
- * Trong mỗi thư mục, file đặt tên bắt đầu bằng "00-lead-" là ảnh tràn viền mở
- * chương; các file còn lại là chùm ảnh nhỏ đi kèm, theo thứ tự tên file.
- *
- *   src/assets/chapters/01/00-lead-XXX.webp   ← ảnh mở chương
- *   src/assets/chapters/01/01-XXX.webp        ← ảnh 1
- *
- * @type {Record<string, { lead: string|null, photos: {src:string, alt:string}[] }>}
- */
-export const chapterAssets = (() => {
-  const grouped = {}
-  for (const [path, src] of sortedEntries(chapterFiles)) {
-    const rest = path.replace('../assets/chapters/', '')
-    const key = rest.slice(0, rest.indexOf('/'))
-    const file = rest.slice(rest.indexOf('/') + 1)
-    grouped[key] ??= { lead: null, photos: [] }
-    if (file.startsWith('00-lead')) grouped[key].lead = src
-    else grouped[key].photos.push({ src, alt: file.replace(/\.[^.]+$/, '') })
-  }
-  return grouped
-})()
+export const storyImage = firstOr(storyFiles, firstOr(heroFiles, FALLBACK.hero))
 
 /**
  * Album ảnh. Ảnh trong thư mục con → mỗi thư mục là một album;
