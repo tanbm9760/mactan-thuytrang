@@ -68,14 +68,10 @@ src/assets/gallery/studio/       → bộ 1
 src/assets/gallery/ngoai-canh/   → bộ 2
 ```
 
-Tên bộ **không hiện ra ngoài**. Toàn bộ ảnh của các thư mục con được ghép thành
-một cuốn album lật từng trang, theo đúng thứ tự khai trong `config.albums`.
-
-Ảnh **đặt lọt trong khung giấy** chứ không cắt đầy trang, nên ảnh ngang và ảnh
-dọc lẫn lộn vẫn hiện đủ khung - giống ảnh dán trong album thật.
-
-Máy tính mở hai trang có gáy ở giữa, điện thoại một trang. Lật bằng nút hai bên
-hoặc vuốt ngang trên điện thoại. Chạm vào ảnh để xem lớn.
+Tên bộ **không hiện ra ngoài** - hai bộ chỉ ngăn nhau bằng một dấu mảnh. Tên
+khai trong `config.albums` chỉ dùng cho trình đọc màn hình và để quyết định thứ
+tự hiện. Thẻ ảnh trong album cao cố định, rộng tự do, nên ảnh ngang và ảnh dọc
+đều hiện đủ khung, không bị cắt.
 
 **Mã QR**: đặt tên file có chữ `groom` / `bride` (hoặc `trai` / `gai`).
 
