@@ -24,6 +24,10 @@ export default function Navbar() {
     }
   }, [menuOpen])
 
+  // Chưa cuộn thì nav nằm trên ảnh hero (giữ nguyên bản, không phủ) nên chữ
+  // phải trắng; cuộn qua hero rồi thì nền là giấy ngà, chữ chuyển sang sẫm.
+  const onDark = !scrolled && !menuOpen
+
   const links = [
     config.sections.story && { label: t('nav.story'), href: '#story' },
     { label: t('nav.details'), href: '#details' },
@@ -57,7 +61,7 @@ export default function Navbar() {
           className="block transition-opacity hover:opacity-80"
           aria-label="Về đầu trang"
         >
-          <Monogram size={44} tone="gold" />
+          <Monogram size={44} tone={onDark ? 'light' : 'gold'} />
         </a>
 
         {/* --- Menu desktop --- */}
@@ -66,17 +70,23 @@ export default function Navbar() {
             <button
               key={link.href}
               onClick={() => goTo(link.href)}
-              className="cursor-pointer text-sm text-foreground uppercase tracking-widest transition-colors hover:text-primary"
+              className={`cursor-pointer text-sm uppercase tracking-widest transition-colors ${
+                onDark
+                  ? 'hero-sub text-white/90 hover:text-white'
+                  : 'text-foreground hover:text-primary'
+              }`}
             >
               {link.label}
             </button>
           ))}
-          <LanguageSwitch language={language} setLanguage={setLanguage} langs={languages} />
+          <LanguageSwitch onDark={onDark} language={language} setLanguage={setLanguage} langs={languages} />
         </div>
 
         {/* --- Nút menu mobile --- */}
         <button
-          className="-mr-2.5 cursor-pointer p-2.5 text-foreground md:hidden"
+          className={`-mr-2.5 cursor-pointer p-2.5 md:hidden ${
+            onDark ? 'hero-sub text-white' : 'text-foreground'
+          }`}
           onClick={() => setMenuOpen((v) => !v)}
           aria-label="Menu"
           aria-expanded={menuOpen}
@@ -98,17 +108,17 @@ export default function Navbar() {
             </button>
           ))}
           <div className="my-2 h-px w-full bg-border" />
-          <LanguageSwitch language={language} setLanguage={setLanguage} langs={languages} />
+          <LanguageSwitch onDark={onDark} language={language} setLanguage={setLanguage} langs={languages} />
         </div>
       )}
     </nav>
   )
 }
 
-function LanguageSwitch({ language, setLanguage, langs }) {
+function LanguageSwitch({ onDark = false, language, setLanguage, langs }) {
   return (
     <div className="flex items-center gap-3">
-      <Globe className="h-4 w-4 text-foreground" />
+      <Globe className={`h-4 w-4 ${onDark ? 'hero-sub text-white/90' : 'text-foreground'}`} />
       {langs.map((lang) => (
         <button
           key={lang.code}
@@ -117,8 +127,12 @@ function LanguageSwitch({ language, setLanguage, langs }) {
           aria-current={language === lang.code}
           className={`cursor-pointer text-sm uppercase tracking-widest transition-colors ${
             language === lang.code
-              ? 'font-semibold text-primary underline underline-offset-4'
-              : 'text-muted-foreground hover:text-primary'
+              ? onDark
+                ? 'hero-sub font-semibold text-white underline underline-offset-4'
+                : 'font-semibold text-primary underline underline-offset-4'
+              : onDark
+                ? 'hero-sub text-white/70 hover:text-white'
+                : 'text-muted-foreground hover:text-primary'
           }`}
         >
           {lang.label}

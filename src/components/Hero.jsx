@@ -24,11 +24,10 @@ export default function Hero() {
         fetchPriority="high"
         className="parallax-img hero-zoom absolute inset-x-0 top-[-7%] h-[114%] w-full object-cover object-[50%_62%]"
       />
-      <div aria-hidden className="hero-scrim absolute inset-0" />
 
-      <div className="relative z-10 w-full px-5 text-center text-foreground">
+      <div className="relative z-10 w-full px-5 text-center text-white">
         <RevealGroup step={130}>
-          <p className="hero-sub mb-6 text-[10px] uppercase tracking-[0.42em] text-muted-foreground md:mb-8 md:text-xs">
+          <p className="hero-sub mb-6 text-[10px] uppercase tracking-[0.42em] text-white md:mb-8 md:text-xs">
             {t('hero.subtitle')}
           </p>
 
@@ -36,21 +35,21 @@ export default function Hero() {
             <span className="block text-[3.15rem] break-words sm:text-7xl md:text-8xl lg:text-9xl">
               {orderedNames[0]}
             </span>
-            <span className="my-2 block text-2xl text-primary md:my-3 md:text-4xl">&</span>
+            <span className="hero-title my-2 block text-2xl text-white/85 md:my-3 md:text-4xl">&</span>
             <span className="block text-[3.15rem] break-words sm:text-7xl md:text-8xl lg:text-9xl">
               {orderedNames[1]}
             </span>
           </h1>
 
           <div className="mx-auto mt-9 flex max-w-lg items-center justify-center gap-5 md:mt-11">
-            <span className="h-px flex-1 bg-gold/50" />
-            <p className="hero-sub font-serif text-base text-foreground italic whitespace-nowrap md:text-xl">
+            <span className="h-px flex-1 bg-white/75 shadow-[0_1px_2px_rgb(28_24_18/0.55)]" />
+            <p className="hero-sub font-serif text-base text-white italic whitespace-nowrap md:text-xl">
               {dateStr}
             </p>
-            <span className="h-px flex-1 bg-gold/50" />
+            <span className="h-px flex-1 bg-white/75 shadow-[0_1px_2px_rgb(28_24_18/0.55)]" />
           </div>
 
-          <p className="hero-sub mt-5 text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">
+          <p className="hero-sub mt-5 text-[10px] uppercase tracking-[0.32em] text-white md:text-xs">
             {config.venue.city}
           </p>
         </RevealGroup>
@@ -59,7 +58,7 @@ export default function Hero() {
           <RevealGroup start={430}>
             <button
               onClick={() => document.querySelector('#rsvp')?.scrollIntoView({ behavior: 'smooth' })}
-              className="mt-10 min-h-12 cursor-pointer bg-deep px-9 text-[11px] tracking-[0.22em] text-deep-foreground uppercase transition-opacity hover:opacity-90 md:mt-12 md:text-xs"
+              className="mt-10 min-h-12 cursor-pointer bg-white px-9 text-[11px] tracking-[0.22em] text-foreground uppercase shadow-[0_6px_28px_-8px_rgb(28_24_18/0.6)] transition-colors hover:bg-white/90 md:mt-12 md:text-xs"
             >
               {t('hero.cta')}
             </button>
@@ -70,7 +69,7 @@ export default function Hero() {
       <button
         onClick={() => document.querySelector('#countdown, #story')?.scrollIntoView({ behavior: 'smooth' })}
         aria-label={t('hero.scroll')}
-        className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 cursor-pointer text-muted-foreground/70 transition-colors hover:text-primary"
+        className="hero-sub absolute bottom-5 left-1/2 z-10 -translate-x-1/2 cursor-pointer text-white/75 transition-colors hover:text-white"
       >
         <ChevronDown className="h-6 w-6 animate-bounce" />
       </button>
