@@ -94,19 +94,29 @@
    làm mềm đầu nét, WONK bật bộ chữ nghiêng "lệch chuẩn" có duyên hơn.
    ═════════════════════════════════════════════════════════════════════════ */
 @layer utilities {
-  /* Tên cô dâu chú rể, ngày cưới cỡ lớn. Mảnh, siết chặt, dùng như đồ hoạ. */
+  /* Tên cô dâu chú rể.
+     Fraunces có ba trục, và tên hai người dùng cả ba:
+       SOFT 100 - đầu nét bo tròn hết cỡ, hết cảm giác sắc lạnh;
+       WONK 1   - bộ chữ "lệch chuẩn", chữ & thành một nét uốn có duyên;
+       opsz 72  - bản dành cho cỡ vừa: nét thanh dày hơn, bụng chữ tròn hơn.
+                  Bản 144 (chữ tít) tương phản rất gắt, đẹp nhưng cứng.
+     Ba thứ đó cộng lại làm tên mềm hẳn mà vẫn là chữ của một tờ tạp chí, chứ
+     không rơi vào loại chữ thư pháp mà thiệp cưới nào cũng dùng.
+
+     ⚠️ Bộ chữ này RỘNG hơn bản cũ khoảng 16% ở cùng một cỡ. Mọi chỗ đặt tên
+     trên một dòng đều đã được chỉnh lại cỡ cho vừa; đổi trục thì phải đo lại. */
   .t-display {
     font-family: var(--font-serif);
-    font-variation-settings: "SOFT" 20, "WONK" 0, "opsz" 144;
+    font-variation-settings: "SOFT" 100, "WONK" 1, "opsz" 72;
     font-weight: 300;
-    line-height: 0.98;
-    letter-spacing: -0.035em;
+    line-height: 1.02;
+    letter-spacing: -0.025em;
   }
 
   /* Tên chương */
   .t-head {
     font-family: var(--font-serif);
-    font-variation-settings: "SOFT" 40, "WONK" 0, "opsz" 96;
+    font-variation-settings: "SOFT" 80, "WONK" 0, "opsz" 84;
     font-weight: 300;
     line-height: 1.1;
     letter-spacing: -0.02em;

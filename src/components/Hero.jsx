@@ -38,11 +38,16 @@ export default function Hero() {
   const date = config.weddingDate
 
   /* Tên trải một dòng khi khung nhìn thấp hoặc rộng; xếp chồng khi khung cao.
-     Hai dòng chồng nhau chiếm gấp đôi chiều cao mà dải trời thì không đủ. */
+     Hai dòng chồng nhau chiếm gấp đôi chiều cao mà dải trời thì không đủ.
+
+     Trên máy thấp, khối tên còn được đẩy xuống sâu hơn (`squat:pt-…`): dải
+     trời ở đó hẹp, nếu cứ dùng chung một khoảng đệm với máy cao thì tên dính
+     ngay dưới thanh nav và đọc ra như một dòng chú thích chứ không phải tiêu
+     đề. Đẩy xuống cho nó nằm giữa khoảng trời, giữa thanh nav và hai bàn tay. */
   const nameSize =
-    'text-[clamp(1.9rem,min(11.5vw,7.4svh),4.25rem)] ' +
-    'squat:text-[clamp(1.5rem,min(9.6vw,10svh),3.25rem)] ' +
-    'md:text-[clamp(3.5rem,5.6vw,5.75rem)]'
+    'text-[clamp(1.75rem,min(10.5vw,7svh),3.9rem)] ' +
+    'squat:text-[clamp(1.35rem,min(8.4vw,8.6svh),2.9rem)] ' +
+    'md:text-[clamp(3rem,4.9vw,5rem)]'
 
   return (
     <section
@@ -73,18 +78,18 @@ export default function Hero() {
           giữa khung hình không bị đụng tới. */}
       <div
         aria-hidden
-        className="absolute inset-x-0 bottom-0 h-[44%] bg-[linear-gradient(to_top,rgb(20_18_12/0.74)_0%,rgb(20_18_12/0.58)_24%,rgb(20_18_12/0.30)_52%,rgb(20_18_12/0.10)_76%,transparent_100%)]"
+        className="absolute inset-x-0 bottom-0 h-[44%] bg-[linear-gradient(to_top,rgb(20_18_12/0.80)_0%,rgb(20_18_12/0.64)_26%,rgb(20_18_12/0.36)_54%,rgb(20_18_12/0.12)_78%,transparent_100%)]"
       />
 
-      <div className="relative z-10 flex h-full flex-col justify-between gutter pt-[clamp(4.5rem,9.5svh,7rem)] pb-[clamp(0.9rem,2.6svh,3rem)]">
+      <div className="relative z-10 flex h-full flex-col justify-between gutter pt-[clamp(4.5rem,9.5svh,7rem)] pb-[clamp(0.9rem,2.2svh,1.75rem)] squat:pt-[clamp(5rem,13svh,8rem)]">
         {/* ── Trên trời: mực sẫm ────────────────────────────────────────── */}
         <RevealGroup step={150} className="text-center">
           <p className="t-eyebrow text-foreground/65">{t('hero.subtitle')}</p>
 
-          <h1 className="t-display mt-[clamp(0.6rem,1.9svh,1.75rem)] text-foreground">
-            <span className="flex flex-col items-center squat:flex-row squat:items-baseline squat:justify-center squat:gap-4 md:flex-row md:items-baseline md:justify-center md:gap-7">
+          <h1 className="t-display mt-[clamp(0.7rem,2.4svh,1.75rem)] text-foreground">
+            <span className="flex flex-col items-center squat:flex-row squat:items-baseline squat:justify-center squat:gap-3 md:flex-row md:items-baseline md:justify-center md:gap-7">
               <span className={`whitespace-nowrap ${nameSize}`}>{orderedNames[0]}</span>
-              <span className="my-[0.22em] font-serif text-[min(3.4vw,0.9rem)] text-primary italic squat:my-0 md:my-0 md:text-[1.5rem]">
+              <span className="my-[0.22em] font-serif text-[clamp(0.9rem,min(5.2vw,3.5svh),1.95rem)] text-primary italic squat:my-0 squat:text-[clamp(0.7rem,min(4.2vw,4.3svh),1.45rem)] md:my-0 md:text-[clamp(1.5rem,2.45vw,2.5rem)]">
                 &amp;
               </span>
               <span className={`whitespace-nowrap ${nameSize}`}>{orderedNames[1]}</span>
@@ -98,17 +103,22 @@ export default function Hero() {
             nơi chốn xuống nằm ngay trên nút xác nhận - vừa gom hết thông tin
             "khi nào, ở đâu, bấm vào đâu" vào một chỗ, vừa nhường lại cho tên
             cả dải trời. */}
+        {/* Khối này bị siết rất chặt là có lý do: ngày cưới là dòng TRÊN CÙNG
+            của nó, nên chỉ cần khối cao thêm vài chục pixel là dòng ấy trôi
+            khỏi dãy đồi tối và rơi vào vệt nắng - lúc đó chữ ngà không còn
+            bám được nữa. Mọi khoảng hở bên dưới ngày cưới đều được cắt tới
+            mức tối thiểu để đẩy nó xuống nền tối. */}
         <RevealGroup start={560} step={130} className="text-center text-[#f2ecdd]">
           <p className="t-eyebrow-lg on-photo">
             {pad(date.getDate())} · {pad(date.getMonth() + 1)} · {date.getFullYear()}
           </p>
 
-          <p className="t-eyebrow on-photo mt-[clamp(0.4rem,1.1svh,0.75rem)] text-[#f2ecdd]/80">
+          <p className="t-eyebrow on-photo mt-[clamp(0.3rem,0.8svh,0.55rem)] text-[#f2ecdd]/80">
             {config.venue.city}
           </p>
 
           {config.sections.rsvp && (
-            <div className="mt-[clamp(1rem,2.6svh,1.75rem)]">
+            <div className="mt-[clamp(0.7rem,1.6svh,1.15rem)]">
               <button
                 onClick={() => document.querySelector('#rsvp')?.scrollIntoView({ behavior: 'smooth' })}
                 className="inline-flex min-h-11 cursor-pointer items-center border border-[#f2ecdd]/45 px-8 text-[#f2ecdd] transition-colors duration-500 hover:border-[#f2ecdd] hover:bg-[#f2ecdd] hover:text-foreground"
@@ -131,7 +141,7 @@ export default function Hero() {
               document.querySelector('#countdown, #story')?.scrollIntoView({ behavior: 'smooth' })
             }
             aria-label={t('hero.scroll')}
-            className="mx-auto mt-2 flex h-11 w-11 cursor-pointer items-end justify-center squat:hidden md:mt-5"
+            className="mx-auto mt-1 flex h-11 w-11 cursor-pointer items-end justify-center squat:hidden md:mt-2"
           >
             <span aria-hidden className="block h-8 w-px bg-linear-to-b from-transparent to-[#f2ecdd]/70" />
           </button>
