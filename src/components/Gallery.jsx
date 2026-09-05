@@ -6,6 +6,7 @@ import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { galleryAlbums } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
+import { usePressHold } from '../hooks/usePressHold'
 import Lightbox from './Lightbox'
 
 export default function Gallery() {
@@ -92,28 +93,18 @@ function Carousel({ photos, label, onSelect }) {
 
   return (
     <div className="relative md:px-12" role="group" aria-label={label}>
-      <div className="overflow-hidden" ref={emblaRef}>
+      <div className="overflow-hidden py-4" ref={emblaRef}>
         <div className="-ml-2 flex md:-ml-4">
-          {/* Thẻ ảnh cao cố định, rộng tự do: ảnh ngang thành thẻ rộng, ảnh dọc
-              thành thẻ hẹp. Không tấm nào bị cắt, và mép trên mép dưới vẫn
-              thẳng hàng nên dải ảnh đọc như một cuộn phim. */}
+          {/* Giờ chỉ còn ảnh đứng nên mọi thẻ cùng một khổ. Vẫn để chiều cao
+              cố định và chiều rộng tự do: nếu sau này thêm ảnh ngang thì nó
+              vẫn hiện đủ khung chứ không bị cắt. */}
           {photos.map((photo, i) => (
-            <div key={photo.src} className="flex-none pl-2 md:pl-4">
-              <button
-                onClick={() => onSelect(i)}
-                aria-label={t('gallery.viewLarger')}
-                className="group relative block h-[86vw] max-h-[430px] cursor-pointer overflow-hidden sm:h-[52vw] lg:h-[430px]"
-              >
-                <div className="absolute inset-0 z-10 bg-primary/15 opacity-0 mix-blend-overlay transition-opacity duration-300 group-hover:opacity-100" />
-                <img
-                  src={photo.src}
-                  alt={photo.alt}
-                  loading={i < 3 ? 'eager' : 'lazy'}
-                  decoding="async"
-                  className="h-full w-auto max-w-none object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-              </button>
-            </div>
+            <PhotoCard
+              key={photo.src}
+              photo={photo}
+              eager={i < 3}
+              onOpen={() => onSelect(i)}
+            />
           ))}
         </div>
       </div>
@@ -130,6 +121,40 @@ function Carousel({ photos, label, onSelect }) {
         label={t('gallery.next')}
         onClick={() => emblaApi?.scrollNext()}
       />
+    </div>
+  )
+}
+
+/**
+ * Một tấm ảnh trong album. Chạm để xem lớn, giữ để nhấc ảnh lên xem kỹ.
+ */
+function PhotoCard({ photo, eager, onOpen }) {
+  const { t } = useLanguage()
+  const { held, handlers, consumeHold } = usePressHold()
+
+  return (
+    <div className="flex-none pl-2 md:pl-4">
+      <button
+        {...handlers}
+        onClick={() => {
+          // vừa giữ xong thì thôi, không mở ảnh lớn
+          if (!consumeHold()) onOpen()
+        }}
+        aria-label={t('gallery.viewLarger')}
+        className={`photo-card group relative block h-[86vw] max-h-[430px] cursor-pointer overflow-hidden select-none sm:h-[52vw] lg:h-[430px] ${
+          held ? 'is-held' : ''
+        }`}
+      >
+        <div className="absolute inset-0 z-10 bg-primary/15 opacity-0 mix-blend-overlay transition-opacity duration-300 group-hover:opacity-100" />
+        <img
+          src={photo.src}
+          alt={photo.alt}
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          draggable={false}
+          className="h-full w-auto max-w-none object-cover"
+        />
+      </button>
     </div>
   )
 }

@@ -75,6 +75,13 @@ tự hiện. Thẻ ảnh trong album cao cố định, rộng tự do, nên ản
 
 **Mã QR**: đặt tên file có chữ `groom` / `bride` (hoặc `trai` / `gai`).
 
+Album chỉ dùng **ảnh đứng** cho đều khổ. Thẻ ảnh cao cố định, rộng tự do - nếu
+sau này bạn thêm ảnh ngang thì nó vẫn hiện đủ khung chứ không bị cắt, chỉ là
+thẻ sẽ rộng hơn các thẻ còn lại.
+
+**Chạm** vào ảnh để xem lớn, **giữ** ngón tay để nhấc ảnh lên xem kỹ. Vuốt ngang
+để lướt.
+
 **Nhạc nền**: bỏ 1 file mp3 vào `src/assets/music/`, rồi bật `sections.music: true`.
 
 > Ảnh nên nén trước khi bỏ vào (dùng [squoosh.app](https://squoosh.app), xuất

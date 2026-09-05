@@ -195,6 +195,34 @@
       0 6px 24px rgb(0 0 0 / 0.45);
   }
 
+  /* ══ Giữ để xem kỹ ══
+     Ảnh nhấc lên và phóng nhẹ khi giữ ngón tay, như khi cầm một tấm ảnh in
+     lên xem. Lớp ảnh bên trong phóng nhiều hơn khung một chút, tạo chiều sâu. */
+  .photo-card {
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    transition:
+      transform 0.5s var(--ease),
+      box-shadow 0.5s var(--ease);
+    /* chặn menu "lưu ảnh" khi giữ lâu trên di động */
+    -webkit-touch-callout: none;
+  }
+  .photo-card.is-held {
+    transform: scale(1.045);
+    box-shadow: 0 24px 55px -22px rgb(0 0 0 / 0.5);
+    z-index: 10;
+  }
+  .photo-card img {
+    transition: transform 0.6s var(--ease), filter 0.6s var(--ease);
+  }
+  .photo-card:hover img {
+    transform: scale(1.05);
+  }
+  /* đặt sau quy tắc :hover để lúc vừa rê vừa giữ thì "giữ" thắng */
+  .photo-card.is-held img {
+    transform: scale(1.12);
+    filter: saturate(1.06) contrast(1.03);
+  }
+
   .fade-up {
     animation: fadeUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
     animation-delay: var(--reveal-delay, 0ms);
@@ -261,6 +289,10 @@
   .reveal-mask.is-visible img {
     clip-path: none;
     transform: none;
+    transition: none;
+  }
+  .photo-card,
+  .photo-card img {
     transition: none;
   }
   .fade-up,
