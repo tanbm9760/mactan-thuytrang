@@ -4,6 +4,7 @@ import { storyImage } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
 import { RevealGroup } from './Reveal'
 import SectionMark from './SectionMark'
+import Florals from './Florals'
 
 /**
  * Trang đôi của một quyển tạp chí, không phải một section "ảnh | chữ".
@@ -25,7 +26,8 @@ export default function Story() {
   const paragraphs = t('story.paragraphs') ?? []
 
   return (
-    <section id="story" className="sec-lg overflow-hidden bg-background">
+    <section id="story" className="relative sec-lg overflow-hidden bg-background">
+      <Florals preset="story" />
       <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-0">
         {/* ── Ảnh, tràn ra mép trái ──────────────────────────────────────── */}
         <div className="lg:col-span-6 lg:pt-[6vw]">

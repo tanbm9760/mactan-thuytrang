@@ -108,21 +108,40 @@ Theo quy ước của thiệp cưới Việt Nam, cha mẹ đã khuất được
 cạnh tên. Bật bằng `fatherLotus: true` hoặc `motherLotus: true` trong
 `config.families`; bỏ dòng đó đi là hoa biến mất.
 
-### Vì sao thiệp không có hoa trang trí
+### Hoa nhỏ rải rác
 
-Trước đây mỗi phần của trang có năm bảy bông hoa màu nước rải ở lề. Chúng đã
-được bỏ hẳn, và đây là một quyết định thiết kế chứ không phải thiếu sót.
+Hoa lấy thẳng từ **tấm thiệp in của gia đình** - đúng những bông ấy, đúng năm
+màu ấy (vàng bơ, xanh lam nhạt, tím oải hương, hồng phấn, cam đào). Website
+phải nhận ra được là cùng một bộ với tấm thiệp cầm trên tay, nên hoa vẽ theo
+thiệp chứ không vẽ theo ý người làm web.
 
-Hoa rải là thứ khiến một tấm thiệp trông giống *mẫu thiệp làm sẵn* nhanh hơn
-bất kỳ chi tiết nào khác: nó lặp lại y hệt ở mọi phần, nó thêm năm sắc màu
-(hồng, lam, tím, cam, vàng) vào một bảng màu vốn chỉ có năm giá trị ngà - đồng -
-olive, và nó tranh chỗ với đúng hai thứ đáng được nhìn là **ảnh cưới** và
-**chữ**. Sang trọng đến từ chỗ trống, không đến từ số lượng hoạ tiết.
+Vẽ hoàn toàn bằng SVG trong
+[`src/components/Florals.jsx`](src/components/Florals.jsx), không dùng file
+ảnh - nét ở mọi độ phân giải và không thêm byte nào vào phần ảnh phải tải.
 
-Thứ thay vào chỗ của hoa là khoảng trắng, kẻ tóc, và vài dấu rất nhỏ: chấm
-tròn đồng giữa `29` và `09`, hạt kim cương giữa hai bộ ảnh, bông sen cạnh tên
-cha mẹ đã khuất. Nếu về sau muốn thêm hoạ tiết, hãy thêm **một** thứ và đặt nó
-ở **một** chỗ duy nhất trong cả trang.
+Mỗi phần dùng một cách rải riêng, khai trong `PRESETS`:
+
+```js
+{ top: 10, left: 10, size: 58, rot: -18, hue: 'vang', kind: 'a' }
+//  vị trí theo %     cỡ px  độ nghiêng   màu        dáng hoa
+```
+
+- `hue`: `vang` · `lam` · `tim` · `hong` · `cam`
+- `kind`: `a` (sáu cánh) · `b` (năm cánh) · `s` (nhành oải hương)
+- Thêm `sm: true` nếu chỉ muốn hiện từ màn hình ≥640px
+
+Ba điều giữ cho nó không thành rườm rà, sửa `PRESETS` thì nhớ giữ:
+
+1. **Chỉ rải trên nền giấy.** Không bao giờ đặt hoa lên ảnh cưới - ảnh là thứ
+   đáng được nhìn nhất, hoa mà đè lên thì cả hai cùng hỏng.
+2. **Toạ độ bám cột chữ, không bám mép màn hình.** `BOXES` khoá bề ngang khối
+   hoa theo bề ngang nội dung của từng phần. Tấm thiệp in là khổ đứng, hoa nằm
+   ngay sát chữ; màn hình máy tính rộng gấp đôi, rải theo mép thì hoa dạt ra
+   tận rìa và trông như lạc chỗ.
+3. **Mỗi bông một nhịp trôi khác nhau** (14-26 giây), nên mắt không bao giờ
+   bắt được hai bông động cùng lúc - đó là khác biệt giữa "hoa khô rung rất
+   nhẹ trên mặt giấy" và "hoạt ảnh trang trí". Chuyển động tự tắt khi máy bật
+   *giảm chuyển động*.
 
 ---
 

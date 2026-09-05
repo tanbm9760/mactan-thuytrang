@@ -3,6 +3,7 @@ import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { qrBride, qrGroom } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
+import Florals from './Florals'
 
 /**
  * Hộp mừng cưới, cố ý là phần nhỏ tiếng nhất của cả tấm thiệp.
@@ -24,7 +25,8 @@ export default function Gift() {
   const active = sides.find((side) => side.key === openSide)
 
   return (
-    <section id="gift" className="sec-sm gutter bg-background">
+    <section id="gift" className="relative overflow-hidden sec-sm gutter bg-background">
+      <Florals preset="gift" />
       <div ref={ref} className="reveal mx-auto max-w-xl text-center">
         <span aria-hidden className="mx-auto block h-px w-10 bg-gold/70" />
 

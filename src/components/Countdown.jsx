@@ -3,6 +3,7 @@ import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { useReveal } from '../hooks/useReveal'
 import { RevealGroup } from './Reveal'
+import Florals from './Florals'
 
 function timeLeft(target) {
   const diff = target.getTime() - Date.now()
@@ -42,7 +43,8 @@ export default function Countdown() {
     : []
 
   return (
-    <section id="countdown" className="sec-sm gutter bg-background">
+    <section id="countdown" className="relative overflow-hidden sec-sm gutter bg-background">
+      <Florals preset="countdown" />
       <div className="mx-auto max-w-4xl">
         {left ? (
           <>

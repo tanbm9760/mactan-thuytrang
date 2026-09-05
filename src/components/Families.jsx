@@ -4,6 +4,7 @@ import { useReveal } from '../hooks/useReveal'
 import { RevealGroup } from './Reveal'
 import LotusIcon from './LotusIcon'
 import SectionMark from './SectionMark'
+import Florals from './Florals'
 
 /**
  * Lời mời của hai gia đình, dựng theo đúng thứ tự trên tấm thiệp in: tên cha
@@ -31,7 +32,8 @@ export default function Families() {
         ]
 
   return (
-    <section className="sec-lg gutter bg-sand">
+    <section className="relative overflow-hidden sec-lg gutter bg-sand">
+      <Florals preset="families" />
       <div className="mx-auto max-w-3xl text-center">
         <SectionMark numeral="II" align="center" />
 

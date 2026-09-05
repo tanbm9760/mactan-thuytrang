@@ -306,6 +306,24 @@
 
   .breathe { animation: breathe 4s ease-in-out infinite; }
 
+  /* Hiện dần bằng độ mờ, không kèm dịch chuyển - dùng cho lớp hoa, vì lớp hoa
+     đã có chuyển động riêng của nó rồi. */
+  .reveal-soft {
+    opacity: 0;
+    transition: opacity 1.6s var(--ease-editorial);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal-soft.is-visible { opacity: 1; }
+
+  /* Hoa trôi rất chậm. Mỗi bông một chu kỳ và một độ trễ khác nhau, nên không
+     bao giờ có hai bông động cùng nhịp - đó là khác biệt giữa "hoa khô rung
+     nhẹ trên mặt giấy" và "hoạt ảnh trang trí". */
+  .floral-drift {
+    animation: floralDrift var(--dur, 20s) ease-in-out infinite;
+    animation-delay: var(--delay, 0s);
+    transform: rotate(var(--rot, 0deg));
+  }
+
   /* Bìa thiệp tách đôi. Chậm và có chủ ý - mở một tấm thiệp, không phải mở
      một cánh cửa. Để ở CSS chứ không ở class Tailwind để reduced-motion tắt
      được nó. */
@@ -452,6 +470,17 @@
   to   { opacity: 1; transform: none; }
 }
 
+@keyframes floralDrift {
+  0%,
+  100% {
+    transform: rotate(var(--rot, 0deg)) translate3d(0, 0, 0);
+  }
+  50% {
+    transform: rotate(calc(var(--rot, 0deg) + var(--spin, 2deg)))
+      translate3d(var(--dx, 3px), var(--dy, -6px), 0);
+  }
+}
+
 @keyframes breathe {
   0%, 100% { opacity: 0.4; }
   50%      { opacity: 0.85; }
@@ -483,6 +512,9 @@
   .photo-card,
   .photo-card img { transition: none; }
   .cover-panel, .cover-face { transition-duration: 0.3s; }
+  .reveal-soft,
+  .reveal-soft.is-visible { opacity: 1; transition: none; }
+  .floral-drift { animation: none; }
   .fade-up,
   .hero-zoom,
   .breathe { animation: none; }

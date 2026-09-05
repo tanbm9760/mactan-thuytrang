@@ -7,6 +7,7 @@ import { useReveal } from '../hooks/useReveal'
 import { usePressHold } from '../hooks/usePressHold'
 import Lightbox from './Lightbox'
 import SectionMark from './SectionMark'
+import Florals from './Florals'
 
 /**
  * Album ảnh, trình bày như một cuốn lookbook chứ không như một component
@@ -31,7 +32,8 @@ export default function Gallery() {
   }
 
   return (
-    <section id="gallery" className="sec overflow-hidden bg-sand">
+    <section id="gallery" className="relative sec overflow-hidden bg-sand">
+      <Florals preset="gallery" />
       <div ref={headRef} className="reveal gutter">
         <div className="mx-auto max-w-4xl text-center">
           <SectionMark numeral="IV" align="center" />

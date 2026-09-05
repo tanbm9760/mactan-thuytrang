@@ -6,6 +6,7 @@ import { useReveal } from '../hooks/useReveal'
 import Schedule from './Schedule'
 import { RevealGroup } from './Reveal'
 import SectionMark from './SectionMark'
+import Florals from './Florals'
 
 const pad = (n) => String(n).padStart(2, '0')
 
@@ -30,7 +31,8 @@ export default function Details() {
     .filter((row) => row.lines.length > 0)
 
   return (
-    <section id="details" className="sec bg-background">
+    <section id="details" className="relative overflow-hidden sec bg-background">
+      <Florals preset="details" />
       <div className="gutter">
         <div className="mx-auto max-w-4xl">
           <SectionMark numeral="III" align="center" />
