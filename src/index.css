@@ -4,6 +4,15 @@
    hình: một tấm ảnh dọc chỉ tràn viền đẹp khi khung nhìn cũng đứng. Máy tính
    bảng dựng đứng rộng 768px vẫn phải dùng cách dựng của điện thoại, còn nếu
    cắt theo `md:` thì cột ảnh 46vw sẽ xẻ đôi cô dâu chú rể. */
+/* Khung nhìn thấp: điện thoại có thanh địa chỉ chiếm chỗ, hoặc máy để ngang.
+   Ở đó dải trời trong ảnh mở đầu chỉ còn hơn trăm pixel, không đủ cho tên xếp
+   chồng hai dòng - nên tên trải thành một dòng, đúng như trên máy tính. */
+@custom-variant squat {
+  @media (max-height: 740px) {
+    @slot;
+  }
+}
+
 @custom-variant wide {
   @media (min-width: 900px) and (min-aspect-ratio: 5/4) {
     @slot;

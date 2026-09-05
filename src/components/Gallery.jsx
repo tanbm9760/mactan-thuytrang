@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
 import useEmblaCarousel from 'embla-carousel-react'
-import Autoplay from 'embla-carousel-autoplay'
 import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { galleryAlbums } from '../lib/assets'
@@ -14,12 +13,13 @@ import SectionMark from './SectionMark'
  * carousel.
  *
  * Ba thay đổi làm nên khác biệt đó:
- *  - Ảnh KHÔNG còn cùng một khổ. Cứ ba tấm lại có một tấm to hơn hẳn, nên
- *    dải ảnh có nhịp lớn-nhỏ thay vì đều tăm tắp.
- *  - Mép dưới các tấm ảnh thẳng hàng, mép trên so le - đó là thứ khiến một
- *    dải ảnh trông như được bày ra trên bàn chứ không như một hàng thẻ.
- *  - Dải ảnh chạy tràn ra khỏi hai mép màn hình, và điều khiển là một dòng
- *    chữ số nhỏ ở góc chứ không phải hai nút tròn nổi trên ảnh.
+ *  - Một khung cố định: đúng một tấm trên điện thoại, đúng ba tấm trên máy
+ *    tính. Mỗi cú vuốt là một trang, dừng đúng chỗ.
+ *  - Mọi tấm cùng một khổ, bo góc mềm, viền chỉ là một vòng sáng cực mảnh -
+ *    ảnh nào cũng được đối xử như nhau, không tấm nào to hơn tấm nào.
+ *  - Không tự động chạy.
+ *  - Điều khiển là một dòng chữ số nhỏ nằm trong lề, không phải hai nút tròn
+ *    nổi đè lên ảnh.
  */
 export default function Gallery() {
   const { t } = useLanguage()
@@ -83,17 +83,28 @@ function albumLabel(albumKey) {
   return album?.vi ?? albumKey
 }
 
-/* Nhịp lớn-nhỏ của dải ảnh. Cứ tấm thứ 3 lại là một tấm lớn. Tất cả ảnh gốc
-   đều là 2:3, nên chỉ đổi CHIỀU RỘNG - không cắt lại khung hình, không ai bị
-   cắt mất đầu hay mất chân. */
-const WIDE = 'basis-[74%] sm:basis-[46%] lg:basis-[30%]'
-const NARROW = 'basis-[56%] sm:basis-[34%] lg:basis-[22%]'
+/* Khung ảnh: đúng MỘT tấm trên điện thoại, đúng BA tấm trên máy tính.
+   Ảnh gốc đều là 2:3 nên khung 2:3 không cắt mất phần nào của ai.
+
+   Trước đây mỗi tấm rộng 72%/42%/28% nên luôn có một tấm ló ra dở dang ở mép
+   phải. Nhìn thì có nhịp, nhưng lướt bằng ngón tay lại khó chịu: vuốt một cái
+   không biết nó sẽ dừng ở đâu, và tấm đang xem chẳng bao giờ nằm trọn trong
+   khung. Chia chẵn thì mỗi cú vuốt là một trang, dừng đúng chỗ. */
+const PLATE_WIDTH = 'basis-full pl-3 md:basis-1/3 md:pl-4'
 
 function Filmstrip({ photos, label, onSelect }) {
   const { t } = useLanguage()
-  const [emblaRef, emblaApi] = useEmblaCarousel({ align: 'start', loop: photos.length > 3 }, [
-    Autoplay({ delay: 5200, stopOnInteraction: true, stopOnMouseEnter: true }),
-  ])
+  /* Không còn tự động chạy. Ảnh tự trôi trong lúc khách đang ngắm là thứ gây
+     khó chịu nhất ở đây - đang nhìn một tấm thì nó đổi mất. Giờ ảnh chỉ đổi
+     khi khách vuốt hoặc bấm.
+
+     `containScroll: 'trimSnaps'` bỏ các điểm dừng thừa ở hai đầu, nhờ vậy tấm
+     đầu và tấm cuối luôn nằm sát mép khung chứ không dừng lệch nửa vời. */
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    align: 'start',
+    loop: photos.length > 3,
+    containScroll: 'trimSnaps',
+  })
   const [state, setState] = useState({ index: 0, canPrev: false, canNext: false })
 
   const onUpdate = useCallback((api) => {
@@ -115,26 +126,31 @@ function Filmstrip({ photos, label, onSelect }) {
 
   return (
     <div role="group" aria-label={label}>
-      {/* Dải ảnh chạy sát hai mép màn hình. Cả trang còn lại đều thụt vào
-          trong lề, nên đúng một chỗ tràn viền là đủ để phần album bật hẳn ra.
-          (Không đặt padding cho dải: embla canh mép trái tấm ảnh vào mép trái
-          khung nhìn, nên padding sẽ bị nuốt mất ngay ở tấm thứ hai.) */}
-      <div className="overflow-hidden" ref={emblaRef}>
-        <div className="flex items-end gap-3 md:gap-5">
-          {photos.map((photo, i) => (
-            <Plate
-              key={photo.src}
-              photo={photo}
-              width={i % 3 === 0 ? WIDE : NARROW}
-              eager={i < 3}
-              onOpen={() => onSelect(i)}
-            />
-          ))}
+      {/* Khung ảnh nằm gọn trong lề như phần còn lại của trang. Ảnh không
+          tràn ra mép nữa: tràn viền thì đẹp lúc đứng yên, nhưng lúc vuốt lại
+          làm mất cảm giác "một khung, một tấm".
+
+          ⚠️ Lề phải nằm ở thẻ NGOÀI thẻ overflow-hidden. `overflow: hidden`
+          cắt ở mép ngoài của phần đệm chứ không phải mép trong, nên nếu đặt
+          lề ngay trên thẻ này thì tấm kế tiếp vẫn ló ra trong vùng đệm - hỏng
+          đúng cái cảm giác "một khung, một tấm" vừa dựng.
+
+          Khoảng cách giữa các tấm cũng không dùng `gap`: ba tấm rộng 1/3 cộng
+          thêm hai khoảng hở thì thành hơn 100%, tấm thứ ba bị cắt. Cách đúng
+          là mỗi tấm tự mang phần đệm trái của nó rồi kéo cả dải lệch sang trái
+          đúng bằng ngần ấy - lúc đó 1/3 vẫn là 1/3. */}
+      <div className="gutter">
+        <div className="overflow-hidden" ref={emblaRef}>
+          <div className="-ml-3 flex items-stretch md:-ml-4">
+            {photos.map((photo, i) => (
+              <Plate key={photo.src} photo={photo} eager={i < 3} onOpen={() => onSelect(i)} />
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Điều khiển: một dòng chữ số nhỏ, đặt trong lề chứ không nổi trên ảnh */}
-      <div className="mt-7 flex items-center gap-6 gutter md:mt-9">
+      <div className="mt-6 flex items-center gap-6 gutter md:mt-7">
         <p className="font-serif text-[0.9rem] font-light text-muted-foreground tabular-nums">
           {String(state.index + 1).padStart(2, '0')}
           <span className="mx-1.5 text-border">/</span>
@@ -174,12 +190,12 @@ function StripButton({ label, glyph, disabled, onClick }) {
 }
 
 /** Một tấm ảnh trong album. Chạm để xem lớn, giữ để nhấc ảnh lên xem kỹ. */
-function Plate({ photo, width, eager, onOpen }) {
+function Plate({ photo, eager, onOpen }) {
   const { t } = useLanguage()
   const { held, handlers, consumeHold } = usePressHold()
 
   return (
-    <div className={`min-w-0 shrink-0 grow-0 ${width}`}>
+    <div className={`min-w-0 shrink-0 grow-0 ${PLATE_WIDTH}`}>
       <button
         {...handlers}
         onClick={() => {
@@ -190,16 +206,20 @@ function Plate({ photo, width, eager, onOpen }) {
         className={`photo-card block w-full cursor-pointer select-none ${held ? 'is-held' : ''}`}
       >
         {/* Khung 2:3 khớp đúng tỉ lệ ảnh gốc nên object-cover không cắt mất
-            phần nào. Góc vuông: bo góc là ngôn ngữ của thẻ giao diện, còn
-            đây là một tấm ảnh in. */}
-        <span className="relative block aspect-2/3 w-full overflow-hidden bg-muted">
+            phần nào.
+
+            Bo góc đặt ở CẢ khung ngoài lẫn thẻ ảnh. Thừa một chút nhưng an
+            toàn: có trình duyệt bỏ qua vùng cắt bo góc của thẻ cha khi lớp
+            bên trong được ghép ảnh riêng, khi đó thẻ ảnh vẫn tròn góc nhờ bo
+            góc của chính nó. */}
+        <span className="relative block aspect-2/3 w-full overflow-hidden rounded-[18px] bg-muted ring-1 ring-foreground/[0.06] ring-inset md:rounded-[22px]">
           <img
             src={photo.src}
             alt={photo.alt}
             loading={eager ? 'eager' : 'lazy'}
             decoding="async"
             draggable={false}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full rounded-[18px] object-cover md:rounded-[22px]"
           />
         </span>
       </button>
