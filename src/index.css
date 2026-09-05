@@ -148,51 +148,50 @@
   }
 
   /* ══ Nền cho chữ trên ảnh hero ══
-     Không dùng một lớp tối phủ đều: nó làm phẳng cả bức ảnh mà vẫn không cứu
-     được chữ ở vùng sáng nhất. Thay vào đó là một vệt tối hình elip đúng chỗ
-     đặt chữ - giữa khung tối đủ để chữ trắng nổi, còn rìa khung vẫn giữ
-     nguyên màu hoàng hôn và bóng hai bàn tay. */
+     Phủ NGÀ chứ không phủ đen. Phủ đen tuy cứu được chữ trắng nhưng giết mất
+     ánh hoàng hôn và làm cả tấm thiệp mở ra bằng một nốt nặng nề, ngược hẳn
+     tông giấy ngà của phần còn lại.
+
+     Vẫn là vệt hình elip đúng chỗ đặt chữ: giữa khung sáng lên đủ để chữ olive
+     sẫm đọc được, còn rìa khung giữ nguyên màu trời chiều. Bài toán bị lật
+     ngược - giờ phải lo nền đủ SÁNG, vì hai bàn tay vốn là bóng tối. */
   .hero-scrim {
     background:
       radial-gradient(
-        ellipse 92% 60% at 50% 47%,
-        rgb(0 0 0 / 0.66) 0%,
-        rgb(0 0 0 / 0.48) 48%,
-        rgb(0 0 0 / 0.1) 78%
+        ellipse 95% 62% at 50% 47%,
+        rgb(247 243 234 / 0.74) 0%,
+        rgb(247 243 234 / 0.58) 46%,
+        rgb(247 243 234 / 0.12) 80%
       ),
-      linear-gradient(to top, rgb(0 0 0 / 0.62) 0%, rgb(0 0 0 / 0.12) 34%, rgb(0 0 0 / 0) 58%),
-      linear-gradient(to bottom, rgb(0 0 0 / 0.42) 0%, rgb(0 0 0 / 0) 24%),
-      rgb(0 0 0 / 0.16);
+      linear-gradient(to top, rgb(247 243 234 / 0.6) 0%, rgb(247 243 234 / 0.15) 36%, rgb(247 243 234 / 0) 62%),
+      linear-gradient(to bottom, rgb(247 243 234 / 0.6) 0%, rgb(247 243 234 / 0) 26%),
+      rgb(247 243 234 / 0.1);
   }
 
-  /* Khung dọc hẹp lộ nhiều trời sáng hơn khung ngang, nên phải phủ đậm hơn.
-     Đây là lý do phải đo riêng cho điện thoại thay vì dùng chung một giá trị. */
   @media (width < 48rem) {
     .hero-scrim {
       background:
         radial-gradient(
-          ellipse 135% 56% at 50% 45%,
-          rgb(0 0 0 / 0.74) 0%,
-          rgb(0 0 0 / 0.58) 50%,
-          rgb(0 0 0 / 0.18) 82%
+          ellipse 140% 58% at 50% 46%,
+          rgb(247 243 234 / 0.8) 0%,
+          rgb(247 243 234 / 0.64) 48%,
+          rgb(247 243 234 / 0.18) 84%
         ),
-        linear-gradient(to top, rgb(0 0 0 / 0.6) 0%, rgb(0 0 0 / 0.1) 34%, rgb(0 0 0 / 0) 60%),
-        linear-gradient(to bottom, rgb(0 0 0 / 0.45) 0%, rgb(0 0 0 / 0) 20%),
-        rgb(0 0 0 / 0.22);
+        linear-gradient(to top, rgb(247 243 234 / 0.6) 0%, rgb(247 243 234 / 0.14) 36%, rgb(247 243 234 / 0) 64%),
+        linear-gradient(to bottom, rgb(247 243 234 / 0.6) 0%, rgb(247 243 234 / 0) 24%),
+        rgb(247 243 234 / 0.14);
     }
   }
 
-  /* Bóng chữ toả rộng và rất mềm: tách chữ khỏi nền mà không lộ viền đen */
+  /* Quầng sáng rất mờ quanh chữ, thay cho bóng đen: tách chữ khỏi những chỗ
+     ảnh còn sẫm mà không tạo vệt bẩn quanh nét chữ. */
   .hero-title {
     text-shadow:
-      0 1px 2px rgb(0 0 0 / 0.4),
-      0 4px 14px rgb(0 0 0 / 0.45),
-      0 12px 48px rgb(0 0 0 / 0.5);
+      0 1px 10px rgb(247 243 234 / 0.9),
+      0 4px 30px rgb(247 243 234 / 0.75);
   }
   .hero-sub {
-    text-shadow:
-      0 1px 3px rgb(0 0 0 / 0.5),
-      0 6px 24px rgb(0 0 0 / 0.45);
+    text-shadow: 0 1px 8px rgb(247 243 234 / 0.9);
   }
 
   /* ══ Giữ để xem kỹ ══

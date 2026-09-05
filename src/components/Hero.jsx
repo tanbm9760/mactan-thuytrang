@@ -26,9 +26,9 @@ export default function Hero() {
       />
       <div aria-hidden className="hero-scrim absolute inset-0" />
 
-      <div className="relative z-10 w-full px-5 text-center text-white">
+      <div className="relative z-10 w-full px-5 text-center text-foreground">
         <RevealGroup step={130}>
-          <p className="hero-sub mb-6 text-[10px] uppercase tracking-[0.42em] text-white/85 md:mb-8 md:text-xs">
+          <p className="hero-sub mb-6 text-[10px] uppercase tracking-[0.42em] text-muted-foreground md:mb-8 md:text-xs">
             {t('hero.subtitle')}
           </p>
 
@@ -36,21 +36,21 @@ export default function Hero() {
             <span className="block text-[3.15rem] break-words sm:text-7xl md:text-8xl lg:text-9xl">
               {orderedNames[0]}
             </span>
-            <span className="my-2 block text-2xl text-white/80 md:my-3 md:text-4xl">&</span>
+            <span className="my-2 block text-2xl text-primary md:my-3 md:text-4xl">&</span>
             <span className="block text-[3.15rem] break-words sm:text-7xl md:text-8xl lg:text-9xl">
               {orderedNames[1]}
             </span>
           </h1>
 
           <div className="mx-auto mt-9 flex max-w-lg items-center justify-center gap-5 md:mt-11">
-            <span className="h-px flex-1 bg-white/45" />
-            <p className="hero-sub font-serif text-base italic whitespace-nowrap md:text-xl">
+            <span className="h-px flex-1 bg-gold/50" />
+            <p className="hero-sub font-serif text-base text-foreground italic whitespace-nowrap md:text-xl">
               {dateStr}
             </p>
-            <span className="h-px flex-1 bg-white/45" />
+            <span className="h-px flex-1 bg-gold/50" />
           </div>
 
-          <p className="hero-sub mt-5 text-[10px] uppercase tracking-[0.32em] text-white/85 md:text-xs">
+          <p className="hero-sub mt-5 text-[10px] uppercase tracking-[0.32em] text-muted-foreground md:text-xs">
             {config.venue.city}
           </p>
         </RevealGroup>
@@ -59,7 +59,7 @@ export default function Hero() {
           <RevealGroup start={430}>
             <button
               onClick={() => document.querySelector('#rsvp')?.scrollIntoView({ behavior: 'smooth' })}
-              className="mt-10 min-h-12 cursor-pointer bg-white px-9 text-[11px] tracking-[0.22em] text-foreground uppercase transition-colors hover:bg-white/90 md:mt-12 md:text-xs"
+              className="mt-10 min-h-12 cursor-pointer bg-deep px-9 text-[11px] tracking-[0.22em] text-deep-foreground uppercase transition-opacity hover:opacity-90 md:mt-12 md:text-xs"
             >
               {t('hero.cta')}
             </button>
@@ -70,7 +70,7 @@ export default function Hero() {
       <button
         onClick={() => document.querySelector('#countdown, #story')?.scrollIntoView({ behavior: 'smooth' })}
         aria-label={t('hero.scroll')}
-        className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 cursor-pointer text-white/60 transition-colors hover:text-white"
+        className="absolute bottom-5 left-1/2 z-10 -translate-x-1/2 cursor-pointer text-muted-foreground/70 transition-colors hover:text-primary"
       >
         <ChevronDown className="h-6 w-6 animate-bounce" />
       </button>
