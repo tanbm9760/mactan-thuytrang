@@ -119,6 +119,8 @@ export const translations = {
       phoneInvalid: 'Số điện thoại chưa hợp lệ',
       notConfigured:
         'Form chưa được kết nối. Xem mục "Kết nối Google Sheets" trong README.md.',
+      devUrl:
+        'Link Apps Script đang là bản thử nghiệm (/dev). Phải dùng URL kết thúc bằng /exec của bản triển khai đặt quyền "Bất kỳ ai".',
     },
     footer: {
       thanks: 'Cảm ơn bạn đã là một phần trong câu chuyện của chúng mình.',
@@ -241,6 +243,8 @@ export const translations = {
       phoneInvalid: 'That phone number does not look right',
       notConfigured:
         'The form is not connected yet. See "Kết nối Google Sheets" in README.md.',
+      devUrl:
+        'The Apps Script link is a test URL (/dev). Use the /exec URL of a deployment set to "Anyone".',
     },
     footer: {
       thanks: 'Thank you for being part of our story.',

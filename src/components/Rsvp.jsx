@@ -56,7 +56,11 @@ export default function Rsvp() {
     if (result.ok) {
       setStatus('success')
     } else {
-      setErrorText(result.reason === 'not-configured' ? t('rsvp.notConfigured') : t('rsvp.errorDesc'))
+      const reasons = {
+        'not-configured': t('rsvp.notConfigured'),
+        'dev-url': t('rsvp.devUrl'),
+      }
+      setErrorText(reasons[result.reason] ?? t('rsvp.errorDesc'))
       setStatus('error')
     }
   }

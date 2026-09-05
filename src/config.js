@@ -92,7 +92,8 @@ export const config = {
   rsvp: {
     /* Dán URL Web App của Google Apps Script vào đây.
        Hướng dẫn lấy URL: xem file README.md, mục "Kết nối Google Sheets". */
-    endpoint: '',
+    endpoint:
+      'https://script.google.com/macros/s/AKfycbxmKteLt7lFj606bu12Es1gSiYnOnymG6YK7I4JLHf1LenGkw8-BWiPzF2lrF55YApd_g/exec',
     deadline: new Date(2026, 8, 15), // hạn phản hồi: 15/09/2026
     maxGuests: 6,
   },

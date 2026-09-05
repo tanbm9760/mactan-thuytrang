@@ -163,7 +163,18 @@ Form "Xác nhận tham dự" gửi thẳng vào một Google Sheet của bạn �
 6. Copy URL dạng `https://script.google.com/macros/s/AKfy.../exec`
 7. Dán vào `rsvp.endpoint` trong `src/config.js`
 
+> ⚠️ **Phải là URL kết thúc bằng `/exec`, không phải `/dev`.**
+> Apps Script cho hai URL: `/dev` là bản thử nghiệm, chỉ chạy khi chính bạn
+> đang đăng nhập bằng tài khoản sở hữu script - khách mở lên sẽ bị Google đòi
+> đăng nhập và phản hồi mất trắng. Hai URL dùng hai mã ID khác nhau nên không
+> thể tự đổi đuôi; phải lấy `/exec` từ màn hình Triển khai.
+>
+> Trang web tự chặn trường hợp này: nếu `endpoint` kết thúc bằng `/dev` thì
+> form báo lỗi ngay thay vì để khách gặp.
+
 Kiểm tra: mở thẳng URL đó trên trình duyệt, thấy `{"ok":true,...}` là đã chạy.
+Nếu bị chuyển sang trang đăng nhập Google thì bản triển khai chưa đặt quyền
+"Bất kỳ ai".
 
 Mỗi phản hồi sẽ thành một dòng trong sheet: thời gian, họ tên, số điện thoại,
 khách của nhà trai/nhà gái, có tham dự không, số người, lời chúc.
