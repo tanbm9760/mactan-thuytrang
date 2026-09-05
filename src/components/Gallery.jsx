@@ -38,9 +38,6 @@ export default function Gallery() {
           <h2 className="t-head mt-9 text-[clamp(2rem,6vw,3.5rem)] text-foreground">
             {t('gallery.title')}
           </h2>
-          <p className="t-quote mt-4 text-[clamp(1.05rem,2.6vw,1.35rem)] text-primary">
-            {t('gallery.subtitle')}
-          </p>
         </div>
       </div>
 
