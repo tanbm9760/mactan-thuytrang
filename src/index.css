@@ -195,6 +195,32 @@
       0 6px 24px rgb(0 0 0 / 0.45);
   }
 
+  /* ══ Album lật trang ══
+     Tờ giấy xoay quanh gáy sách. transform-origin đặt ở mép trái chứ không
+     phải tâm - đó là khác biệt giữa "lật trang" và "lật thẻ bài". */
+  .album-leaf {
+    transform-origin: left center;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .album-face {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .album-face-back {
+    transform: rotateY(180deg);
+  }
+
+  /* Bóng đổ ở gáy: làm hai trang trông như hai mặt của một cuốn sách mở */
+  .album-gutter-right {
+    box-shadow: inset 14px 0 22px -18px rgb(0 0 0 / 0.45);
+  }
+  .album-gutter-left {
+    box-shadow: inset -14px 0 22px -18px rgb(0 0 0 / 0.45);
+  }
+
   .fade-up {
     animation: fadeUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
     animation-delay: var(--reveal-delay, 0ms);
@@ -263,6 +289,7 @@
     transform: none;
     transition: none;
   }
+  .album-leaf { transition: none !important; }
   .fade-up,
   .hero-zoom { animation: none; }
 }
