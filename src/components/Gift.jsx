@@ -4,6 +4,7 @@ import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { qrBride, qrGroom } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
+import Florals from './Florals'
 
 export default function Gift() {
   const { t } = useLanguage()
@@ -18,8 +19,9 @@ export default function Gift() {
   const active = sides.find((side) => side.key === openSide)
 
   return (
-    <section id="gift" className="bg-sand px-6 py-24 md:py-28">
-      <div ref={ref} className="reveal mx-auto max-w-3xl text-center">
+    <section id="gift" className="relative overflow-hidden bg-sand px-6 py-24 md:py-28">
+      <Florals preset="gift" />
+      <div ref={ref} className="reveal relative mx-auto max-w-3xl text-center">
         <h2 className="mb-8 font-serif text-4xl text-primary md:text-5xl">{t('gift.title')}</h2>
         <p className="mb-12 leading-relaxed text-muted-foreground">{t('gift.desc')}</p>
 

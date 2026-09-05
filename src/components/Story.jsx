@@ -3,6 +3,7 @@ import { coupleNames } from '../config'
 import { storyImage } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
 import { RevealGroup, SplitWords } from './Reveal'
+import Florals from './Florals'
 
 /**
  * Chuyện tình gói gọn trong một khối: một tấm ảnh khung vòm bên trái, lời kể
@@ -14,8 +15,9 @@ export default function Story() {
   const paragraphs = t('story.paragraphs') ?? []
 
   return (
-    <section id="story" className="bg-background px-6 py-24 md:py-32">
-      <div className="mx-auto flex max-w-6xl flex-col items-stretch gap-12 md:flex-row md:gap-20">
+    <section id="story" className="relative overflow-hidden bg-background px-6 py-24 md:py-32">
+      <Florals preset="story" />
+      <div className="relative mx-auto flex max-w-6xl flex-col items-stretch gap-12 md:flex-row md:gap-20">
         <div className="relative w-full flex-1">
           <div
             ref={imageRef}

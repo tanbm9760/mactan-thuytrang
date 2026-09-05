@@ -6,6 +6,7 @@ import { mapEmbedUrl, mapUrl } from '../lib/venue'
 import { useReveal } from '../hooks/useReveal'
 import Schedule from './Schedule'
 import { RevealGroup } from './Reveal'
+import Florals from './Florals'
 
 const pad = (n) => String(n).padStart(2, '0')
 
@@ -22,8 +23,9 @@ export default function Details() {
   ].filter((f) => f.lines.filter(Boolean).length > 0)
 
   return (
-    <section id="details" className="bg-sand px-6 py-24 md:py-32">
-      <div ref={ref} className="reveal mx-auto max-w-4xl">
+    <section id="details" className="relative overflow-hidden bg-sand px-6 py-24 md:py-32">
+      <Florals preset="details" />
+      <div ref={ref} className="reveal relative mx-auto max-w-4xl">
         {/* ── Ngày cưới đặt cỡ lớn, dùng như một khối đồ hoạ ───────────────── */}
         <div className="text-center">
           <p className="mb-4 text-[11px] uppercase tracking-[0.4em] text-muted-foreground">
@@ -69,7 +71,7 @@ export default function Details() {
       </div>
 
       {/* ── Bản đồ ───────────────────────────────────────────────────────── */}
-      <div ref={refMap} className="reveal mx-auto mt-20 max-w-4xl border border-border bg-background">
+      <div ref={refMap} className="reveal relative mx-auto mt-20 max-w-4xl border border-border bg-background">
         <iframe
           title={config.venue.name}
           src={mapEmbedUrl}
@@ -82,6 +84,9 @@ export default function Details() {
           <p className="font-serif text-xl">{config.venue.name}</p>
           {config.venue.subName && (
             <p className="mt-1 text-sm text-muted-foreground">{config.venue.subName}</p>
+          )}
+          {config.venue.hall && (
+            <p className="mt-1 font-serif text-sm text-primary">{config.venue.hall}</p>
           )}
           <p className="mt-1 mb-7 text-sm text-muted-foreground">{config.venue.address}</p>
 

@@ -26,9 +26,10 @@ Sửa file rồi lưu là trang tự cập nhật, không cần tải lại.
 | Ngày giờ cưới (dùng cho đếm ngược) | `weddingDate` |
 | Ngày âm lịch | `lunarDate` |
 | Nhà hàng, địa chỉ, bản đồ | `venue` |
-| Tên bố mẹ hai bên | `families` |
+| Tên bố mẹ hai bên, địa chỉ, hoa sen | `families` |
 | Bật/tắt từng phần của thiệp | `sections` |
-| Chương trình trong ngày (đón khách, làm lễ, khai tiệc) | `schedule` |
+| Chương trình trong ngày (lễ, đón khách, khai tiệc) | `schedule` |
+| Sảnh tiệc trong toà nhà | `venue.hall` |
 | Ngân hàng, số tài khoản mừng cưới | `gift` |
 | Link nhận phản hồi RSVP, hạn chót | `rsvp` |
 | Số điện thoại liên hệ ở cuối trang | `contact` |
@@ -91,6 +92,33 @@ tự hiện. Thẻ ảnh trong album cao cố định, rộng tự do, nên ản
 Lời kể nằm ở `story.paragraphs` trong
 [`src/lib/translations.js`](src/lib/translations.js) - mỗi phần tử của mảng là
 một đoạn văn. `story.closing` là câu kết in nghiêng màu vàng đồng ở cuối.
+
+---
+
+### Bông sen cạnh tên cha mẹ
+
+Theo quy ước của thiệp cưới Việt Nam, cha mẹ đã khuất được đặt một bông sen nhỏ
+cạnh tên. Bật bằng `fatherLotus: true` hoặc `motherLotus: true` trong
+`config.families`; bỏ dòng đó đi là hoa biến mất.
+
+### Hoa nhỏ rải rác
+
+Hoa được vẽ hoàn toàn bằng SVG trong
+[`src/components/Florals.jsx`](src/components/Florals.jsx), không dùng file ảnh
+- nhờ vậy nét ở mọi độ phân giải và không thêm byte nào vào phần ảnh phải tải.
+
+Mỗi phần của trang dùng một cách rải riêng, khai trong `PRESETS`. Mỗi bông là
+một dòng:
+
+```js
+{ top: 5, left: 8, size: 52, rot: -18, hue: 'vang', kind: 'a' }
+//  vị trí theo %      cỡ px  độ nghiêng   màu        dáng hoa
+```
+
+- `hue`: `vang` · `lam` · `tim` · `hong` · `cam`
+- `kind`: `a` (sáu cánh) · `b` (năm cánh) · `s` (nhành hoa)
+- Thêm `sm: true` nếu chỉ muốn hiện từ màn hình ≥640px - điện thoại khung hẹp,
+  rải nhiều sẽ thành rối.
 
 ---
 

@@ -37,12 +37,8 @@ export const translations = {
     },
     families: {
       title: 'Trân trọng kính mời',
-      intro:
-        'Sự hiện diện của quý vị là niềm vinh hạnh lớn lao đối với gia đình chúng tôi.',
-      father: 'Ông',
-      mother: 'Bà',
-      son: 'Con trai',
-      daughter: 'Con gái',
+      announce: 'Trân trọng báo tin lễ thành hôn của hai con chúng tôi',
+      honour: 'Sự hiện diện của Quý khách là niềm vinh hạnh cho gia đình chúng tôi',
     },
     story: {
       title: 'Chuyện của chúng mình',
@@ -166,11 +162,8 @@ export const translations = {
     },
     families: {
       title: 'Together with our families',
-      intro: 'We would be honoured by your presence on our wedding day.',
-      father: 'Mr.',
-      mother: 'Mrs.',
-      son: 'Son of',
-      daughter: 'Daughter of',
+      announce: 'We joyfully announce the wedding of our children',
+      honour: 'Your presence is the greatest honour for our families',
     },
     story: {
       title: 'Our Story',

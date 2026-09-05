@@ -5,8 +5,10 @@
 
 export const config = {
   /* --- Cô dâu & chú rể ---------------------------------------------------- */
-  groom: { name: 'Mạc Tân', shortName: 'Tân', initial: 'MT' },
-  bride: { name: 'Thuỳ Trang', shortName: 'Trang', initial: 'TT' },
+  /* `name` dùng ở màn hình đầu; `fullName` dùng ở phần lời mời của hai gia
+     đình, đúng như cách ghi trên thiệp in. */
+  groom: { name: 'Mạc Tân', fullName: 'Bùi Mạc Tân', shortName: 'Tân', initial: 'MT' },
+  bride: { name: 'Thùy Trang', fullName: 'Đỗ Thùy Trang', shortName: 'Trang', initial: 'TT' },
 
   /* Thứ tự hiển thị tên trên thiệp: 'groom-first' hoặc 'bride-first' */
   nameOrder: 'groom-first',
@@ -20,7 +22,8 @@ export const config = {
   /* --- Địa điểm ----------------------------------------------------------- */
   venue: {
     name: 'Trung tâm Hội nghị Quốc tế',
-    subName: 'Văn phòng Chính phủ', // dòng phụ dưới tên, để '' nếu không cần
+    subName: 'Văn phòng Chính phủ', // dòng phụ dưới tên
+    hall: 'Sảnh Tầng 2', // sảnh cụ thể trong toà nhà, để '' nếu không cần
     address: '35 Hùng Vương, Ba Đình, Hà Nội', // cổng khách vào
     city: 'Hà Nội, Việt Nam',
 
@@ -31,18 +34,36 @@ export const config = {
   },
 
   /* --- Chương trình trong ngày ------------------------------------------- */
-  /* ⚠️ Đây là mốc giờ tôi đặt tạm quanh giờ 10:30 của bạn — hãy sửa cho đúng.
-     Xoá cả mảng (schedule: []) nếu không muốn hiện phần này. */
+  /* Lấy từ thiệp in. Xoá cả mảng (schedule: []) nếu không muốn hiện phần này. */
   schedule: [
-    { time: '10:00', vi: 'Đón khách', en: 'Guests arrive' },
-    { time: '10:30', vi: 'Cử hành hôn lễ', en: 'Ceremony' },
+    {
+      time: '06:30',
+      vi: 'Lễ thành hôn',
+      en: 'Wedding ceremony',
+      viNote: 'Tại tư gia nhà trai',
+      enNote: 'At the groom’s family home',
+    },
+    { time: '10:30', vi: 'Đón khách', en: 'Guests arrive' },
     { time: '11:00', vi: 'Khai tiệc', en: 'Reception begins' },
   ],
 
   /* --- Gia đình hai bên (để null nếu không muốn hiện phần này) ------------- */
   families: {
-    groom: { title: 'NHÀ TRAI', father: 'Ông Bùi Trần Tuyến', mother: 'Bà Trần Thị Mai' },
-    bride: { title: 'NHÀ GÁI', father: 'Ông Đỗ Thế Hường', mother: 'Bà Hoàng Thị Hồng Ánh' },
+    /* `fatherLotus` / `motherLotus` đặt một bông sen nhỏ cạnh tên - quy ước
+       của thiệp cưới Việt Nam cho cha mẹ đã khuất. Bỏ dòng đó đi nếu không cần. */
+    groom: {
+      title: 'NHÀ TRAI',
+      father: 'Ông Bùi Trần Tuyến',
+      fatherLotus: true,
+      mother: 'Bà Trần Thị Mai',
+      address: 'P. Lĩnh Nam, Hà Nội',
+    },
+    bride: {
+      title: 'NHÀ GÁI',
+      father: 'Ông Đỗ Thế Hường',
+      mother: 'Bà Hoàng Thị Hồng Ánh',
+      address: 'P. Vĩnh Hưng, Hà Nội',
+    },
   },
 
   /* --- Bật / tắt từng phần ------------------------------------------------ */

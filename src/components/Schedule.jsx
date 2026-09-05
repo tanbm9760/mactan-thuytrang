@@ -35,7 +35,14 @@ export default function Schedule() {
                 {item.time}
               </span>
               <span aria-hidden className="w-12 shrink-0" />
-              <span className="text-muted-foreground">{item[language] ?? item.vi}</span>
+              <span className="text-left">
+                <span className="block text-muted-foreground">{item[language] ?? item.vi}</span>
+                {item[`${language}Note`] && (
+                  <span className="mt-0.5 block font-serif text-sm italic text-muted-foreground/70">
+                    {item[`${language}Note`]}
+                  </span>
+                )}
+              </span>
               <span
                 aria-hidden
                 className="absolute left-26 top-[0.6rem] h-1.5 w-1.5 -translate-x-1/2 rounded-full bg-gold"
