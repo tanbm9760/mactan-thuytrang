@@ -1,0 +1,220 @@
+@import "tailwindcss";
+
+@theme {
+  /* ══ Bảng màu "Hoàng hôn" ══
+     Rút từ chính ảnh cưới: vàng đồng và olive sẫm của ảnh hero lúc hoàng hôn,
+     nền ngà ấm của bộ studio. Không có màu nào không xuất hiện trong ảnh. */
+
+  --color-background: #f7f3ea;   /* ngà ấm — nền chính */
+  --color-sand: #efe6d6;         /* cát nhạt — nền section xen kẽ */
+  --color-foreground: #2e2c24;   /* olive đen — chữ chính (12.6:1) */
+  --color-muted-foreground: #6b6455; /* chữ phụ (5.3:1) */
+
+  --color-primary: #8a6b3c;      /* vàng đồng đậm — CHỮ tiêu đề (4.46:1) */
+  --color-primary-foreground: #fdfbf7;
+  --color-gold: #b08d57;         /* vàng đồng sáng — CHỈ cho kẻ/hoa văn,
+                                    2.79:1 nên không bao giờ dùng làm chữ */
+
+  --color-deep: #33322a;         /* olive sẫm — nền bìa thiệp & section RSVP */
+  --color-deep-foreground: #f7f3ea;
+
+  --color-border: #e2d9c8;       /* kẻ tóc */
+  --color-secondary: #efe6d6;
+  --color-secondary-foreground: #2e2c24;
+  --color-muted: #ece5da;
+  --color-accent: #efe6d6;
+
+  /* ══ Chữ ══ */
+  --font-serif: "Fraunces", "Playfair Display", Georgia, serif;
+  --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Fraunces là font biến thiên: SOFT làm mềm đầu nét, WONK bật bộ chữ
+     "lệch chuẩn" có duyên hơn. Đây là thứ Playfair không làm được. */
+  .font-serif {
+    font-variation-settings: "SOFT" 40, "WONK" 1, "opsz" 100;
+    letter-spacing: -0.01em;
+  }
+
+  /* Dấu tiếng Việt chồng tầng (ắ, ộ, ữ) cao hơn chữ hoa nhiều, nên tiêu đề
+     cần nhiều leading hơn mặc định thì mới không bị chật. */
+  h1, h2, h3 {
+    line-height: 1.18;
+  }
+
+  ::selection {
+    background-color: var(--color-sand);
+    color: var(--color-foreground);
+  }
+}
+
+@layer utilities {
+  /* ══ Chuyển động ══
+     Một đường cong duy nhất dùng cho mọi thứ. Nó ra rất nhanh rồi giảm tốc
+     rất dài — đây là thứ tạo ra cảm giác "mượt" của giao diện Apple, chứ
+     không phải ease-in-out mặc định. */
+
+  .reveal,
+  .reveal-img {
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    transition-timing-function: var(--ease);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  /* Chữ: trồi lên kèm nét mờ tan dần */
+  .reveal {
+    opacity: 0;
+    transform: translate3d(0, 28px, 0);
+    filter: blur(6px);
+    transition-property: opacity, transform, filter;
+    transition-duration: 1.1s;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+    filter: blur(0);
+  }
+
+  /* Ảnh: nở nhẹ ra thay vì trồi lên — ảnh không nên "nhảy" */
+  .reveal-img {
+    opacity: 0;
+    transform: scale(1.06);
+    transition-property: opacity, transform;
+    transition-duration: 1.4s;
+  }
+  .reveal-img.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Ảnh tràn viền có hiệu ứng trôi chậm hơn trang — bọc ngoài phải overflow-hidden */
+  .parallax-img {
+    will-change: transform;
+  }
+
+  /* ══ Nhóm hiện dần theo tầng ══
+     Một observer duy nhất cho cả nhóm; các phần tử con so le nhau bằng
+     transition-delay đặt sẵn. Quan trọng với điện thoại: gắn observer cho
+     từng dòng chữ sẽ tạo ra hàng chục observer, còn cách này chỉ tốn một. */
+  .reveal-group .reveal-item {
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0;
+    transform: translate3d(0, 18px, 0);
+    transition:
+      opacity 0.85s var(--ease),
+      transform 0.85s var(--ease);
+    transition-delay: var(--i-delay, 0ms);
+  }
+  .reveal-group.is-visible .reveal-item {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ══ Ảnh lộ dần từ dưới lên ══
+     Khung mở ra bằng clip-path trong khi ảnh bên trong nhả zoom - hai lớp
+     chuyển động ngược chiều nhau tạo cảm giác ảnh "trồi" ra khỏi trang.
+     clip-path và transform đều chạy trên GPU nên vẫn mượt trên điện thoại. */
+  /* ⚠️ clip-path nằm trên THẺ ẢNH, không nằm trên khung ngoài.
+     IntersectionObserver tính vùng giao sau khi đã cắt theo clip-path, nên nếu
+     đặt clip-path: inset(100%) lên đúng phần tử đang theo dõi thì vùng giao
+     luôn bằng 0, observer không bao giờ báo "đã vào tầm nhìn", và ảnh tàng
+     hình vĩnh viễn. Khung ngoài phải sạch để còn quan sát được. */
+  .reveal-mask img {
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+    clip-path: inset(100% 0 0 0);
+    transform: scale(1.14);
+    transition:
+      clip-path 1.2s var(--ease),
+      transform 1.6s var(--ease);
+    transition-delay: var(--reveal-delay, 0ms);
+  }
+  .reveal-mask.is-visible img {
+    clip-path: inset(0 0 0 0);
+    transform: none;
+  }
+
+  .fade-up {
+    animation: fadeUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation-delay: var(--reveal-delay, 0ms);
+  }
+
+  /* Ảnh hero nở ra rất chậm sau khi tải xong — khung hình "thở" thay vì đứng
+     im như một tấm ảnh dán. Chỉ chạy một lần, không lặp. */
+  .hero-zoom {
+    animation: heroZoom 2.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+
+  /* Kẻ tóc — thay cho viền card. Ngôn ngữ của thiệp in, không phải của app. */
+  .hairline {
+    border-color: var(--color-border);
+    border-width: 1px;
+  }
+
+  /* Chữ số ngày cưới cỡ lớn: mảnh, giãn, dùng như đồ hoạ */
+  .display-date {
+    font-family: var(--font-serif);
+    font-variation-settings: "SOFT" 60, "WONK" 0, "opsz" 144;
+    font-weight: 300;
+    line-height: 0.85;
+    letter-spacing: -0.03em;
+  }
+
+  /* Số thứ tự chương, rất lớn và rất mờ, nằm sau tiêu đề chương */
+  .chapter-numeral {
+    font-family: var(--font-serif);
+    font-variation-settings: "SOFT" 80, "WONK" 0, "opsz" 144;
+    font-weight: 300;
+    line-height: 1;
+    color: var(--color-gold);
+    opacity: 0.22;
+  }
+}
+
+@keyframes heroZoom {
+  from { scale: 1.08; }
+  to   { scale: 1; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(2rem); }
+  to   { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .reveal,
+  .reveal-img {
+    opacity: 1;
+    transform: none;
+    filter: none;
+    transition: none;
+  }
+  .parallax-img { transform: none !important; }
+  .reveal-group .reveal-item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .reveal-mask img,
+  .reveal-mask.is-visible img {
+    clip-path: none;
+    transform: none;
+    transition: none;
+  }
+  .fade-up,
+  .hero-zoom { animation: none; }
+}

@@ -1,0 +1,9 @@
+node_modules
+dist
+.DS_Store
+*.local
+.env
+
+# Ảnh gốc từ studio (~200 MB). Vite không đóng gói thư mục này — thiệp chỉ dùng
+# bản .webp đã nén trong hero/ story/ gallery/. Bỏ qua để repo không phình to.
+src/assets/prewedding_simplevows/
