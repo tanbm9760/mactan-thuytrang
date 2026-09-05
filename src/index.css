@@ -1,87 +1,213 @@
 @import "tailwindcss";
 
+/* Bố cục của ảnh tràn viền không đổi theo CHIỀU RỘNG mà theo TỈ LỆ khung
+   hình: một tấm ảnh dọc chỉ tràn viền đẹp khi khung nhìn cũng đứng. Máy tính
+   bảng dựng đứng rộng 768px vẫn phải dùng cách dựng của điện thoại, còn nếu
+   cắt theo `md:` thì cột ảnh 46vw sẽ xẻ đôi cô dâu chú rể. */
+@custom-variant wide {
+  @media (min-width: 900px) and (min-aspect-ratio: 5/4) {
+    @slot;
+  }
+}
+
 @theme {
-  /* ══ Bảng màu "Hoàng hôn" ══
-     Rút từ chính ảnh cưới: vàng đồng và olive sẫm của ảnh hero lúc hoàng hôn,
-     nền ngà ấm của bộ studio. Không có màu nào không xuất hiện trong ảnh. */
+  /* ══ Bảng màu ══
+     Rút thẳng từ ảnh cưới. Trời hoàng hôn trong ảnh mở đầu đo được là
+     rgb(253,234,196); nền giấy của trang được đặt sát giá trị sáng đó, nên
+     mép trên tấm ảnh tan vào trang thay vì dán lên trang. Cả bảng chỉ có
+     năm giá trị: mực, giấy, da bò, đồng, và một sắc tối duy nhất. */
 
-  --color-background: #f7f3ea;   /* ngà ấm — nền chính */
-  --color-sand: #efe6d6;         /* cát nhạt — nền section xen kẽ */
-  --color-foreground: #2e2c24;   /* olive đen — chữ chính (12.6:1) */
-  --color-muted-foreground: #6b6455; /* chữ phụ (5.3:1) */
+  --color-background: #f5f0e4;       /* giấy ngà ấm — nền chính */
+  --color-sand: #ebe3d1;             /* giấy da bò — nền xen kẽ */
+  --color-foreground: #23211a;       /* mực olive — chữ chính (14.2:1) */
+  --color-muted-foreground: #6a6354; /* chữ phụ (5.3:1) */
 
-  --color-primary: #8a6b3c;      /* vàng đồng đậm — CHỮ tiêu đề (4.46:1) */
-  --color-primary-foreground: #fdfbf7;
-  --color-gold: #b08d57;         /* vàng đồng sáng — CHỈ cho kẻ/hoa văn,
-                                    2.79:1 nên không bao giờ dùng làm chữ */
+  --color-primary: #7f6234;          /* đồng sẫm — CHỮ nhấn (5.1:1) */
+  --color-primary-foreground: #f5f0e4;
+  --color-gold: #a98a53;             /* đồng sáng — CHỈ cho kẻ và dấu (2.8:1) */
 
-  --color-deep: #33322a;         /* olive sẫm — nền bìa thiệp & section RSVP */
-  --color-deep-foreground: #f7f3ea;
+  --color-deep: #22221b;             /* olive sẫm — bìa thiệp & đoạn kết */
+  --color-deep-foreground: #f0e9da;
 
-  --color-border: #e2d9c8;       /* kẻ tóc */
-  --color-secondary: #efe6d6;
-  --color-secondary-foreground: #2e2c24;
-  --color-muted: #ece5da;
-  --color-accent: #efe6d6;
+  --color-border: #ddd3bf;           /* kẻ tóc */
+  --color-secondary: #ebe3d1;
+  --color-secondary-foreground: #23211a;
+  --color-muted: #e7dfcd;
+  --color-accent: #ebe3d1;
 
   /* ══ Chữ ══ */
   --font-serif: "Fraunces", "Playfair Display", Georgia, serif;
   --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
+
+  --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: 5rem;
+    scroll-padding-top: 4.5rem;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
     font-family: var(--font-sans);
+    font-weight: 300;
     -webkit-font-smoothing: antialiased;
-  }
-
-  /* Fraunces là font biến thiên: SOFT làm mềm đầu nét, WONK bật bộ chữ
-     "lệch chuẩn" có duyên hơn. Đây là thứ Playfair không làm được. */
-  .font-serif {
-    font-variation-settings: "SOFT" 40, "WONK" 1, "opsz" 100;
-    letter-spacing: -0.01em;
+    text-rendering: optimizeLegibility;
   }
 
   /* Dấu tiếng Việt chồng tầng (ắ, ộ, ữ) cao hơn chữ hoa nhiều, nên tiêu đề
      cần nhiều leading hơn mặc định thì mới không bị chật. */
   h1, h2, h3 {
-    line-height: 1.18;
+    line-height: 1.14;
+    text-wrap: balance;
   }
 
   ::selection {
-    background-color: var(--color-sand);
-    color: var(--color-foreground);
+    background-color: var(--color-gold);
+    color: var(--color-background);
+  }
+
+  :focus-visible {
+    outline: 1px solid var(--color-primary);
+    outline-offset: 3px;
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   HỆ CHỮ
+   Bảy vai trò, không hơn. Mỗi vai một class - không đặt cỡ chữ rời rạc ở
+   từng component nữa, vì đó là cách một trang mất dần trật tự.
+   Fraunces là font biến thiên: opsz đổi hẳn hình dáng chữ (bản 144 mảnh và
+   sắc như chữ tiêu đề tạp chí, bản 9 dày và tròn như chữ chú thích), SOFT
+   làm mềm đầu nét, WONK bật bộ chữ nghiêng "lệch chuẩn" có duyên hơn.
+   ═════════════════════════════════════════════════════════════════════════ */
 @layer utilities {
-  /* ══ Chuyển động ══
-     Một đường cong duy nhất dùng cho mọi thứ. Nó ra rất nhanh rồi giảm tốc
-     rất dài — đây là thứ tạo ra cảm giác "mượt" của giao diện Apple, chứ
-     không phải ease-in-out mặc định. */
+  /* Tên cô dâu chú rể, ngày cưới cỡ lớn. Mảnh, siết chặt, dùng như đồ hoạ. */
+  .t-display {
+    font-family: var(--font-serif);
+    font-variation-settings: "SOFT" 20, "WONK" 0, "opsz" 144;
+    font-weight: 300;
+    line-height: 0.98;
+    letter-spacing: -0.035em;
+  }
 
+  /* Tên chương */
+  .t-head {
+    font-family: var(--font-serif);
+    font-variation-settings: "SOFT" 40, "WONK" 0, "opsz" 96;
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+  }
+
+  /* Câu cảm xúc, lời dẫn */
+  .t-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-variation-settings: "SOFT" 60, "WONK" 1, "opsz" 60;
+    font-weight: 300;
+    line-height: 1.42;
+    letter-spacing: -0.005em;
+  }
+
+  /* Nhãn nhỏ chữ hoa, giãn rất rộng - thứ giữ cả trang có vẻ "in ấn" */
+  .t-eyebrow {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.625rem;
+    line-height: 1.6;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    text-indent: 0.42em; /* bù khoảng giãn thừa ở cuối để khối vẫn canh đúng */
+  }
+
+  /* Chữ số La Mã mở chương. Dùng chữ serif và giãn vừa phải - đặt trong
+     .t-eyebrow (giãn 0.42em) thì "III" đọc ra thành ba nét sổ rời nhau. */
+  .t-roman {
+    font-family: var(--font-serif);
+    font-variation-settings: "SOFT" 20, "WONK" 0, "opsz" 24;
+    font-weight: 400;
+    font-size: 0.75rem;
+    line-height: 1;
+    letter-spacing: 0.22em;
+    text-indent: 0.22em;
+  }
+
+  .t-eyebrow-lg {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 0.6875rem;
+    line-height: 1.6;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    text-indent: 0.34em;
+  }
+
+  /* Đoạn văn. Chiều rộng cột được khoá theo ch để dòng không bao giờ dài quá. */
+  .t-body {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.9375rem;
+    line-height: 1.9;
+    letter-spacing: 0.004em;
+  }
+  @media (min-width: 768px) {
+    .t-body { font-size: 1rem; }
+  }
+
+  .t-caption {
+    font-family: var(--font-sans);
+    font-weight: 300;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+    letter-spacing: 0.02em;
+  }
+
+  /* Chữ số: ngày cưới, đếm ngược, giờ trong chương trình */
+  .t-num {
+    font-family: var(--font-serif);
+    font-variation-settings: "SOFT" 40, "WONK" 0, "opsz" 144;
+    font-weight: 300;
+    font-variant-numeric: tabular-nums lining-nums;
+    line-height: 0.86;
+    letter-spacing: -0.03em;
+  }
+
+  .measure      { max-width: 36ch; }
+  .measure-wide { max-width: 52ch; }
+
+  /* ── Nhịp dọc ──────────────────────────────────────────────────────────
+     Ba nhịp, không phải một. Trang nào cũng py-24 thì mắt không còn biết
+     đâu là cao trào, đâu là quãng nghỉ. */
+  .sec    { padding-block: clamp(5rem, 11vw, 8.5rem); }
+  .sec-sm { padding-block: clamp(3.5rem, 7vw, 5.25rem); }
+  .sec-lg { padding-block: clamp(6.5rem, 15vw, 11.5rem); }
+  .gutter { padding-inline: clamp(1.5rem, 5vw, 4rem); }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CHUYỂN ĐỘNG
+   Một đường cong duy nhất cho mọi thứ: ra rất nhanh rồi giảm tốc rất dài.
+   Không nảy, không xoay, không trôi lơ lửng. Chuyển động chỉ được phép làm
+   một việc - đưa mắt người đọc tới đúng chỗ, rồi biến mất.
+   ═════════════════════════════════════════════════════════════════════════ */
+@layer utilities {
   .reveal,
   .reveal-img {
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    transition-timing-function: var(--ease);
+    transition-timing-function: var(--ease-editorial);
     transition-delay: var(--reveal-delay, 0ms);
     will-change: opacity, transform;
   }
 
-  /* Chữ: trồi lên kèm nét mờ tan dần */
   .reveal {
     opacity: 0;
-    transform: translate3d(0, 28px, 0);
-    filter: blur(6px);
+    transform: translate3d(0, 22px, 0);
+    filter: blur(4px);
     transition-property: opacity, transform, filter;
-    transition-duration: 1.1s;
+    transition-duration: 1.05s;
   }
   .reveal.is-visible {
     opacity: 1;
@@ -89,10 +215,9 @@
     filter: blur(0);
   }
 
-  /* Ảnh: nở nhẹ ra thay vì trồi lên — ảnh không nên "nhảy" */
   .reveal-img {
     opacity: 0;
-    transform: scale(1.06);
+    transform: scale(1.05);
     transition-property: opacity, transform;
     transition-duration: 1.4s;
   }
@@ -101,22 +226,18 @@
     transform: none;
   }
 
-  /* Ảnh tràn viền có hiệu ứng trôi chậm hơn trang — bọc ngoài phải overflow-hidden */
-  .parallax-img {
-    will-change: transform;
-  }
+  .parallax-img { will-change: transform; }
 
-  /* ══ Nhóm hiện dần theo tầng ══
+  /* ── Nhóm hiện dần theo tầng ──
      Một observer duy nhất cho cả nhóm; các phần tử con so le nhau bằng
      transition-delay đặt sẵn. Quan trọng với điện thoại: gắn observer cho
      từng dòng chữ sẽ tạo ra hàng chục observer, còn cách này chỉ tốn một. */
   .reveal-group .reveal-item {
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
     opacity: 0;
-    transform: translate3d(0, 18px, 0);
+    transform: translate3d(0, 15px, 0);
     transition:
-      opacity 0.85s var(--ease),
-      transform 0.85s var(--ease);
+      opacity 0.9s var(--ease-editorial),
+      transform 0.9s var(--ease-editorial);
     transition-delay: var(--i-delay, 0ms);
   }
   .reveal-group.is-visible .reveal-item {
@@ -124,22 +245,21 @@
     transform: none;
   }
 
-  /* ══ Ảnh lộ dần từ dưới lên ══
+  /* ── Ảnh lộ dần từ dưới lên ──
      Khung mở ra bằng clip-path trong khi ảnh bên trong nhả zoom - hai lớp
      chuyển động ngược chiều nhau tạo cảm giác ảnh "trồi" ra khỏi trang.
-     clip-path và transform đều chạy trên GPU nên vẫn mượt trên điện thoại. */
-  /* ⚠️ clip-path nằm trên THẺ ẢNH, không nằm trên khung ngoài.
-     IntersectionObserver tính vùng giao sau khi đã cắt theo clip-path, nên nếu
-     đặt clip-path: inset(100%) lên đúng phần tử đang theo dõi thì vùng giao
-     luôn bằng 0, observer không bao giờ báo "đã vào tầm nhìn", và ảnh tàng
-     hình vĩnh viễn. Khung ngoài phải sạch để còn quan sát được. */
+
+     ⚠️ clip-path nằm trên THẺ ẢNH, không nằm trên khung ngoài.
+     IntersectionObserver tính vùng giao SAU khi đã cắt theo clip-path, nên
+     nếu đặt clip-path: inset(100%) lên đúng phần tử đang theo dõi thì vùng
+     giao luôn bằng 0, observer không bao giờ báo "đã vào tầm nhìn", và ảnh
+     tàng hình vĩnh viễn. Khung ngoài phải sạch để còn quan sát được. */
   .reveal-mask img {
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
     clip-path: inset(100% 0 0 0);
-    transform: scale(1.14);
+    transform: scale(1.12);
     transition:
-      clip-path 1.2s var(--ease),
-      transform 1.6s var(--ease);
+      clip-path 1.25s var(--ease-editorial),
+      transform 1.7s var(--ease-editorial);
     transition-delay: var(--reveal-delay, 0ms);
   }
   .reveal-mask.is-visible img {
@@ -147,110 +267,175 @@
     transform: none;
   }
 
-  /* ══ Chữ trên ảnh hero ══
-     Ảnh giữ nguyên, KHÔNG phủ gì lên cả. Thay vào đó chính chữ tự mang theo
-     quầng tối của nó: nhiều lớp bóng chồng nhau, lớp trong rất sát và đặc để
-     tách nét chữ khỏi nền, các lớp ngoài loang rộng và nhạt dần để không thấy
-     đường viền. Nhờ vậy chữ đọc được cả trên vùng trời sáng lẫn trên bóng hai
-     bàn tay, mà bức ảnh vẫn nguyên vẹn.
-
-     Dùng nâu gần đen (#1c1812) chứ không dùng đen tuyền, để quầng bóng nằm
-     trong cùng tông ấm với cả tấm thiệp. */
-  .hero-title {
-    text-shadow:
-      0 0 2px rgb(28 24 18 / 0.5),
-      0 1px 3px rgb(28 24 18 / 0.55),
-      0 3px 12px rgb(28 24 18 / 0.6),
-      0 8px 32px rgb(28 24 18 / 0.55),
-      0 18px 70px rgb(28 24 18 / 0.45);
+  /* Kẻ tóc tự vẽ ra từ mép trái */
+  .reveal-rule {
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 1.3s var(--ease-editorial);
+    transition-delay: var(--reveal-delay, 0ms);
   }
-  /* Chữ nhỏ cần quầng bóng KHÁC chữ lớn: nét mảnh nên ít "lõi" để bám, phải
-     dùng nhiều lớp rất sát và đặc để tạo thành một viền tối mỏng ôm lấy nét,
-     rồi mới loang rộng ra. Dùng đúng công thức của chữ lớn thì chữ nhỏ vẫn
-     chìm vì bóng loang quá xa nét. */
-  .hero-sub {
-    text-shadow:
-      0 0 1px rgb(28 24 18 / 0.9),
-      0 0 2px rgb(28 24 18 / 0.8),
-      0 0 4px rgb(28 24 18 / 0.7),
-      0 1px 3px rgb(28 24 18 / 0.75),
-      0 2px 10px rgb(28 24 18 / 0.6),
-      0 6px 26px rgb(28 24 18 / 0.5);
-  }
-
-  /* ══ Giữ để xem kỹ ══
-     Ảnh nhấc lên và phóng nhẹ khi giữ ngón tay, như khi cầm một tấm ảnh in
-     lên xem. Lớp ảnh bên trong phóng nhiều hơn khung một chút, tạo chiều sâu. */
-  .photo-card {
-    --ease: cubic-bezier(0.16, 1, 0.3, 1);
-    transition:
-      transform 0.5s var(--ease),
-      box-shadow 0.5s var(--ease);
-    /* chặn menu "lưu ảnh" khi giữ lâu trên di động */
-    -webkit-touch-callout: none;
-  }
-  .photo-card.is-held {
-    transform: scale(1.045);
-    box-shadow: 0 24px 55px -22px rgb(0 0 0 / 0.5);
-    z-index: 10;
-  }
-  .photo-card img {
-    transition: transform 0.6s var(--ease), filter 0.6s var(--ease);
-  }
-  .photo-card:hover img {
-    transform: scale(1.05);
-  }
-  /* đặt sau quy tắc :hover để lúc vừa rê vừa giữ thì "giữ" thắng */
-  .photo-card.is-held img {
-    transform: scale(1.12);
-    filter: saturate(1.06) contrast(1.03);
-  }
+  .reveal-rule.is-visible { transform: scaleX(1); }
 
   .fade-up {
-    animation: fadeUp 1.1s cubic-bezier(0.16, 1, 0.3, 1) both;
+    animation: fadeUp 1s var(--ease-editorial) both;
     animation-delay: var(--reveal-delay, 0ms);
   }
 
-  /* Ảnh hero nở ra rất chậm sau khi tải xong — khung hình "thở" thay vì đứng
-     im như một tấm ảnh dán. Chỉ chạy một lần, không lặp. */
-  .hero-zoom {
-    animation: heroZoom 2.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
+  /* Ảnh mở đầu nở ra rất chậm sau khi tải xong - khung hình "thở" thay vì
+     đứng im như một tấm ảnh dán. Chỉ chạy một lần, không lặp. */
+  .hero-zoom { animation: heroZoom 2.6s var(--ease-editorial) both; }
 
-  /* Kẻ tóc — thay cho viền card. Ngôn ngữ của thiệp in, không phải của app. */
-  .hairline {
-    border-color: var(--color-border);
-    border-width: 1px;
-  }
+  .breathe { animation: breathe 4s ease-in-out infinite; }
 
-  /* Chữ số ngày cưới cỡ lớn: mảnh, giãn, dùng như đồ hoạ */
-  .display-date {
-    font-family: var(--font-serif);
-    font-variation-settings: "SOFT" 60, "WONK" 0, "opsz" 144;
-    font-weight: 300;
-    line-height: 0.85;
-    letter-spacing: -0.03em;
+  /* Bìa thiệp tách đôi. Chậm và có chủ ý - mở một tấm thiệp, không phải mở
+     một cánh cửa. Để ở CSS chứ không ở class Tailwind để reduced-motion tắt
+     được nó. */
+  /* Đường cong đối xứng: đứng yên một nhịp, tách ra, rồi tắt dần rất dài.
+     Đường cong cũ dồn hết quãng đường vào nửa đầu nên mới hơn nửa giây là bìa
+     đã bay hết - trông như cánh cửa bật ra chứ không như một tấm thiệp mở. */
+  /* ⚠️ Phải nêu cả `translate` và `scale`, không chỉ `transform`.
+     Tailwind v4 sinh ra `translate: -100% 0` / `scale: 1.015` (thuộc tính
+     riêng) chứ không còn gộp vào `transform` như v3 nữa. Chỉ khai
+     `transition: transform` thì trình duyệt không có gì để nội suy, và bìa
+     thiệp nhảy phắt sang hai bên trong một khung hình thay vì trượt ra
+     trong 1,6 giây. */
+  .cover-panel {
+    transition:
+      translate 1.6s cubic-bezier(0.72, 0, 0.18, 1),
+      transform 1.6s cubic-bezier(0.72, 0, 0.18, 1),
+      opacity 1.6s ease-out;
   }
-
-  /* Số thứ tự chương, rất lớn và rất mờ, nằm sau tiêu đề chương */
-  .chapter-numeral {
-    font-family: var(--font-serif);
-    font-variation-settings: "SOFT" 80, "WONK" 0, "opsz" 144;
-    font-weight: 300;
-    line-height: 1;
-    color: var(--color-gold);
-    opacity: 0.22;
+  /* Mặt thiệp nhạt dần chậm hơn quãng trượt, để mắt còn kịp thấy tấm thiệp
+     tách làm đôi chứ không phải chỉ thấy nó biến mất. */
+  .cover-face {
+    transition:
+      opacity 1.15s ease-out,
+      scale 1.6s var(--ease-editorial),
+      transform 1.6s var(--ease-editorial);
   }
 }
 
+/* ═══════════════════════════════════════════════════════════════════════════
+   VẬT LIỆU
+   ═════════════════════════════════════════════════════════════════════════ */
+@layer utilities {
+  /* Chữ dập chìm trên giấy sáng: một vệt sáng mảnh phía dưới nét, một vệt
+     tối cực nhạt phía trên. Gần như không thấy, nhưng đủ để chữ có vẻ được
+     ép vào giấy chứ không phải in đè lên. */
+  .letterpress {
+    text-shadow:
+      0 1px 0 rgb(255 255 255 / 0.85),
+      0 -1px 0 rgb(35 33 26 / 0.07);
+  }
+
+  /* Cùng ý đó nhưng trên nền tối - dùng cho bìa thiệp */
+  .letterpress-dark {
+    text-shadow:
+      0 -1px 0 rgb(0 0 0 / 0.5),
+      0 1px 0 rgb(240 233 218 / 0.07);
+  }
+
+  /* Chữ sáng nằm trên vùng tối của ảnh. Quầng bóng rất tiết chế: ảnh đã đủ
+     tối ở đó rồi, đây chỉ là để chống trường hợp trình duyệt cắt ảnh khác đi. */
+  .on-photo {
+    text-shadow:
+      0 1px 2px rgb(16 14 10 / 0.5),
+      0 4px 18px rgb(16 14 10 / 0.38);
+  }
+
+  /* Giữ để xem kỹ: ảnh nhấc lên và phóng nhẹ khi giữ ngón tay, như khi cầm
+     một tấm ảnh in lên xem. */
+  .photo-card {
+    transition:
+      transform 0.55s var(--ease-editorial),
+      box-shadow 0.55s var(--ease-editorial);
+    -webkit-touch-callout: none; /* chặn menu "lưu ảnh" khi giữ lâu */
+  }
+  .photo-card.is-held {
+    transform: scale(1.035);
+    box-shadow: 0 30px 60px -28px rgb(35 33 26 / 0.55);
+    z-index: 10;
+  }
+  .photo-card img { transition: transform 0.8s var(--ease-editorial), filter 0.6s var(--ease-editorial); }
+  .photo-card:hover img { transform: scale(1.04); }
+  /* đặt sau :hover để lúc vừa rê vừa giữ thì "giữ" thắng */
+  .photo-card.is-held img { transform: scale(1.09); filter: saturate(1.05); }
+
+  /* Ô nhập của thiệp RSVP: một nét kẻ tóc, không hộp. Nét dày lên và sáng
+     lên khi con trỏ vào - giống viết lên một tấm thiệp có dòng kẻ sẵn. */
+  .ink-field {
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgb(240 233 218 / 0.28);
+    border-radius: 0;
+    padding: 0 0 0.65rem;
+    color: var(--color-deep-foreground);
+    font-family: var(--font-serif);
+    font-variation-settings: "SOFT" 40, "WONK" 0, "opsz" 40;
+    font-weight: 300;
+    font-size: 1.125rem;
+    outline: none;
+    transition: border-color 0.4s var(--ease-editorial);
+  }
+  .ink-field::placeholder {
+    color: rgb(240 233 218 / 0.42);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 300;
+  }
+  .ink-field:focus { border-bottom-color: var(--color-gold); }
+  .ink-field:-webkit-autofill,
+  .ink-field:-webkit-autofill:focus {
+    -webkit-text-fill-color: var(--color-deep-foreground);
+    -webkit-box-shadow: 0 0 0 1000px var(--color-deep) inset;
+    caret-color: var(--color-deep-foreground);
+  }
+  .ink-field--error { border-bottom-color: #c98b7a; }
+
+  /* Nút tăng giảm mặc định của ô số là giao diện của hệ điều hành, không phải
+     của tấm thiệp. Bỏ đi; khách gõ số, và trên điện thoại vẫn hiện bàn phím số. */
+  .ink-field[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+  .ink-field[type="number"]::-webkit-outer-spin-button,
+  .ink-field[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Nút gạch chân mảnh: nét kẻ chạy ra từ giữa khi rê chuột */
+  .rule-link {
+    position: relative;
+    display: inline-block;
+    padding-bottom: 0.35rem;
+  }
+  .rule-link::after {
+    content: "";
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    height: 1px;
+    background: currentColor;
+    opacity: 0;
+    transition: opacity 0.45s var(--ease-editorial);
+  }
+  .rule-link:hover::after,
+  .rule-link:focus-visible::after { opacity: 1; }
+  /* Nút đứng một mình cần cho thấy nó bấm được, nên giữ sẵn một nét rất mờ */
+  .rule-on::after { opacity: 0.32; }
+}
+
 @keyframes heroZoom {
-  from { scale: 1.08; }
+  from { scale: 1.07; }
   to   { scale: 1; }
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(2rem); }
+  from { opacity: 0; transform: translateY(1.25rem); }
   to   { opacity: 1; transform: none; }
+}
+
+@keyframes breathe {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.85; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -274,10 +459,12 @@
     transform: none;
     transition: none;
   }
+  .reveal-rule,
+  .reveal-rule.is-visible { transform: none; transition: none; }
   .photo-card,
-  .photo-card img {
-    transition: none;
-  }
+  .photo-card img { transition: none; }
+  .cover-panel, .cover-face { transition-duration: 0.3s; }
   .fade-up,
-  .hero-zoom { animation: none; }
+  .hero-zoom,
+  .breathe { animation: none; }
 }

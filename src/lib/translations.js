@@ -6,6 +6,7 @@
 export const translations = {
   vi: {
     cover: {
+      ceremony: 'Thiệp mời lễ thành hôn',
       inviting: 'Trân trọng kính mời',
       open: 'Chạm để mở thiệp',
     },
@@ -14,7 +15,9 @@ export const translations = {
     },
     bands: ['Ngày vui sẽ trọn vẹn hơn nếu có bạn ở đó.'],
     nav: {
-      home: 'Trang chủ',
+      home: 'Về đầu trang',
+      menu: 'Mục lục',
+      close: 'Đóng',
       story: 'Chuyện chúng mình',
       details: 'Thông tin',
       gallery: 'Album',
@@ -59,6 +62,7 @@ export const translations = {
       when: 'Thời gian',
       time: 'Giờ đón khách',
       where: 'Địa điểm',
+      address: 'Địa chỉ',
       lunar: 'Ngày âm',
       directions: 'Chỉ đường',
       addToCalendar: 'Thêm vào lịch',
@@ -133,6 +137,7 @@ export const translations = {
 
   en: {
     cover: {
+      ceremony: 'The wedding of',
       inviting: 'You are warmly invited',
       open: 'Tap to open',
     },
@@ -141,7 +146,9 @@ export const translations = {
     },
     bands: ['The day will be complete with you there.'],
     nav: {
-      home: 'Home',
+      home: 'Back to top',
+      menu: 'Menu',
+      close: 'Close',
       story: 'Our Story',
       details: 'Details',
       gallery: 'Gallery',
@@ -186,6 +193,7 @@ export const translations = {
       when: 'When',
       time: 'Reception',
       where: 'Where',
+      address: 'Address',
       lunar: 'Lunar date',
       directions: 'Get Directions',
       addToCalendar: 'Add to Calendar',

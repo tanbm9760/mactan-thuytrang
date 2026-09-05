@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
-import { Music, Pause } from 'lucide-react'
 import { useLanguage } from '../lib/i18n'
 import { musicTrack } from '../lib/assets'
 
 /**
- * Nút bật/tắt nhạc nền. Trình duyệt chặn tự phát nhạc khi chưa có tương tác,
- * nên ta thử phát ngay ở lần chạm đầu tiên của khách và im lặng bỏ qua nếu bị chặn.
+ * Bật/tắt nhạc nền. Trình duyệt chặn tự phát nhạc khi chưa có tương tác, nên
+ * ta thử phát ngay ở lần chạm đầu tiên của khách và im lặng bỏ qua nếu bị chặn.
+ *
+ * Nút là hai nét kẻ dọc mảnh, không phải một cái icon nốt nhạc trong hộp tròn
+ * đổ bóng - nó phải nhỏ đến mức gần như không nhìn thấy.
  */
 export default function MusicToggle() {
   const { t } = useLanguage()
@@ -50,9 +52,20 @@ export default function MusicToggle() {
       <button
         onClick={toggle}
         aria-label={playing ? t('music.pause') : t('music.play')}
-        className="fixed bottom-5 right-5 z-40 cursor-pointer rounded-full border border-border bg-background/90 p-3 text-primary shadow-md backdrop-blur transition-colors hover:border-primary"
+        className="fixed right-3 bottom-3 z-40 flex h-11 w-11 cursor-pointer items-center justify-center gap-[3px] text-primary"
       >
-        {playing ? <Pause className="h-5 w-5" /> : <Music className="h-5 w-5" />}
+        <span
+          aria-hidden
+          className={`block w-px bg-current transition-all duration-500 ${playing ? 'h-3.5' : 'h-2'}`}
+        />
+        <span
+          aria-hidden
+          className={`block w-px bg-current transition-all duration-500 ${playing ? 'h-2' : 'h-3.5'}`}
+        />
+        <span
+          aria-hidden
+          className={`block w-px bg-current transition-all duration-500 ${playing ? 'h-3' : 'h-1.5'}`}
+        />
       </button>
     </>
   )

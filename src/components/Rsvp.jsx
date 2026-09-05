@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { AlertCircle } from 'lucide-react'
 import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { submitRsvp } from '../lib/rsvp'
 import { guestName, guestSide } from '../lib/guest'
 import { useReveal } from '../hooks/useReveal'
+import { RevealGroup } from './Reveal'
 
 /* Link đích danh (?guest=…&side=trai) điền sẵn giúp khách hai ô đầu tiên */
 const EMPTY_FORM = {
@@ -16,6 +16,15 @@ const EMPTY_FORM = {
   message: '',
 }
 
+/**
+ * Đoạn kết. Cả trang chuyển sang nền olive sẫm và ở nguyên đó cho tới hết -
+ * một cú tắt đèn duy nhất sau khi đã đi qua toàn bộ phần giấy sáng.
+ *
+ * Form nằm THẲNG trên nền tối, không nằm trong một cái thẻ trắng nổi lên
+ * giữa nền tối như trước. Mỗi ô nhập chỉ là một nét kẻ tóc, như dòng kẻ sẵn
+ * trên một tấm thiệp hồi âm; nút gửi là một nét viền mảnh chứ không phải một
+ * khối màu đặc.
+ */
 export default function Rsvp() {
   const { t } = useLanguage()
   const ref = useReveal()
@@ -65,145 +74,128 @@ export default function Rsvp() {
     }
   }
 
-  const inputClass = (field) =>
-    `w-full rounded-none border-0 border-b-2 bg-transparent px-0 pb-2 text-lg outline-none transition-colors focus:border-primary ${
-      errors[field] ? 'border-red-400' : 'border-border'
-    }`
-
   return (
-    <section id="rsvp" className="bg-deep px-6 py-24 text-deep-foreground md:py-28">
-      <div ref={ref} className="reveal mx-auto max-w-2xl">
-        <div className="mb-12 text-center">
-          <h2 className="mb-4 font-serif text-4xl md:text-5xl">{t('rsvp.title')}</h2>
-          <p className="font-serif text-lg italic text-deep-foreground/70">
+    <section id="rsvp" data-deep className="sec-lg gutter bg-deep text-deep-foreground">
+      <div ref={ref} className="reveal mx-auto max-w-xl">
+        <div className="text-center">
+          <span aria-hidden className="mx-auto block h-px w-10 bg-gold" />
+          <h2 className="t-display mt-9 text-[clamp(2.25rem,8vw,4rem)] text-deep-foreground">
+            {t('rsvp.title')}
+          </h2>
+          <p className="t-caption mt-6 text-deep-foreground/65">
             {t('rsvp.subtitle')(config.rsvp.deadline)}
           </p>
         </div>
 
         {status === 'success' ? (
-          <div className="fade-up border border-deep-foreground/20 bg-deep-foreground/5 p-12 text-center backdrop-blur-sm">
-            <h3 className="mb-4 font-serif text-2xl">{t('rsvp.successTitle')}</h3>
-            <p className="text-deep-foreground/70">{t('rsvp.successDesc')}</p>
+          <div className="fade-up mt-20 text-center">
+            <p className="t-quote text-[clamp(1.5rem,4.5vw,2.25rem)] text-deep-foreground">
+              {t('rsvp.successTitle')}
+            </p>
+            <p className="t-caption mx-auto mt-6 max-w-sm text-pretty text-deep-foreground/60">
+              {t('rsvp.successDesc')}
+            </p>
             <button
               onClick={() => {
                 setForm(EMPTY_FORM)
                 setStatus('idle')
               }}
-              className="mt-8 cursor-pointer border border-deep-foreground px-6 py-3 text-xs uppercase tracking-widest transition-colors hover:bg-deep-foreground hover:text-deep"
+              className="t-eyebrow rule-link rule-on mt-10 cursor-pointer text-deep-foreground/70 transition-colors duration-500 hover:text-deep-foreground"
             >
               {t('rsvp.again')}
             </button>
           </div>
         ) : (
-          <form
-            onSubmit={onSubmit}
-            noValidate
-            className="space-y-8 border border-border bg-background p-8 text-foreground md:p-12"
-          >
-            <Field label={t('rsvp.nameLabel')} error={errors.name} htmlFor="rsvp-name">
-              <input
-                id="rsvp-name"
-                type="text"
-                value={form.name}
-                onChange={set('name')}
-                placeholder={t('rsvp.namePlaceholder')}
-                autoComplete="name"
-                className={inputClass('name')}
-              />
-            </Field>
+          <form onSubmit={onSubmit} noValidate className="mt-16 md:mt-20">
+            <RevealGroup step={90} className="space-y-12">
+              <Field label={t('rsvp.nameLabel')} error={errors.name} htmlFor="rsvp-name">
+                <input
+                  id="rsvp-name"
+                  type="text"
+                  value={form.name}
+                  onChange={set('name')}
+                  placeholder={t('rsvp.namePlaceholder')}
+                  autoComplete="name"
+                  className={`ink-field w-full ${errors.name ? 'ink-field--error' : ''}`}
+                />
+              </Field>
 
-            <Field label={t('rsvp.phoneLabel')} error={errors.phone} htmlFor="rsvp-phone">
-              <input
-                id="rsvp-phone"
-                type="tel"
-                inputMode="tel"
-                value={form.phone}
-                onChange={set('phone')}
-                placeholder={t('rsvp.phonePlaceholder')}
-                autoComplete="tel"
-                className={inputClass('phone')}
-              />
-            </Field>
+              <Field label={t('rsvp.phoneLabel')} error={errors.phone} htmlFor="rsvp-phone">
+                <input
+                  id="rsvp-phone"
+                  type="tel"
+                  inputMode="tel"
+                  value={form.phone}
+                  onChange={set('phone')}
+                  placeholder={t('rsvp.phonePlaceholder')}
+                  autoComplete="tel"
+                  className={`ink-field w-full ${errors.phone ? 'ink-field--error' : ''}`}
+                />
+              </Field>
 
-            <Field label={t('rsvp.sideLabel')}>
-              <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:gap-6">
-                <Radio
+              <Field label={t('rsvp.sideLabel')}>
+                <Choices
                   name="side"
-                  value="groom"
-                  checked={form.side === 'groom'}
+                  value={form.side}
                   onChange={set('side')}
-                  label={t('rsvp.sideGroom')}
+                  options={[
+                    { value: 'groom', label: t('rsvp.sideGroom') },
+                    { value: 'bride', label: t('rsvp.sideBride') },
+                  ]}
                 />
-                <Radio
-                  name="side"
-                  value="bride"
-                  checked={form.side === 'bride'}
-                  onChange={set('side')}
-                  label={t('rsvp.sideBride')}
-                />
-              </div>
-            </Field>
+              </Field>
 
-            <Field label={t('rsvp.attendingLabel')}>
-              <div className="flex flex-col gap-3 pt-2 sm:flex-row sm:gap-6">
-                <Radio
+              <Field label={t('rsvp.attendingLabel')}>
+                <Choices
                   name="attending"
-                  value="yes"
-                  checked={form.attending === 'yes'}
+                  value={form.attending}
                   onChange={set('attending')}
-                  label={t('rsvp.accept')}
+                  options={[
+                    { value: 'yes', label: t('rsvp.accept') },
+                    { value: 'no', label: t('rsvp.decline') },
+                  ]}
                 />
-                <Radio
-                  name="attending"
-                  value="no"
-                  checked={form.attending === 'no'}
-                  onChange={set('attending')}
-                  label={t('rsvp.decline')}
+              </Field>
+
+              {form.attending === 'yes' && (
+                <div className="fade-up">
+                  <Field label={t('rsvp.guestsLabel')} htmlFor="rsvp-guests">
+                    <input
+                      id="rsvp-guests"
+                      type="number"
+                      min="1"
+                      max={config.rsvp.maxGuests}
+                      value={form.guests}
+                      onChange={set('guests')}
+                      className="ink-field w-20"
+                    />
+                  </Field>
+                </div>
+              )}
+
+              <Field label={t('rsvp.messageLabel')} htmlFor="rsvp-message">
+                <textarea
+                  id="rsvp-message"
+                  rows={2}
+                  value={form.message}
+                  onChange={set('message')}
+                  placeholder={t('rsvp.messagePlaceholder')}
+                  className="ink-field w-full resize-none"
                 />
-              </div>
-            </Field>
-
-            {form.attending === 'yes' && (
-              <div className="fade-up">
-                <Field label={t('rsvp.guestsLabel')} htmlFor="rsvp-guests">
-                  <input
-                    id="rsvp-guests"
-                    type="number"
-                    min="1"
-                    max={config.rsvp.maxGuests}
-                    value={form.guests}
-                    onChange={set('guests')}
-                    className={`${inputClass('guests')} w-24`}
-                  />
-                </Field>
-              </div>
-            )}
-
-            <Field label={t('rsvp.messageLabel')} htmlFor="rsvp-message">
-              <textarea
-                id="rsvp-message"
-                rows={3}
-                value={form.message}
-                onChange={set('message')}
-                placeholder={t('rsvp.messagePlaceholder')}
-                className="w-full resize-none rounded-md border-2 border-border bg-transparent p-3 outline-none transition-colors focus:border-primary"
-              />
-            </Field>
+              </Field>
+            </RevealGroup>
 
             {status === 'error' && (
-              <div className="flex items-start gap-3 rounded-md border border-red-200 bg-red-50 p-4 text-sm text-red-700">
-                <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" />
-                <div>
-                  <p className="font-medium">{t('rsvp.errorTitle')}</p>
-                  <p>{errorText}</p>
-                </div>
+              <div className="mt-12 border-l border-[#c98b7a] pl-5">
+                <p className="t-eyebrow text-[#e0a996]">{t('rsvp.errorTitle')}</p>
+                <p className="t-caption mt-2 text-deep-foreground/70">{errorText}</p>
               </div>
             )}
 
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="w-full cursor-pointer bg-deep py-4 text-sm uppercase tracking-[0.2em] text-deep-foreground transition-opacity hover:opacity-90 disabled:cursor-default disabled:opacity-60"
+              className="t-eyebrow mt-16 w-full cursor-pointer border border-deep-foreground/40 py-5 text-deep-foreground transition-colors duration-500 hover:border-deep-foreground hover:bg-deep-foreground hover:text-deep disabled:cursor-default disabled:opacity-45 md:mt-20"
             >
               {status === 'sending' ? t('rsvp.submitting') : t('rsvp.submit')}
             </button>
@@ -222,27 +214,61 @@ function Field({ label, error, htmlFor, children }) {
   const Tag = htmlFor ? 'label' : 'div'
   return (
     <Tag className="block" {...(htmlFor ? { htmlFor } : { role: 'group', 'aria-label': label })}>
-      <span className="mb-2 block text-xs uppercase tracking-widest text-muted-foreground">
-        {label}
-      </span>
+      <span className="t-eyebrow mb-4 block text-deep-foreground/60">{label}</span>
       {children}
-      {error && <span className="mt-2 block text-sm text-red-500">{error}</span>}
+      {error && <span className="t-caption mt-3 block text-[#e0a996]">{error}</span>}
     </Tag>
   )
 }
 
-function Radio({ name, value, checked, onChange, label }) {
+/**
+ * Lựa chọn dạng radio, vẽ lại hoàn toàn: một vòng tròn kẻ tóc, tâm đặc dần
+ * khi được chọn. Ô radio thật vẫn nằm đó nhưng trong suốt và phủ kín vùng
+ * bấm - nhờ vậy bàn phím, trình đọc màn hình và việc gửi form vẫn nguyên vẹn.
+ */
+function Choices({ name, value, onChange, options }) {
   return (
-    <label className="flex cursor-pointer items-center gap-3">
-      <input
-        type="radio"
-        name={name}
-        value={value}
-        checked={checked}
-        onChange={onChange}
-        className="h-4 w-4 accent-primary"
-      />
-      <span className="font-serif text-lg">{label}</span>
-    </label>
+    <div className="flex flex-col gap-5 sm:flex-row sm:gap-10">
+      {options.map((option) => {
+        const checked = value === option.value
+        return (
+          <label
+            key={option.value}
+            className="group relative flex min-h-11 cursor-pointer items-center gap-3.5"
+          >
+            <input
+              type="radio"
+              name={name}
+              value={option.value}
+              checked={checked}
+              onChange={onChange}
+              /* Ô radio thật nằm trong suốt phủ kín vùng bấm. `peer` để vòng
+                 tròn vẽ tay bên dưới còn sáng lên được khi đi bằng bàn phím -
+                 outline mặc định sẽ tàng hình theo chính ô này. */
+              className="peer absolute inset-0 h-full w-full cursor-pointer opacity-0"
+            />
+            <span
+              aria-hidden
+              className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded-full border transition-colors duration-500 peer-focus-visible:ring-1 peer-focus-visible:ring-gold peer-focus-visible:ring-offset-4 peer-focus-visible:ring-offset-deep ${
+                checked ? 'border-gold' : 'border-deep-foreground/30'
+              }`}
+            >
+              <span
+                className={`h-1.5 w-1.5 rounded-full bg-gold transition-transform duration-500 ${
+                  checked ? 'scale-100' : 'scale-0'
+                }`}
+              />
+            </span>
+            <span
+              className={`font-serif text-[1.0625rem] font-light transition-colors duration-500 ${
+                checked ? 'text-deep-foreground' : 'text-deep-foreground/65'
+              }`}
+            >
+              {option.label}
+            </span>
+          </label>
+        )
+      })}
+    </div>
   )
 }

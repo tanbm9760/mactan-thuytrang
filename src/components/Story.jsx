@@ -2,61 +2,71 @@ import { useLanguage } from '../lib/i18n'
 import { coupleNames } from '../config'
 import { storyImage } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
-import { RevealGroup, SplitWords } from './Reveal'
-import Florals from './Florals'
+import { RevealGroup } from './Reveal'
+import SectionMark from './SectionMark'
 
 /**
- * Chuyện tình gói gọn trong một khối: một tấm ảnh khung vòm bên trái, lời kể
- * bên phải. Trên điện thoại thì ảnh nằm trên, chữ nằm dưới.
+ * Trang đôi của một quyển tạp chí, không phải một section "ảnh | chữ".
+ *
+ * Ba thứ làm nên điều đó:
+ *  1. Ảnh chạy tràn ra khỏi mép trái màn hình, không nằm gọn trong container.
+ *  2. Cột chữ hẹp (34 ký tự) và bắt đầu THẤP hơn đỉnh ảnh - hai khối lệch
+ *     nhau theo chiều dọc thay vì cùng bắt đầu ở một đường ngang.
+ *  3. Tiêu đề chồng nhẹ lên chữ số chương cỡ lớn phía sau nó.
+ *
+ * Dưới 1024px thì xếp dọc: ảnh tràn hết bề ngang rồi mới tới chữ - đúng cách
+ * một trang tạp chí xử lý khổ hẹp. Chia đôi cột sớm hơn (từ 768px) thì tấm ảnh
+ * co lại còn hơn 300px và chìm nghỉm bên cạnh một cột chữ dài gấp ba nó.
  */
 export default function Story() {
   const { t } = useLanguage()
-  const imageRef = useReveal({ threshold: 0.1 })
+  const imageRef = useReveal({ threshold: 0.08 })
+  const closingRef = useReveal({ threshold: 0.3 })
   const paragraphs = t('story.paragraphs') ?? []
 
   return (
-    <section id="story" className="relative overflow-hidden bg-background px-6 py-24 md:py-32">
-      <Florals preset="story" />
-      <div className="relative mx-auto flex max-w-6xl flex-col items-stretch gap-12 md:flex-row md:gap-20">
-        <div className="relative w-full flex-1">
-          <div
+    <section id="story" className="sec-lg overflow-hidden bg-background">
+      <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-0">
+        {/* ── Ảnh, tràn ra mép trái ──────────────────────────────────────── */}
+        <div className="lg:col-span-6 lg:pt-[6vw]">
+          <figure
             ref={imageRef}
-            className="reveal-mask aspect-4/5 overflow-hidden rounded-t-full rounded-b-[18px] md:absolute md:inset-0 md:aspect-auto"
+            className="reveal-mask aspect-4/5 w-full overflow-hidden lg:aspect-3/4"
           >
             <img
               src={storyImage}
               alt={coupleNames}
               loading="lazy"
               decoding="async"
-              className="h-full w-full object-cover object-[50%_30%]"
+              className="h-full w-full object-cover object-[52%_26%]"
             />
-          </div>
-          {/* vệt màu trang trí phía sau ảnh */}
-          <div
-            aria-hidden
-            className="absolute -right-6 -bottom-6 -z-10 h-32 w-32 rounded-full bg-sand opacity-70 blur-2xl"
-          />
+          </figure>
         </div>
 
-        <div className="flex-1 space-y-6 text-center md:text-left">
-          <SplitWords
-            as="h2"
-            text={t('story.title')}
-            step={60}
-            className="block font-serif text-4xl text-primary md:text-5xl"
-          />
-          <p className="font-serif text-lg italic text-muted-foreground">{t('story.subtitle')}</p>
-          <div className="mx-auto h-px w-24 bg-gold/50 md:mx-0" />
+        {/* ── Cột chữ ────────────────────────────────────────────────────── */}
+        <div className="gutter lg:col-span-5 lg:col-start-8 lg:pr-[clamp(1.5rem,5vw,7rem)] lg:pl-0">
+          <SectionMark numeral="I" />
 
-          {/* Đoạn văn dài luôn canh trái cho dễ đọc, kể cả trên điện thoại */}
-          <RevealGroup step={110} className="space-y-4 text-left leading-[1.85] text-muted-foreground">
+          <h2 className="t-head mt-10 text-[clamp(2.1rem,6.5vw,3.5rem)] text-foreground">
+            {t('story.title')}
+          </h2>
+
+          <p className="t-quote mt-5 text-[clamp(1.05rem,2.4vw,1.35rem)] text-primary">
+            {t('story.subtitle')}
+          </p>
+
+          <RevealGroup step={90} className="t-body measure-wide mt-10 space-y-5 text-muted-foreground">
             {paragraphs.map((paragraph, i) => (
               <p key={i}>{paragraph}</p>
             ))}
-            <p className="pt-2 font-serif text-xl leading-snug text-primary italic md:text-2xl">
+          </RevealGroup>
+
+          <div ref={closingRef} className="reveal mt-12 md:mt-16">
+            <span aria-hidden className="mb-7 block h-px w-16 bg-gold/70" />
+            <p className="t-quote text-[clamp(1.3rem,3.2vw,1.85rem)] text-foreground">
               {t('story.closing')}
             </p>
-          </RevealGroup>
+          </div>
         </div>
       </div>
     </section>

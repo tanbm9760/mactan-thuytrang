@@ -5,13 +5,19 @@ import { guestName } from '../lib/guest'
 import Monogram from './Monogram'
 
 const SEEN_KEY = 'wedding-cover-seen'
+const OPEN_MS = 1650
+
+const pad = (n) => String(n).padStart(2, '0')
 
 /**
- * Bìa thiệp. Vào trang thấy một tấm bìa olive sẫm với monogram; chạm vào thì
- * bìa tách đôi trượt sang hai bên để lộ ảnh hero.
+ * Bìa thiệp - dựng như một tấm thiệp in thật chứ không phải màn hình chờ.
  *
- * Ngoài việc tạo nghi thức, nó còn che đúng khoảng thời gian ảnh hero đang tải
- * — khách không bao giờ thấy màn hình trống.
+ * Khung kẻ đôi mảnh, monogram dập chìm, chữ giãn rộng, một lớp vân giấy riêng
+ * (lớp vân của cả trang nằm dưới bìa nên không nhìn thấy). Chạm vào thì bìa
+ * tách đôi và trượt ra rất chậm - mở một tấm thiệp, không phải mở một cánh cửa.
+ *
+ * Ngoài việc tạo nghi thức, nó còn che đúng khoảng thời gian ảnh mở đầu đang
+ * tải - khách không bao giờ thấy màn hình trống.
  *
  * Chỉ hiện một lần mỗi phiên: cuộn lại trang giữa chừng không phải mở lại bìa.
  */
@@ -46,42 +52,58 @@ export default function Cover() {
     } catch {
       /* bỏ qua */
     }
-    setTimeout(() => setState('done'), 1100)
+    setTimeout(() => setState('done'), OPEN_MS)
   }
 
   if (state === 'hidden' || state === 'done') return null
 
   const opening = state === 'opening'
-  const dateStr = t('details.dateFormat')(config.weddingDate)
+  const date = config.weddingDate
 
-  /* Mỗi nửa bìa chứa cùng một nội dung rộng bằng cả màn hình, chỉ khác là bị
+  /* Mỗi nửa bìa chứa cùng một mặt thiệp rộng bằng cả màn hình, chỉ khác là bị
      cắt bởi khung của nửa đó — ghép lại thành một mặt bìa liền mạch. */
   const face = (align) => (
-    <div
-      className={`absolute inset-y-0 ${align} flex w-screen flex-col items-center justify-center px-8 text-center`}
-    >
-      <Monogram size={104} tone="light" className="mb-10" />
+    <div className={`absolute inset-y-0 ${align} w-screen`}>
+      {/* Khung kẻ đôi, thụt vào như đường bế của một tấm thiệp in */}
+      <div
+        aria-hidden
+        className="absolute inset-[18px] border border-[#f0e9da]/16 sm:inset-7 md:inset-10"
+      />
+      <div
+        aria-hidden
+        className="absolute inset-[23px] border border-[#f0e9da]/8 sm:inset-9 md:inset-[3.25rem]"
+      />
 
-      {guestName && (
-        <>
-          <p className="mb-2 text-[11px] uppercase tracking-[0.35em] text-[#f7f3ea]/55">
-            {t('cover.inviting')}
-          </p>
-          <p className="mb-8 font-serif text-2xl text-[#f7f3ea] md:text-3xl">{guestName}</p>
-        </>
-      )}
+      <div
+        className={`cover-face absolute inset-0 flex flex-col items-center justify-center px-10 text-center ${
+          opening ? 'scale-[1.015] opacity-0' : 'scale-100 opacity-100'
+        }`}
+      >
+        <p className="t-eyebrow text-[#f0e9da]/58">{t('cover.ceremony')}</p>
 
-      <div className="mb-8 h-px w-16 bg-[#b08d57]" />
+        <Monogram size={92} tone="light" ring className="my-9" />
 
-      <p className="font-serif text-3xl leading-tight text-[#f7f3ea] md:text-5xl">
-        {orderedNames[0]}
-      </p>
-      <p className="my-2 font-serif text-xl text-[#b08d57] md:text-2xl">&</p>
-      <p className="font-serif text-3xl leading-tight text-[#f7f3ea] md:text-5xl">
-        {orderedNames[1]}
-      </p>
+        <p className="t-display letterpress-dark text-[clamp(2rem,8.5vw,3.25rem)] text-[#f0e9da]">
+          {orderedNames[0]}
+        </p>
+        <p className="my-3 font-serif text-sm text-[#a98a53] italic">&amp;</p>
+        <p className="t-display letterpress-dark text-[clamp(2rem,8.5vw,3.25rem)] text-[#f0e9da]">
+          {orderedNames[1]}
+        </p>
 
-      <p className="mt-8 text-[11px] uppercase tracking-[0.3em] text-[#f7f3ea]/60">{dateStr}</p>
+        <div aria-hidden className="my-9 h-px w-14 bg-[#a98a53]/60" />
+
+        <p className="t-eyebrow-lg text-[#f0e9da]/60">
+          {pad(date.getDate())} · {pad(date.getMonth() + 1)} · {date.getFullYear()}
+        </p>
+
+        {guestName && (
+          <div className="mt-12">
+            <p className="t-eyebrow text-[#f0e9da]/52">{t('cover.inviting')}</p>
+            <p className="mt-3 font-serif text-xl font-light text-[#f0e9da]/90">{guestName}</p>
+          </div>
+        )}
+      </div>
     </div>
   )
 
@@ -100,32 +122,42 @@ export default function Cover() {
       aria-label={t('cover.open')}
     >
       <div
-        className={`relative h-full w-1/2 overflow-hidden bg-deep transition-transform duration-1000 ease-[cubic-bezier(0.76,0,0.24,1)] ${
-          opening ? '-translate-x-full' : 'translate-x-0'
+        className={`cover-panel relative h-full w-1/2 overflow-hidden bg-deep ${
+          opening ? '-translate-x-full opacity-90' : 'translate-x-0'
         }`}
       >
         {face('left-0')}
       </div>
       <div
-        className={`relative h-full w-1/2 overflow-hidden bg-deep transition-transform duration-1000 ease-[cubic-bezier(0.76,0,0.24,1)] ${
-          opening ? 'translate-x-full' : 'translate-x-0'
+        className={`cover-panel relative h-full w-1/2 overflow-hidden bg-deep ${
+          opening ? 'translate-x-full opacity-90' : 'translate-x-0'
         }`}
       >
         {face('right-0')}
       </div>
 
-      {/* Đường nối giữa hai nửa + lời mời chạm */}
+      {/* Vân giấy riêng cho bìa: lớp vân của cả trang nằm DƯỚI bìa nên không
+          nhìn thấy ở đây, mà một mặt olive phẳng lì thì lộ ngay là màn hình. */}
       <div
         aria-hidden
-        /* Mờ dần ở giữa để đường nối không cắt ngang qua tên và monogram,
-           nhưng vẫn thấy ở trên dưới nên khách đoán được bìa sẽ tách đôi. */
-        className={`pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-linear-to-b from-[#b08d57]/35 via-transparent to-[#b08d57]/35 transition-opacity duration-500 ${
+        className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
+        style={{
+          backgroundImage:
+            "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23c)'/%3E%3C/svg%3E\")",
+        }}
+      />
+
+      {/* Đường nối giữa hai nửa: mờ hẳn ở giữa để không cắt ngang qua tên và
+          monogram, nhưng vẫn thấy ở trên dưới nên khách đoán được bìa sẽ tách. */}
+      <div
+        aria-hidden
+        className={`pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-linear-to-b from-[#a98a53]/30 via-transparent to-[#a98a53]/30 transition-opacity duration-700 ${
           opening ? 'opacity-0' : 'opacity-100'
         }`}
       />
       <p
-        className={`pointer-events-none absolute bottom-12 left-1/2 -translate-x-1/2 animate-pulse text-[11px] uppercase tracking-[0.3em] text-[#f7f3ea]/60 transition-opacity duration-500 ${
-          opening ? 'opacity-0' : 'opacity-100'
+        className={`t-eyebrow pointer-events-none absolute bottom-14 left-1/2 -translate-x-1/2 text-[#f0e9da] transition-opacity duration-500 ${
+          opening ? 'opacity-0' : 'breathe'
         }`}
       >
         {t('cover.open')}

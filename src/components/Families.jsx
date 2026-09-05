@@ -1,13 +1,17 @@
 import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { useReveal } from '../hooks/useReveal'
-import { RevealGroup, SplitWords } from './Reveal'
+import { RevealGroup } from './Reveal'
 import LotusIcon from './LotusIcon'
-import Florals from './Florals'
+import SectionMark from './SectionMark'
 
 /**
- * Khối lời mời của hai gia đình, dựng theo đúng thứ tự trên tấm thiệp in:
- * tên cha mẹ hai bên → câu báo tin → tên đầy đủ cô dâu chú rể → lời cảm tạ.
+ * Lời mời của hai gia đình, dựng theo đúng thứ tự trên tấm thiệp in: tên cha
+ * mẹ hai bên → câu báo tin → tên đầy đủ cô dâu chú rể → lời cảm tạ.
+ *
+ * Đây là phần trang trọng nhất của thiệp, nên nó cũng là phần đối xứng nhất
+ * và tĩnh nhất. Không thẻ, không hộp bo góc, không hoa - chỉ có khoảng trắng
+ * rất rộng, vài nét kẻ tóc, và chữ được xếp cân đúng trục giữa.
  */
 export default function Families() {
   const { t } = useLanguage()
@@ -27,45 +31,49 @@ export default function Families() {
         ]
 
   return (
-    <section className="relative overflow-hidden bg-background px-6 py-24 md:py-32">
-      <Florals preset="families" />
+    <section className="sec-lg gutter bg-sand">
+      <div className="mx-auto max-w-3xl text-center">
+        <SectionMark numeral="II" align="center" />
 
-      <div className="relative mx-auto max-w-4xl text-center">
-        <SplitWords
-          as="h2"
-          text={t('families.title')}
-          step={60}
-          className="mb-14 block font-serif text-3xl text-primary md:text-4xl"
-        />
+        <h2 className="t-head mt-9 text-[clamp(1.6rem,4.4vw,2.5rem)] text-foreground">
+          {t('families.title')}
+        </h2>
 
         {/* ── Cha mẹ hai bên ─────────────────────────────────────────────── */}
         <RevealGroup
-          step={160}
-          className="grid gap-10 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-8"
+          step={170}
+          className="mt-16 grid gap-12 md:mt-20 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-10"
         >
           <FamilySide family={sides[0].family} />
-          <div aria-hidden className="mx-auto h-px w-20 bg-border md:h-28 md:w-px" />
+          <div aria-hidden className="mx-auto h-px w-16 bg-border md:h-24 md:w-px" />
           <FamilySide family={sides[1].family} />
         </RevealGroup>
 
         {/* ── Câu báo tin ────────────────────────────────────────────────── */}
         <p
           ref={announceRef}
-          className="reveal mx-auto mt-16 max-w-md text-[13px] tracking-wide text-muted-foreground uppercase"
+          className="reveal t-caption mx-auto mt-20 max-w-sm text-pretty text-muted-foreground md:mt-24"
         >
           {t('families.announce')}
         </p>
 
         {/* ── Tên đầy đủ cô dâu chú rể ───────────────────────────────────── */}
-        <RevealGroup as="div" step={150} className="mt-8">
-          <p className="font-serif text-3xl text-foreground md:text-5xl">{sides[0].person}</p>
-          <p className="my-2 font-serif text-xl text-gold md:my-3 md:text-2xl">&</p>
-          <p className="font-serif text-3xl text-foreground md:text-5xl">{sides[1].person}</p>
+        <RevealGroup as="div" step={160} className="mt-9">
+          <p className="t-display letterpress text-[clamp(1.85rem,7vw,3.25rem)] text-foreground">
+            {sides[0].person}
+          </p>
+          <p className="my-4 font-serif text-base text-primary italic md:my-5">&amp;</p>
+          <p className="t-display letterpress text-[clamp(1.85rem,7vw,3.25rem)] text-foreground">
+            {sides[1].person}
+          </p>
         </RevealGroup>
 
-        <p ref={honourRef} className="reveal mx-auto mt-14 max-w-xl text-pretty leading-relaxed text-muted-foreground">
-          {t('families.honour')}
-        </p>
+        <div ref={honourRef} className="reveal mt-20 md:mt-24">
+          <span aria-hidden className="mx-auto mb-8 block h-px w-10 bg-gold/70" />
+          <p className="t-quote mx-auto max-w-lg text-pretty text-[clamp(1.05rem,2.6vw,1.35rem)] text-muted-foreground">
+            {t('families.honour')}
+          </p>
+        </div>
       </div>
     </section>
   )
@@ -73,21 +81,21 @@ export default function Families() {
 
 function FamilySide({ family, className = '', ...rest }) {
   return (
-    <div className={`space-y-1.5 ${className}`} {...rest}>
-      <p className="mb-3 text-xs tracking-[0.25em] text-primary uppercase">{family.title}</p>
+    <div className={`space-y-2 ${className}`} {...rest}>
+      <p className="t-eyebrow mb-5 text-primary">{family.title}</p>
 
-      <p className="flex items-center justify-center gap-1.5 text-muted-foreground">
+      <p className="flex items-center justify-center gap-1.5 font-serif text-[1.0625rem] font-light text-foreground">
         <span>{family.father}</span>
         {family.fatherLotus && <LotusIcon className="shrink-0 text-gold" />}
       </p>
 
-      <p className="flex items-center justify-center gap-1.5 text-muted-foreground">
+      <p className="flex items-center justify-center gap-1.5 font-serif text-[1.0625rem] font-light text-foreground">
         <span>{family.mother}</span>
         {family.motherLotus && <LotusIcon className="shrink-0 text-gold" />}
       </p>
 
       {family.address && (
-        <p className="pt-1 font-serif text-sm italic text-muted-foreground/75">{family.address}</p>
+        <p className="t-caption pt-2 text-muted-foreground/80">{family.address}</p>
       )}
     </div>
   )

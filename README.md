@@ -108,24 +108,21 @@ Theo quy ước của thiệp cưới Việt Nam, cha mẹ đã khuất được
 cạnh tên. Bật bằng `fatherLotus: true` hoặc `motherLotus: true` trong
 `config.families`; bỏ dòng đó đi là hoa biến mất.
 
-### Hoa nhỏ rải rác
+### Vì sao thiệp không có hoa trang trí
 
-Hoa được vẽ hoàn toàn bằng SVG trong
-[`src/components/Florals.jsx`](src/components/Florals.jsx), không dùng file ảnh
-- nhờ vậy nét ở mọi độ phân giải và không thêm byte nào vào phần ảnh phải tải.
+Trước đây mỗi phần của trang có năm bảy bông hoa màu nước rải ở lề. Chúng đã
+được bỏ hẳn, và đây là một quyết định thiết kế chứ không phải thiếu sót.
 
-Mỗi phần của trang dùng một cách rải riêng, khai trong `PRESETS`. Mỗi bông là
-một dòng:
+Hoa rải là thứ khiến một tấm thiệp trông giống *mẫu thiệp làm sẵn* nhanh hơn
+bất kỳ chi tiết nào khác: nó lặp lại y hệt ở mọi phần, nó thêm năm sắc màu
+(hồng, lam, tím, cam, vàng) vào một bảng màu vốn chỉ có năm giá trị ngà - đồng -
+olive, và nó tranh chỗ với đúng hai thứ đáng được nhìn là **ảnh cưới** và
+**chữ**. Sang trọng đến từ chỗ trống, không đến từ số lượng hoạ tiết.
 
-```js
-{ top: 5, left: 8, size: 52, rot: -18, hue: 'vang', kind: 'a' }
-//  vị trí theo %      cỡ px  độ nghiêng   màu        dáng hoa
-```
-
-- `hue`: `vang` · `lam` · `tim` · `hong` · `cam`
-- `kind`: `a` (sáu cánh) · `b` (năm cánh) · `s` (nhành hoa)
-- Thêm `sm: true` nếu chỉ muốn hiện từ màn hình ≥640px - điện thoại khung hẹp,
-  rải nhiều sẽ thành rối.
+Thứ thay vào chỗ của hoa là khoảng trắng, kẻ tóc, và vài dấu rất nhỏ: chấm
+tròn đồng giữa `29` và `09`, hạt kim cương giữa hai bộ ảnh, bông sen cạnh tên
+cha mẹ đã khuất. Nếu về sau muốn thêm hoạ tiết, hãy thêm **một** thứ và đặt nó
+ở **một** chỗ duy nhất trong cả trang.
 
 ---
 
@@ -223,53 +220,92 @@ src/
 ├── hooks/useReveal.js        hiệu ứng hiện dần khi cuộn
 └── components/
     ├── Cover.jsx             bìa thiệp, chạm để mở
-    ├── Monogram.jsx          monogram SVG
-    ├── PaperGrain.jsx        lớp nhiễu giấy phủ toàn trang
-    ├── PhotoBand.jsx         dải ảnh tràn viền xen giữa các phần
+    ├── Monogram.jsx          dấu triện hai chữ viết tắt (SVG)
+    ├── SectionMark.jsx       dấu mở chương: số La Mã + kẻ tóc
+    ├── LotusIcon.jsx         bông sen cạnh tên cha mẹ đã khuất
+    ├── PaperGrain.jsx        lớp vân giấy phủ toàn trang
+    ├── PhotoBand.jsx         ảnh tràn viền, dùng như một lần lật trang
     ├── Schedule.jsx          chương trình trong ngày
     ├── Navbar.jsx            thanh điều hướng + đổi ngôn ngữ
     ├── Hero.jsx              màn hình đầu tiên
-    ├── Countdown.jsx         đồng hồ đếm ngược
+    ├── Countdown.jsx         đếm ngược
     ├── Families.jsx          lời mời + tên bố mẹ hai bên
-    ├── Story.jsx             chuyện tình yêu
-    ├── Details.jsx           ngày cỡ lớn, địa điểm, bản đồ, chương trình
-    ├── Gallery.jsx           album ảnh (carousel + xem phóng to)
+    ├── Story.jsx             chuyện tình yêu, dựng như trang đôi tạp chí
+    ├── Details.jsx           ngày cỡ lớn, chương trình, địa điểm, bản đồ
+    ├── Gallery.jsx           album ảnh (dải ảnh + xem phóng to)
+    ├── Lightbox.jsx          khung xem ảnh phóng to
     ├── Gift.jsx              mã QR mừng cưới
     ├── Rsvp.jsx              form xác nhận tham dự
     ├── Footer.jsx            liên hệ cô dâu chú rể
     └── MusicToggle.jsx       nút bật/tắt nhạc nền
 ```
 
-## 8. Đổi màu và font chữ
+### Nhịp của cả trang
 
-Bảng màu **"Hoàng hôn"** được rút từ chính ảnh cưới của bạn — vàng đồng và
-olive sẫm của ảnh hero lúc hoàng hôn, nền ngà ấm của bộ studio. Tất cả nằm
-trong khối `@theme` ở đầu [`src/index.css`](src/index.css):
+Thứ tự và **độ cao** các phần là quyết định thiết kế quan trọng nhất, và nó nằm
+ở [`src/App.jsx`](src/App.jsx). Không phần nào cao bằng phần nào:
 
-```css
---color-background: #f7f3ea;  /* ngà ấm — nền chính        */
---color-sand:       #efe6d6;  /* cát nhạt — section xen kẽ */
---color-foreground: #2e2c24;  /* olive đen — chữ  (12.6:1) */
---color-primary:    #8a6b3c;  /* vàng đồng đậm — CHỮ (4.5:1) */
---color-gold:       #b08d57;  /* vàng đồng sáng — CHỈ kẻ/hoa văn */
---color-deep:       #33322a;  /* olive sẫm — bìa & phần RSVP */
+```
+BÌA        nghi thức     tối, kín màn hình
+MỞ ĐẦU     cao trào      ảnh kín màn hình, chữ đặt vào khoảng trời trống
+ĐẾM NGƯỢC  nghỉ          rất thấp, rất thoáng
+CHUYỆN     thân mật      cao nhất trang, trang đôi lệch trục
+ẢNH        lật trang     lại kín màn hình
+GIA ĐÌNH   trang trọng   đối xứng tuyệt đối, nền giấy da bò
+NGÀY CƯỚI  đồ hoạ        chữ số cỡ lớn, rồi chương trình và địa điểm
+ALBUM      phóng khoáng  dải ảnh tràn ra hai mép màn hình
+MỪNG CƯỚI  nhỏ tiếng     thấp nhất trang
+XÁC NHẬN   đoạn kết      tắt đèn: nền olive sẫm cho tới hết trang
 ```
 
-> ⚠️ `--color-gold` chỉ đạt **2.79:1** trên nền ngà, dưới ngưỡng đọc được.
-> Dùng nó cho đường kẻ, chấm tròn, hoa văn — **đừng bao giờ dùng làm màu chữ**.
+## 8. Đổi màu và font chữ
+
+Bảng màu **"Hoàng hôn"** được rút từ chính ảnh cưới của bạn — đồng và olive
+sẫm của ảnh mở đầu lúc hoàng hôn, nền ngà ấm của bộ studio. Cả trang chỉ dùng
+năm giá trị, không hơn. Tất cả nằm trong khối `@theme` ở đầu
+[`src/index.css`](src/index.css):
+
+```css
+--color-background: #f5f0e4;  /* ngà ấm — nền chính         */
+--color-sand:       #ebe3d1;  /* giấy da bò — nền xen kẽ    */
+--color-foreground: #23211a;  /* mực olive — chữ   (14.2:1) */
+--color-primary:    #7f6234;  /* đồng sẫm — CHỮ nhấn (5.1:1) */
+--color-gold:       #a98a53;  /* đồng sáng — CHỈ kẻ và dấu  */
+--color-deep:       #22221b;  /* olive sẫm — bìa & đoạn kết */
+```
+
+Màu nền `#f5f0e4` không phải chọn cho đẹp mắt: vùng trời trong ảnh mở đầu đo
+được là `rgb(253,234,196)`, và màu giấy được đặt sát đúng độ sáng đó. Nhờ vậy
+mép trên tấm ảnh **tan vào trang** thay vì dán lên trang - đó là lý do chữ ở
+màn hình đầu tiên đọc được mà không cần phủ tối lên ảnh một chút nào.
+
+> ⚠️ `--color-gold` chỉ đạt **2.8:1** trên nền ngà, dưới ngưỡng đọc được.
+> Dùng nó cho đường kẻ, chấm tròn, dấu nhỏ — **đừng bao giờ dùng làm màu chữ**.
 > Chữ màu vàng phải dùng `--color-primary`.
 
 **Font:** tiêu đề dùng **Fraunces**, nội dung dùng **Be Vietnam Pro**.
 
-Fraunces là font biến thiên, có hai trục hiếm gặp — `SOFT` (độ mềm của đầu nét)
-và `WONK` (bộ chữ "lệch chuẩn", chính là chữ `&` uốn lượn trên bìa thiệp). Chỉnh
-trong `.font-serif` ở `src/index.css`:
+Fraunces là font biến thiên, có ba trục đáng chú ý — `opsz` (đổi hẳn hình dáng
+chữ: bản 144 mảnh và sắc như chữ tít tạp chí, bản 9 dày và tròn như chữ chú
+thích), `SOFT` (độ mềm của đầu nét) và `WONK` (bộ chữ "lệch chuẩn", chính là
+chữ `&` uốn lượn).
 
-```css
-font-variation-settings: "SOFT" 40, "WONK" 1, "opsz" 100;
-```
+Cỡ chữ **không** đặt rời rạc ở từng component nữa. `src/index.css` có bảy vai
+trò chữ, mỗi vai một class — sửa ở đó là cả trang đổi theo:
 
-Đặt `"WONK" 0` nếu muốn chữ nghiêm ngắn hơn, tăng `SOFT` lên 80 nếu muốn mềm hơn.
+| Class | Dùng cho |
+| --- | --- |
+| `.t-display` | tên cô dâu chú rể, ngày cưới cỡ lớn |
+| `.t-head` | tên chương |
+| `.t-quote` | câu cảm xúc, lời dẫn (serif nghiêng) |
+| `.t-eyebrow` / `.t-eyebrow-lg` | nhãn chữ hoa giãn rộng |
+| `.t-roman` | chữ số La Mã mở chương |
+| `.t-body` | đoạn văn |
+| `.t-caption` | chú thích |
+| `.t-num` | chữ số: ngày cưới, đếm ngược, giờ |
+
+Nhịp dọc cũng vậy: `.sec-sm` · `.sec` · `.sec-lg` cho ba độ cao khác nhau -
+đừng đặt cùng một `py-` cho mọi phần, vì đó là thứ làm cả trang phẳng lì.
 
 > Khi đổi sang font khác, **kiểm tra font đó có bộ ký tự tiếng Việt không**.
 > Rất nhiều font serif đẹp trên Google Fonts (Bodoni Moda, DM Serif Display,

@@ -14,26 +14,40 @@ import Rsvp from './components/Rsvp'
 import Footer from './components/Footer'
 import MusicToggle from './components/MusicToggle'
 
+/**
+ * Nhịp của cả tấm thiệp. Đây là quyết định thiết kế quan trọng nhất của file
+ * này - thứ tự và độ cao của các phần, chứ không phải nội dung từng phần:
+ *
+ *   BÌA        nghi thức     tối, kín màn hình
+ *   MỞ ĐẦU     cao trào      ảnh kín màn hình, chữ đặt vào khoảng trời trống
+ *   ĐẾM NGƯỢC  nghỉ          rất thấp, rất thoáng
+ *   CHUYỆN     thân mật      cao nhất trang, trang đôi lệch trục
+ *   ẢNH        lật trang     lại kín màn hình, không một chữ nào ngoài câu đề
+ *   GIA ĐÌNH   trang trọng   đối xứng tuyệt đối, nền giấy da bò
+ *   NGÀY CƯỚI  đồ hoạ        chữ số cỡ lớn, rồi tới chương trình và địa điểm
+ *   ALBUM      phóng khoáng  dải ảnh tràn ra hai mép màn hình
+ *   MỪNG CƯỚI  nhỏ tiếng     thấp nhất trang, gần như chỉ một dòng chữ
+ *   XÁC NHẬN   đoạn kết      tắt đèn: nền olive sẫm cho tới hết trang
+ *
+ * Nền các phần đổi qua lại giấy ngà ↔ giấy da bò, và hai lần bị cắt hẳn bằng
+ * một bức ảnh kín màn hình. Không phần nào cao bằng phần nào.
+ */
 export default function App() {
   const { sections } = config
-  const band = (i) => sections.photoBands && <PhotoBand index={i} />
 
   return (
     <div className="min-h-screen overflow-x-hidden bg-background">
       {sections.cover && <Cover />}
       <Navbar />
 
-      {/* Mạch kể: gặp gỡ → xa cách → tìm lại nhau → ngày vui → lời mời.
-          Ảnh mở chương đã đóng vai trò ngắt nhịp, nên chỉ còn một dải ảnh
-          tràn viền duy nhất, đặt ngay trước phần xác nhận tham dự. */}
       <main>
         <Hero />
         {sections.countdown && <Countdown />}
         {sections.story && <Story />}
+        {sections.photoBands && <PhotoBand index={0} />}
         {sections.families && config.families && <Families />}
         <Details />
         {sections.gallery && <Gallery />}
-        {band(0)}
         {sections.gift && <Gift />}
         {sections.rsvp && <Rsvp />}
       </main>

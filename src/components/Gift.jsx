@@ -1,11 +1,16 @@
 import { useEffect, useState } from 'react'
-import { Check, Copy, QrCode, X } from 'lucide-react'
 import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { qrBride, qrGroom } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
-import Florals from './Florals'
 
+/**
+ * Hộp mừng cưới, cố ý là phần nhỏ tiếng nhất của cả tấm thiệp.
+ *
+ * Không nút bấm có viền, không icon mã QR, không khối nào trông giống một
+ * component ngân hàng. Chỉ một câu chữ nhỏ và hai đường gạch chân - đúng cỡ
+ * một lời nhắn thêm ở cuối thiệp. Mã QR chỉ xuất hiện khi khách chủ động mở.
+ */
 export default function Gift() {
   const { t } = useLanguage()
   const ref = useReveal()
@@ -19,32 +24,38 @@ export default function Gift() {
   const active = sides.find((side) => side.key === openSide)
 
   return (
-    <section id="gift" className="relative overflow-hidden bg-sand px-6 py-24 md:py-28">
-      <Florals preset="gift" />
-      <div ref={ref} className="reveal relative mx-auto max-w-3xl text-center">
-        <h2 className="mb-8 font-serif text-4xl text-primary md:text-5xl">{t('gift.title')}</h2>
-        <p className="mb-12 leading-relaxed text-muted-foreground">{t('gift.desc')}</p>
+    <section id="gift" className="sec-sm gutter bg-background">
+      <div ref={ref} className="reveal mx-auto max-w-xl text-center">
+        <span aria-hidden className="mx-auto block h-px w-10 bg-gold/70" />
 
-        <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
+        <h2 className="t-quote mt-9 text-[clamp(1.25rem,3.4vw,1.6rem)] text-foreground">
+          {t('gift.title')}
+        </h2>
+
+        <p className="t-caption mx-auto mt-5 max-w-md text-pretty text-muted-foreground">
+          {t('gift.desc')}
+        </p>
+
+        <div className="mt-9 flex flex-col items-center justify-center gap-6 sm:flex-row sm:gap-12">
           {sides.map((side) => (
             <button
               key={side.key}
               onClick={() => setOpenSide(side.key)}
-              className="flex w-full cursor-pointer items-center justify-center gap-3 border border-primary/40 bg-background px-8 py-4 transition-colors duration-300 hover:bg-primary hover:text-primary-foreground sm:w-auto"
+              className="t-eyebrow rule-link rule-on cursor-pointer text-primary transition-colors duration-500 hover:text-foreground"
             >
-              <QrCode className="h-5 w-5" />
-              <span className="text-sm font-medium uppercase tracking-widest">{side.label}</span>
+              {side.label}
             </button>
           ))}
         </div>
       </div>
 
-      {active && <GiftModal side={active} onClose={() => setOpenSide(null)} />}
+      {active && <GiftCard side={active} onClose={() => setOpenSide(null)} />}
     </section>
   )
 }
 
-function GiftModal({ side, onClose }) {
+/** Tấm thiệp chuyển khoản, mở ra giữa màn hình. */
+function GiftCard({ side, onClose }) {
   const { t } = useLanguage()
   const [copied, setCopied] = useState(false)
 
@@ -80,51 +91,50 @@ function GiftModal({ side, onClose }) {
       role="dialog"
       aria-modal="true"
       aria-label={side.label}
-      className="fixed inset-0 z-100 flex items-center justify-center bg-black/70 p-4 backdrop-blur-sm"
+      className="fixed inset-0 z-100 flex items-center justify-center bg-deep/85 p-5 backdrop-blur-[3px]"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-sm border border-border bg-background p-6 text-center shadow-2xl"
+        className="fade-up relative w-full max-w-xs bg-background px-8 py-10 text-center shadow-[0_40px_90px_-40px_rgb(0_0_0/0.7)]"
       >
-        <button
-          onClick={onClose}
-          aria-label={t('gallery.close')}
-          className="absolute top-3 right-3 cursor-pointer rounded-full p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-        >
-          <X className="h-5 w-5" />
-        </button>
+        <div aria-hidden className="pointer-events-none absolute inset-3 border border-border" />
 
-        <h3 className="mb-1 font-serif text-xl">{side.info.label}</h3>
-        <p className="mb-5 text-xs uppercase tracking-widest text-muted-foreground">
-          {t('gift.scanHint')}
-        </p>
+        <div className="relative">
+          <p className="t-eyebrow text-primary">{side.info.bank}</p>
 
-        {side.qr ? (
-          <img
-            src={side.qr}
-            alt={side.label}
-            className="mx-auto mb-5 w-full max-w-[280px] rounded-xl bg-white p-3 shadow-sm"
-          />
-        ) : (
-          <div className="mx-auto mb-5 flex aspect-square w-full max-w-[280px] items-center justify-center rounded-md border border-dashed border-border p-6 text-sm text-muted-foreground">
-            {t('gift.noQr')}
+          {side.qr ? (
+            <img
+              src={side.qr}
+              alt={side.label}
+              className="mx-auto mt-7 w-full max-w-[220px] bg-white p-2.5"
+            />
+          ) : (
+            <div className="t-caption mx-auto mt-7 flex aspect-square w-full max-w-[220px] items-center justify-center border border-dashed border-border p-6 text-muted-foreground">
+              {t('gift.noQr')}
+            </div>
+          )}
+
+          <p className="t-eyebrow mt-6 text-muted-foreground">{t('gift.scanHint')}</p>
+
+          <p className="t-num mt-7 text-[1.5rem] text-foreground">{side.info.account}</p>
+          <p className="t-eyebrow mt-3 text-muted-foreground">{side.info.holder}</p>
+
+          <div className="mt-8 flex flex-col items-center gap-5">
+            <button
+              onClick={copyAccount}
+              className="t-eyebrow rule-link rule-on cursor-pointer text-primary transition-colors duration-500 hover:text-foreground"
+            >
+              {copied ? t('gift.copied') : t('gift.copy')}
+            </button>
+            <button
+              onClick={onClose}
+              className="t-eyebrow cursor-pointer text-muted-foreground/70 transition-colors duration-500 hover:text-foreground"
+            >
+              {t('gallery.close')}
+            </button>
           </div>
-        )}
-
-        <div className="space-y-1 text-sm">
-          <p className="font-medium">{side.info.bank}</p>
-          <p className="font-serif text-xl tracking-wider tabular-nums">{side.info.account}</p>
-          <p className="uppercase tracking-widest text-muted-foreground">{side.info.holder}</p>
         </div>
-
-        <button
-          onClick={copyAccount}
-          className="mt-5 inline-flex cursor-pointer items-center gap-2 border border-primary/40 px-5 py-2.5 text-xs uppercase tracking-widest text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
-        >
-          {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
-          {copied ? t('gift.copied') : t('gift.copy')}
-        </button>
       </div>
     </div>
   )
