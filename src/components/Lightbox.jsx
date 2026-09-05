@@ -82,7 +82,7 @@ export default function Lightbox({ photos, index, onClose, onChange }) {
         src={photo.src}
         alt={photo.alt}
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[85vh] w-auto rounded-md object-contain shadow-2xl"
+        className="max-h-[85vh] w-auto rounded-2xl object-contain shadow-2xl"
       />
 
       {photos.length > 1 && (

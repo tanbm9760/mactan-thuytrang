@@ -104,7 +104,7 @@ function GiftModal({ side, onClose }) {
           <img
             src={side.qr}
             alt={side.label}
-            className="mx-auto mb-5 w-full max-w-[280px] rounded-md bg-white p-3 shadow-sm"
+            className="mx-auto mb-5 w-full max-w-[280px] rounded-xl bg-white p-3 shadow-sm"
           />
         ) : (
           <div className="mx-auto mb-5 flex aspect-square w-full max-w-[280px] items-center justify-center rounded-md border border-dashed border-border p-6 text-sm text-muted-foreground">

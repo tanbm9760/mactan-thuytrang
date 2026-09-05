@@ -21,7 +21,7 @@ export default function Story() {
         <div className="relative w-full flex-1">
           <div
             ref={imageRef}
-            className="reveal-mask aspect-4/5 overflow-hidden rounded-t-full md:absolute md:inset-0 md:aspect-auto"
+            className="reveal-mask aspect-4/5 overflow-hidden rounded-t-full rounded-b-[18px] md:absolute md:inset-0 md:aspect-auto"
           >
             <img
               src={storyImage}

@@ -133,7 +133,9 @@ function PhotoCard({ photo, eager, onOpen }) {
   const { held, handlers, consumeHold } = usePressHold()
 
   return (
-    <div className="flex-none pl-2 md:pl-4">
+    /* Rộng theo cột chứ không theo nội dung: 1 ảnh trên điện thoại, 2 trên máy
+       tính bảng, đúng 3 trên máy tính - không còn tấm thứ tư ló ra một nửa. */
+    <div className="min-w-0 shrink-0 grow-0 basis-full pl-2 sm:basis-1/2 md:pl-4 lg:basis-1/3">
       <button
         {...handlers}
         onClick={() => {
@@ -141,19 +143,29 @@ function PhotoCard({ photo, eager, onOpen }) {
           if (!consumeHold()) onOpen()
         }}
         aria-label={t('gallery.viewLarger')}
-        className={`photo-card group relative block h-[86vw] max-h-[430px] cursor-pointer overflow-hidden select-none sm:h-[52vw] lg:h-[430px] ${
-          held ? 'is-held' : ''
-        }`}
+        className={`photo-card group block w-full cursor-pointer select-none ${held ? 'is-held' : ''}`}
       >
-        <div className="absolute inset-0 z-10 bg-primary/15 opacity-0 mix-blend-overlay transition-opacity duration-300 group-hover:opacity-100" />
-        <img
-          src={photo.src}
-          alt={photo.alt}
-          loading={eager ? 'eager' : 'lazy'}
-          decoding="async"
-          draggable={false}
-          className="h-full w-auto max-w-none object-cover"
-        />
+        {/* Khung tỉ lệ 2:3 khớp đúng tỉ lệ ảnh gốc, nên object-cover không cắt
+            mất phần nào.
+
+            Bo góc đặt ở CẢ khung ngoài lẫn thẻ ảnh: khung ngoài cắt nội dung,
+            thẻ ảnh tự bo. Thừa một chút nhưng an toàn - có trình duyệt bỏ qua
+            vùng cắt bo góc khi lớp bên trong được ghép ảnh riêng, khi đó thẻ
+            ảnh vẫn tròn góc nhờ bo góc của chính nó. */}
+        <span className="relative block aspect-2/3 w-full overflow-hidden rounded-[14px] ring-1 ring-black/[0.06] ring-inset md:rounded-[18px]">
+          <img
+            src={photo.src}
+            alt={photo.alt}
+            loading={eager ? 'eager' : 'lazy'}
+            decoding="async"
+            draggable={false}
+            className="absolute inset-0 h-full w-full rounded-[14px] object-cover md:rounded-[18px]"
+          />
+          {/* Lớp phủ khi rê chuột. KHÔNG dùng mix-blend-mode ở đây: nó đẩy
+              phần tử lên một tầng ghép ảnh riêng, và khi đó trình duyệt bỏ
+              qua vùng cắt bo góc của thẻ cha - góc ảnh sẽ vuông trở lại. */}
+          <span className="absolute inset-0 bg-foreground/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        </span>
       </button>
     </div>
   )
