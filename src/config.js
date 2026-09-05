@@ -98,9 +98,10 @@ export const config = {
   },
 
   /* --- Liên hệ nhanh (hiện ở footer) -------------------------------------- */
+  /* Tách nhóm cho dễ đọc; nút gọi tự bỏ khoảng trắng khi bấm. */
   contact: {
-    groomPhone: '0900000000',
-    bridePhone: '0911111111',
+    groomPhone: '0964 359 384',
+    bridePhone: '0984 289 451',
   },
 
   /* --- Gallery: tên hiển thị cho từng album ------------------------------- */
