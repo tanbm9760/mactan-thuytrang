@@ -3,7 +3,6 @@ import { config, orderedNames } from '../config'
 import { heroImage } from '../lib/assets'
 import { useParallax } from '../hooks/useParallax'
 import { RevealGroup } from './Reveal'
-import Florals from './Florals'
 
 const pad = (n) => String(n).padStart(2, '0')
 
@@ -35,7 +34,7 @@ const pad = (n) => String(n).padStart(2, '0')
  */
 export default function Hero() {
   const { t } = useLanguage()
-  const { wrapRef, imgRef } = useParallax(6)
+  const { wrapRef, imgRef } = useParallax(3)
   const date = config.weddingDate
 
   /* Tên trải một dòng khi khung nhìn thấp hoặc rộng; xếp chồng khi khung cao.
@@ -56,13 +55,25 @@ export default function Hero() {
       ref={wrapRef}
       className="relative h-svh min-h-[520px] overflow-hidden bg-background"
     >
+      {/* Khung ảnh phóng lên 120% và neo lên trên (chỉ thò lên 4%).
+
+          Đây là cách duy nhất hạ được hai bàn tay xuống: khung đứng bao giờ
+          cũng hẹp hơn ảnh nên ảnh luôn cắt theo CHIỀU CAO, và khi đó
+          `object-position` theo trục dọc không có tác dụng gì cả - cả chiều
+          cao ảnh đã nằm gọn trong khung rồi. Muốn dời ảnh theo chiều dọc thì
+          phải phóng nó to hơn khung rồi mới trượt được.
+
+          Phóng lên còn được thêm hai thứ: dải trời cho tên rộng ra, và
+          khoảng nắng giữa hai bàn tay với dãy đồi cũng giãn ra - đúng chỗ
+          đang đặt ngày cưới và nút xác nhận. Đổi lại là mất phần đáy ảnh,
+          nhưng đó chỉ là dãy đồi tối, không mất chi tiết nào. */}
       <img
         ref={imgRef}
         src={heroImage}
         alt=""
         aria-hidden
         fetchPriority="high"
-        className="parallax-img hero-zoom absolute inset-x-0 top-[-6%] h-[112%] w-full object-cover object-[50%_52%]"
+        className="parallax-img hero-zoom absolute inset-x-0 top-[-4%] h-[120%] w-full object-cover object-[50%_50%]"
       />
 
       {/* Mép trên tan vào giấy. Đây là lớp làm SÁNG, không phải lớp phủ tối. */}
@@ -70,9 +81,6 @@ export default function Hero() {
         aria-hidden
         className="absolute inset-x-0 top-0 h-[26%] bg-linear-to-b from-background via-background/45 to-transparent"
       />
-      {/* Luống hoa ở chân khung - xem chú thích preset `hero` trong Florals */}
-      <Florals preset="hero" />
-
       <div className="relative z-10 gutter pt-[clamp(4.5rem,9.5svh,7rem)] squat:pt-[clamp(5rem,13svh,8rem)]">
         {/* ── Trên trời: mực sẫm ────────────────────────────────────────── */}
         <RevealGroup step={150} className="text-center">
@@ -114,7 +122,7 @@ export default function Hero() {
           Vị trí đặt theo PHẦN TRĂM chiều cao khung: ảnh luôn cắt theo chiều
           cao nên hai bàn tay bao giờ cũng kết thúc ở cùng một tỉ lệ, dù màn
           hình cao bao nhiêu. */}
-      <div className="absolute inset-x-0 top-[62%] z-10 gutter text-center">
+      <div className="absolute inset-x-0 top-[71%] z-10 gutter text-center">
         <RevealGroup start={520} step={130} className="text-foreground">
           <p className="t-eyebrow-lg text-foreground/80">
             {pad(date.getDate())} · {pad(date.getMonth() + 1)} · {date.getFullYear()}
