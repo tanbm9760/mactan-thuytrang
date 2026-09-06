@@ -161,6 +161,7 @@ const PRESETS = {
      Dải trời lại mỏng, nên hoa ở đây ít hơn các phần khác. Bù lại phần đếm
      ngược ngay bên dưới - toàn nền giấy, không có ảnh - được rải dày hơn. */
   hero: [
+    /* Trên dải trời nối thêm */
     { top: 11, left: 5, size: 54, rot: -16, hue: 'vang', kind: 'a' },
     { top: 10, left: 95, size: 50, rot: 20, hue: 'lam', kind: 'b' },
     { top: 16, left: 13, size: 38, rot: 8, hue: 'cam', kind: 's' },
@@ -169,6 +170,16 @@ const PRESETS = {
     { top: 17, left: 97, size: 36, rot: -14, hue: 'tim', kind: 'b' },
     { top: 11, left: 22, size: 34, rot: 12, hue: 'tim', kind: 'b', sm: true },
     { top: 10, left: 78, size: 36, rot: -18, hue: 'vang', kind: 'b', sm: true },
+
+    /* Xuống cả phần dưới, nhưng chỉ vào những ô đã đo là KHÔNG có bàn tay:
+       lườn phải ở quãng 58-70%, và góc trái dưới ở quãng 94% - chỗ nằm dưới
+       mấy đầu ngón tay. Toạ độ lấy từ bản đồ chỗ trống, không đặt bằng mắt. */
+    { top: 60, left: 95, size: 52, rot: 14, hue: 'vang', kind: 'a' },
+    { top: 67, left: 88, size: 40, rot: -12, hue: 'hong', kind: 'b' },
+    { top: 94, left: 6, size: 50, rot: -8, hue: 'tim', kind: 'a' },
+    { top: 96, left: 19, size: 40, rot: 16, hue: 'lam', kind: 'b' },
+    { top: 61, left: 79, size: 34, rot: 6, hue: 'cam', kind: 's', sm: true },
+    { top: 94, left: 31, size: 36, rot: -14, hue: 'cam', kind: 'b', sm: true },
   ],
   countdown: [
     { top: 68, left: 5, size: 46, rot: 14, hue: 'hong', kind: 'b' },

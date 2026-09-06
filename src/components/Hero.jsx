@@ -41,35 +41,42 @@ export default function Hero() {
     >
       {/* ══ Dải trời nối thêm ở đỉnh khung ══
 
-          Không cắt ảnh, không phóng ảnh - chỉ đẩy cả bức ảnh xuống 14% rồi
-          vẽ tiếp bầu trời vào chỗ vừa trống ra. Nhờ vậy hai bàn tay tụt
+          Không cắt ảnh, không phóng ảnh - chỉ đẩy cả bức ảnh xuống 24% rồi
+          nối tiếp bầu trời vào chỗ vừa trống ra. Nhờ vậy hai bàn tay tụt
           xuống mà vẫn giữ NGUYÊN kích thước; phóng ảnh thì tay xuống được
           nhưng lại to nhỏ theo, còn cách này thì không.
 
-          Màu lấy đúng từ mép trên bức ảnh: #F9E3C1 khi khung ngang cắt gần
-          hết bề ngang, #FDE9C8 ở dải giữa mà điện thoại nhìn thấy. Dải này
-          chạy tới #FBE6C5 - nằm giữa hai giá trị ấy - rồi một đoạn tan dần
-          phủ lên mép ảnh để mối nối không bao giờ thành một đường kẻ ngang,
-          dù khung máy cắt bức ảnh kiểu gì. */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-[25%] bg-[linear-gradient(to_bottom,#F3D9AE_0%,#F8E0BB_45%,#FBE6C5_100%)]"
-      />
+          Phần nối là CHÍNH BỨC ẢNH ẤY, lật ngược lên.
 
-      <img
-        ref={imgRef}
-        src={heroImage}
-        alt=""
-        aria-hidden
-        fetchPriority="high"
-        className="parallax-img hero-zoom absolute inset-x-0 top-[24%] h-[120%] w-full object-cover object-[50%_50%]"
-      />
+          Trước đây nó là một dải chuyển sắc vẽ tay, màu lấy xấp xỉ mép trên
+          bức ảnh. Nhưng mép trên không cùng một màu ở mọi khổ máy (khung
+          ngang cắt gần hết bề ngang thì ra #F9E3C1, khung đứng chỉ thấy dải
+          giữa thì ra #FDE9C8), nên dù có thêm đoạn tan dần thì vẫn là xấp xỉ.
 
-      {/* Đoạn tan dần che mối nối giữa dải trời vẽ thêm và mép ảnh thật */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-[23%] h-[9%] bg-[linear-gradient(to_bottom,#FBE6C5_0%,rgba(251,230,197,0.55)_45%,transparent_100%)]"
-      />
+          Lật ngược thì không còn xấp xỉ nữa: bản lật dùng ĐÚNG khung ảnh và
+          đúng cách cắt của ảnh thật, chỉ khác là úp ngược, nên hàng pixel
+          nằm sát mối nối của hai bên là CÙNG MỘT hàng pixel - trùng khít ở
+          mọi khổ máy, không thể lộ đường nối. Phần lật lên chỉ lấy tới 20%
+          đầu bức ảnh, mà 28% đầu thì toàn trời, nên không có bàn tay nào
+          hiện ngược cả.
+
+          Hai lớp nằm chung một khung để cùng ăn một phép trôi - tách ra thì
+          lúc cuộn chúng trượt lệch nhau và mối nối hở ra. */}
+      <div ref={imgRef} className="parallax-img hero-zoom absolute inset-0">
+        <img
+          src={heroImage}
+          alt=""
+          aria-hidden
+          className="absolute inset-x-0 bottom-[76%] h-[120%] w-full -scale-y-100 object-cover object-[50%_50%]"
+        />
+        <img
+          src={heroImage}
+          alt=""
+          aria-hidden
+          fetchPriority="high"
+          className="absolute inset-x-0 top-[24%] h-[120%] w-full object-cover object-[50%_50%]"
+        />
+      </div>
 
       {/* Hoa rải ở dải trời và hai bên lề khối chữ. Đặt SAU thẻ ảnh trong
           DOM để nằm trên ảnh, nhưng khối chữ có z-10 nên vẫn nằm trên hoa. */}
