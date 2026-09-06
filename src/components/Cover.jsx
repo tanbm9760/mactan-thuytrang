@@ -3,7 +3,7 @@ import { useLanguage } from '../lib/i18n'
 import { config, orderedNames } from '../config'
 import { guestName } from '../lib/guest'
 import Monogram from './Monogram'
-import Florals from './Florals'
+import Florals, { COVER_TWINS } from './Florals'
 
 const SEEN_KEY = 'wedding-cover-seen'
 
@@ -19,11 +19,11 @@ const stillPreferred = () =>
 
    `flapBack` là nhịp kỹ thuật: nắp vừa lật quá 90°, phải cho nó xuống dưới
    tấm thiệp, nếu không thiệp rút lên sẽ chui ra sau lưng cái nắp đang mở. */
-const BEATS = { flapBack: 380, card: 500, dissolve: 1680, done: 2520 }
+const BEATS = { flapBack: 380, card: 500, fly: 700, dissolve: 1900, done: 2860 }
 
-/* Khi khách tắt hiệu ứng chuyển động: vẫn đủ bốn nhịp theo đúng thứ tự ấy,
+/* Khi khách tắt hiệu ứng chuyển động: vẫn đủ các nhịp theo đúng thứ tự ấy,
    chỉ là gần như tức thì. Bỏ hẳn thì bìa biến mất đột ngột, còn khó chịu hơn. */
-const BEATS_STILL = { flapBack: 60, card: 100, dissolve: 240, done: 520 }
+const BEATS_STILL = { flapBack: 60, card: 100, fly: 110, dissolve: 260, done: 540 }
 
 /**
  * Bìa thiệp - một chiếc phong bì thật, đặt trên mặt giấy ngà.
@@ -44,6 +44,11 @@ const BEATS_STILL = { flapBack: 60, card: 100, dissolve: 240, done: 520 }
  * một dấu triện và dòng "trân trọng kính mời"; tên chỉ hiện ra khi tấm thiệp
  * được rút lên. Có vậy thì việc mở thiệp mới đáng để mở.
  *
+ * Chuyển cảnh không phải một nhịp mờ dần: mười bông hoa trên mặt bàn CHÍNH LÀ
+ * mười bông hoa của màn hình mở đầu. Lúc thiệp được rút ra, chúng bay tới đúng
+ * ô của mình rồi trùng khít lên bông sinh đôi đang chờ sẵn dưới lớp bìa - nên
+ * lúc bìa tắt, không có gì biến mất cả, chỉ có tờ giấy lui đi.
+ *
  * Ngoài việc tạo nghi thức, bìa còn che đúng khoảng thời gian ảnh mở đầu
  * đang tải - khách không bao giờ thấy màn hình trống.
  *
@@ -54,6 +59,8 @@ export default function Cover() {
   const [state, setState] = useState('hidden') // hidden | shown | opening | done
   const [phase, setPhase] = useState(0) // 0 kín · 1 bật nắp · 2 rút thiệp · 3 tan
   const [flapBack, setFlapBack] = useState(false)
+  const [flying, setFlying] = useState(false)
+  const stageRef = useRef(null)
   const timers = useRef([])
 
   useEffect(() => {
@@ -68,6 +75,10 @@ export default function Cover() {
 
   useEffect(() => {
     if (state !== 'shown' && state !== 'opening') return
+    /* Đưa trang về đầu trước khi khoá cuộn. Mở lại tab cũ, trình duyệt có thể
+       khôi phục chỗ cuộn dở - mà lúc ấy màn hình mở đầu nằm đâu đó phía trên,
+       và đàn hoa sẽ bay ra ngoài khung nhìn thay vì bay về chỗ của nó. */
+    window.scrollTo(0, 0)
     const prev = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => {
@@ -76,6 +87,40 @@ export default function Cover() {
   }, [state])
 
   useEffect(() => () => timers.current.forEach(clearTimeout), [])
+
+  /* ── Cho hoa bay ────────────────────────────────────────────────────────
+     Kỹ thuật FLIP: đo vị trí THẬT của bông hoa trên bìa và của bông sinh đôi
+     trong màn hình mở đầu (nó đã nằm sẵn dưới lớp bìa từ lúc trang tải xong),
+     rồi nhét đúng quãng lệch ấy vào ba biến --fly-*.
+
+     Không tính bằng phần trăm được, vì hai lớp hoa không cùng một hệ toạ độ:
+     lớp của bìa bị kẹp trong khung 62rem, lớp của màn mở đầu thì tràn khung;
+     một bên đo theo chiều cao khung nhìn, một bên đo theo `svh`; cỡ bông một
+     bên tính từ bề ngang phong bì, một bên tính theo khổ máy. Đo thẳng trên
+     DOM thì mọi khác biệt ấy tự triệt tiêu, kể cả quãng trôi khi cuộn.
+
+     Đo Ở THẺ NGOÀI (thẻ mang data-fl), không đo thẻ trong: thẻ trong đang
+     chạy hoạt ảnh đung đưa, đo vào đó là lấy phải vị trí tức thời của nó. */
+  useEffect(() => {
+    if (!flying || !stageRef.current) return
+
+    COVER_TWINS.forEach((heroIndex, i) => {
+      const from = stageRef.current.querySelector(`[data-fl="cover-${i}"]`)
+      const to = document.querySelector(`[data-fl="hero-${heroIndex}"]`)
+      if (!from || !to) return
+
+      const a = from.getBoundingClientRect()
+      const b = to.getBoundingClientRect()
+      if (!a.width || !b.width) return /* bông bị ẩn ở khổ máy này */
+
+      from.style.setProperty('--fly-x', `${b.left + b.width / 2 - (a.left + a.width / 2)}px`)
+      from.style.setProperty('--fly-y', `${b.top + b.height / 2 - (a.top + a.height / 2)}px`)
+      from.style.setProperty('--fly-s', `${b.width / a.width}`)
+      /* So le nhau một chút, và bông ở xa đi trước - đàn hoa mở ra như một
+         nhịp thở chứ không bật cùng một lúc như một hiệu ứng. */
+      from.style.setProperty('--fly-delay', `${i * 35}ms`)
+    })
+  }, [flying])
 
   const open = () => {
     if (state !== 'shown') return
@@ -91,6 +136,7 @@ export default function Cover() {
     timers.current = [
       setTimeout(() => setFlapBack(true), beat.flapBack),
       setTimeout(() => setPhase(2), beat.card),
+      setTimeout(() => setFlying(true), beat.fly),
       setTimeout(() => setPhase(3), beat.dissolve),
       setTimeout(() => setState('done'), beat.done),
     ]
@@ -104,6 +150,7 @@ export default function Cover() {
 
   return (
     <div
+      ref={stageRef}
       className={[
         'cover-stage fixed inset-0 z-200 flex flex-col items-center justify-center gap-[clamp(2.25rem,7vh,4.5rem)] overflow-hidden',
         phase >= 1 && 'is-open',
@@ -124,7 +171,8 @@ export default function Cover() {
       }}
       aria-label={t('cover.open')}
     >
-      {/* Hoa trên mặt bàn, quanh phong bì */}
+      {/* Hoa trên mặt bàn, quanh phong bì - và cũng chính là hoa của màn hình
+          mở đầu, xem COVER_TWINS trong Florals.jsx. */}
       <Florals preset="cover" />
 
       <div className="cover-env">

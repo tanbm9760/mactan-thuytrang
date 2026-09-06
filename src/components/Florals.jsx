@@ -1,4 +1,5 @@
 import { useReveal } from '../hooks/useReveal'
+import { useFloralScroll } from '../hooks/useFloralScroll'
 
 /**
  * Hoa nhỏ rải rác - lấy thẳng từ tấm thiệp in của gia đình.
@@ -148,6 +149,11 @@ const SCALES = {
      theo khổ máy - máy để ngang chỉ cao 390px thì phong bì bị ép nhỏ lại,
      mà hoa vẫn ăn cỡ `md` thì hoa to gần bằng chiếc phong bì. */
   cover: '[--fl-unit:calc(var(--ew)*0.0025)]',
+
+  /* Phần đếm ngược nhỏ hơn hẳn mọi phần khác. Bốn con số cỡ lớn ăn hết bề
+     ngang, phần lại thấp - nên hoa ở đây phải là hoa nhỏ, nếu không thì không
+     còn một ô trống nào đủ chỗ đặt. */
+  countdown: '[--fl-scale:0.72] sm:[--fl-scale:0.85] md:[--fl-scale:1]',
   /* Hoa trên phong bì đo theo BỀ NGANG PHONG BÌ (--ew), không theo khổ máy:
      máy để ngang rộng 820px vẫn ăn cỡ `md`, mà chiếc phong bì ở đó lại bị
      chiều cao ép xuống chỉ còn 250px - hoa cỡ máy tính rơi lên tờ giấy bé
@@ -169,7 +175,10 @@ const BOXES = {
      nửa mét và trông như lạc sang một trang khác. */
   cover: 'max-w-[62rem]',
   envelope: 'max-w-none',
-  countdown: 'max-w-[62rem]',
+  /* Rộng hơn hẳn cột chữ (max-w-4xl = 56rem) để hai lề ngoài cột đủ chỗ
+     cho hoa. Bằng 62rem như cũ thì lề chỉ còn 48px mỗi bên, hoa rơi thẳng
+     vào giữa mấy con số. */
+  countdown: 'max-w-[74rem]',
   story: 'max-w-none',
   families: 'max-w-[54rem]',
   details: 'max-w-[62rem]',
@@ -178,20 +187,32 @@ const BOXES = {
 }
 
 const PRESETS = {
-  /* Mặt bàn quanh chiếc phong bì.
+  /* Mặt bàn quanh chiếc phong bì - mà cũng chính là mười bông hoa của màn
+     hình mở đầu, đang đứng chờ ở một chỗ khác.
 
-     Trên điện thoại phong bì chiếm gần trọn bề ngang, chỉ còn hai mẩu ở đỉnh
-     và đáy màn hình - nên hầu hết bông chỉ hiện từ 640px trở lên. Hai bông
-     duy nhất luôn hiện nằm sát hai mép dưới, tránh xa dòng chữ "chạm để mở". */
+     `twin` là số thứ tự của bông tương ứng trong preset `hero`. Lúc mở thiệp,
+     mỗi bông ở đây bay tới đúng ô của bông ấy rồi trùng khít lên nó - hai màn
+     hình nối vào nhau bằng chính những bông hoa, chứ không bằng một nhịp mờ
+     dần. Xem đoạn "cho hoa bay" trong Cover.jsx.
+
+     Vì thế hue / kind / size / rot ở đây phải SAO Y bông twin: lệch một thứ
+     thôi là lúc hạ cánh mắt bắt được ngay hai bông khác nhau chồng lên nhau.
+     Chỉ `top` và `left` được khác - đó mới là quãng đường bay.
+
+     Toạ độ đi bay chọn sát chiếc phong bì hơn toạ độ đích, nên khi mở thiệp
+     hoa nở rộng ra chứ không xô lại. Và không bông nào nằm trong khoảng
+     26-74% chiều cao: đó là chỗ của chiếc phong bì. */
   cover: [
-    { top: 90, left: 5, size: 44, rot: -12, hue: 'tim', kind: 'a' },
-    { top: 92, left: 95, size: 46, rot: 16, hue: 'vang', kind: 'a' },
-    { top: 12, left: 8, size: 54, rot: -16, hue: 'vang', kind: 'a', sm: true },
-    { top: 9, left: 91, size: 48, rot: 18, hue: 'lam', kind: 'b', sm: true },
-    { top: 23, left: 3, size: 38, rot: 10, hue: 'hong', kind: 's', sm: true },
-    { top: 20, left: 97, size: 36, rot: -12, hue: 'tim', kind: 'b', sm: true },
-    { top: 78, left: 13, size: 34, rot: -8, hue: 'lam', kind: 's', sm: true },
-    { top: 80, left: 87, size: 36, rot: 12, hue: 'cam', kind: 'b', sm: true },
+    { top: 26, left: 7, size: 54, rot: -16, hue: 'vang', kind: 'a', twin: 0 },
+    { top: 24, left: 93, size: 50, rot: 20, hue: 'lam', kind: 'b', twin: 1 },
+    { top: 29, left: 17, size: 38, rot: 8, hue: 'cam', kind: 's', twin: 2 },
+    { top: 28, left: 83, size: 40, rot: -10, hue: 'hong', kind: 's', twin: 3 },
+    { top: 33, left: 3, size: 38, rot: 10, hue: 'hong', kind: 'b', twin: 4 },
+    { top: 31, left: 97, size: 36, rot: -14, hue: 'tim', kind: 'b', twin: 5 },
+    { top: 74, left: 93, size: 52, rot: 14, hue: 'vang', kind: 'a', twin: 8 },
+    { top: 78, left: 84, size: 40, rot: -12, hue: 'hong', kind: 'b', twin: 9 },
+    { top: 76, left: 6, size: 50, rot: -8, hue: 'tim', kind: 'a', twin: 10 },
+    { top: 79, left: 15, size: 40, rot: 16, hue: 'lam', kind: 'b', twin: 11 },
   ],
 
   /* Trên chính tờ giấy phong bì. Toạ độ tránh hai chỗ: dải chữ ở giữa, và
@@ -236,22 +257,38 @@ const PRESETS = {
     { top: 61, left: 79, size: 34, rot: 6, hue: 'cam', kind: 's', sm: true },
     { top: 94, left: 31, size: 36, rot: -14, hue: 'cam', kind: 'b', sm: true },
   ],
+  /* Phần đếm ngược là phần CHẬT nhất trang: bốn con số cỡ lớn trải hết bề
+     ngang cột chữ, mà cột chữ thì rộng gần bằng cả khung. Chỉ còn hai chỗ
+     trống thật:
+
+       - dải padding trên và dưới, không có chữ nào;
+       - hai lề ngoài cột chữ - nhưng lề ấy chỉ có từ 640px trở lên, dưới
+         mức đó lề chỉ còn 24px nên mọi bông đặt ngang tầm chữ đều đè lên số.
+
+     Năm toạ độ dưới đây lấy từ bản đồ chỗ trống đo ở ba khổ máy (390 / 768 /
+     1440), tính cả quãng hoa trôi khi cuộn: dải trên bên phải chữ "CÒN LẠI",
+     mép phải ngoài cột số, và góc trái dưới cùng. Không đặt bằng mắt. */
   countdown: [
-    { top: 68, left: 5, size: 46, rot: 14, hue: 'hong', kind: 'b' },
-    { top: 70, left: 95, size: 54, rot: -18, hue: 'tim', kind: 'a' },
-    { top: 26, left: 89, size: 38, rot: 8, hue: 'vang', kind: 's' },
-    { top: 46, left: 7, size: 40, rot: -12, hue: 'cam', kind: 'b' },
-    { top: 88, left: 16, size: 34, rot: 6, hue: 'lam', kind: 's', sm: true },
-    { top: 86, left: 84, size: 36, rot: -8, hue: 'vang', kind: 'b', sm: true },
+    { top: 10, left: 90, size: 34, rot: 8, hue: 'vang', kind: 'b' },
+    { top: 16, left: 42, size: 26, rot: -12, hue: 'lam', kind: 's' },
+    { top: 44, left: 96, size: 30, rot: 14, hue: 'cam', kind: 'b' },
+    { top: 76, left: 96, size: 26, rot: 6, hue: 'tim', kind: 'a' },
+    { top: 96, left: 10, size: 34, rot: -10, hue: 'hong', kind: 'b' },
   ],
   story: [
-    /* Phần này ảnh chiếm cả cột trái trên máy tính và cả bề ngang khi xếp
-       dọc, nên chỉ còn dải cuối phần là chỗ trống chung cho mọi khổ máy. */
-    { top: 96, left: 2, size: 44, rot: 16, hue: 'tim', kind: 'a' },
-    { top: 96, left: 20, size: 38, rot: -20, hue: 'vang', kind: 'b' },
-    { top: 98, left: 79, size: 40, rot: 10, hue: 'lam', kind: 's' },
-    { top: 95, left: 95, size: 46, rot: -12, hue: 'hong', kind: 'b' },
-    { top: 97, left: 50, size: 34, rot: -14, hue: 'cam', kind: 'b', sm: true },
+    /* Phần chật nhất trang: ảnh chiếm cả cột trái trên máy tính và cả bề ngang
+       khi xếp dọc, còn cột chữ chạy gần hết phần còn lại.
+
+       Trên điện thoại thì KHÔNG CÒN chỗ nào thật: dải trống duy nhất là
+       padding cuối phần, mà dải ấy hẹp hơn đúng một bông hoa cộng quãng trôi
+       khi cuộn - đặt vào đó thì hoặc hoa chạm chữ, hoặc hoa thò xuống dải ảnh
+       của phần sau. Thà để trống còn hơn đặt một bông ở chỗ không có chỗ.
+
+       Từ 640px trở lên, cột chữ thu hẹp lại và hở ra một dải bên phải chạy
+       suốt chiều cao phần - hoa dồn cả vào đó. */
+    { top: 62, left: 98, size: 44, rot: 10, hue: 'lam', kind: 's', sm: true },
+    { top: 74, left: 98, size: 38, rot: -16, hue: 'tim', kind: 'a', sm: true },
+    { top: 86, left: 98, size: 34, rot: 14, hue: 'cam', kind: 'b', sm: true },
   ],
   families: [
     { top: 10, left: 10, size: 58, rot: -18, hue: 'vang', kind: 'a' },
@@ -283,8 +320,13 @@ const PRESETS = {
   ],
 }
 
+/** Số thứ tự bông `hero` tương ứng của từng bông `cover`, đúng thứ tự preset.
+ *  Cover.jsx dùng bảng này để bắt cặp lúc cho hoa bay sang màn hình mở đầu. */
+export const COVER_TWINS = PRESETS.cover.map((it) => it.twin)
+
 export default function Florals({ preset, className = '' }) {
   const ref = useReveal({ threshold: 0.05 })
+  useFloralScroll(ref)
   const items = PRESETS[preset] ?? []
   if (items.length === 0) return null
 
@@ -304,6 +346,12 @@ export default function Florals({ preset, className = '' }) {
       >
       {items.map((it, i) => {
         const Shape = SHAPES[it.kind] ?? BlossomA
+        /* Nhịp đung đưa suy ra từ số thứ tự, nhưng bông trên bìa phải mượn số
+           thứ tự của bông sinh đôi: cùng chu kỳ, cùng độ trễ thì tới lúc hạ
+           cánh hai bông đang ở đúng một pha, chồng lên nhau không lệch một
+           pixel. Lấy số thứ tự riêng thì đúng khoảnh khắc bìa tắt có một cái
+           giật rất nhỏ. */
+        const seed = it.twin ?? i
         return (
           <span
             key={i}
@@ -316,7 +364,22 @@ export default function Florals({ preset, className = '' }) {
                  là `size px × tỉ lệ` như cũ. Riêng phong bì đổi đơn vị ấy đi. */
               width: `calc(${it.size} * var(--fl-unit, 1px) * var(--fl-scale, 1))`,
               height: `calc(${it.size} * var(--fl-unit, 1px) * var(--fl-scale, 1))`,
-              transform: 'translate(-50%, -50%)',
+              /* Quãng bay đi qua BIẾN, không đi qua chuỗi transform dựng sẵn:
+                 React vẽ lại là ghi đè mất thuộc tính `transform` đặt bằng
+                 tay, còn biến tự đặt thì nó không đụng tới. */
+              /* Ba chuyển động chồng lên nhau trong một dòng transform:
+                   --fly-*   quãng bay từ bìa thiệp sang màn hình mở đầu
+                   --fl-scroll x --fl-depth   quãng trôi theo trang khi cuộn
+                   -50%      đưa tâm bông về đúng toạ độ
+                 Quãng bay và quãng trôi đi qua BIẾN chứ không viết thẳng vào
+                 chuỗi: React vẽ lại là ghi đè mất thuộc tính `transform` đặt
+                 bằng tay, còn biến tự đặt thì nó không đụng tới. */
+              transform:
+                'translate(var(--fly-x, 0px), calc(var(--fly-y, 0px) + var(--fl-scroll, 0px) * var(--fl-depth, 1)))' +
+                ' translate(-50%, -50%) scale(var(--fly-s, 1))',
+              /* Bông to là bông gần, trôi nhanh hơn bông nhỏ ở xa. Chia cho 46
+                 (cỡ bông trung bình) nên độ sâu rơi vào quãng 0,65-1,17. */
+              '--fl-depth': (it.size / 46).toFixed(2),
             }}
           >
             {/* Lớp trong lo phần trôi; lớp ngoài lo phần định vị. Tách ra vì
@@ -325,11 +388,11 @@ export default function Florals({ preset, className = '' }) {
               className="floral-drift block h-full w-full"
               style={{
                 '--rot': `${it.rot}deg`,
-                '--spin': `${(i % 2 ? 1 : -1) * (2 + (i % 3))}deg`,
-                '--dx': `${(i % 2 ? 1 : -1) * (3 + (i % 4))}px`,
-                '--dy': `${(i % 3 ? -1 : 1) * (5 + (i % 5))}px`,
-                '--dur': `${16 + ((i * 7) % 11)}s`,
-                '--delay': `${(i * 1.7) % 6}s`,
+                '--spin': `${(seed % 2 ? 1 : -1) * (2 + (seed % 3))}deg`,
+                '--dx': `${(seed % 2 ? 1 : -1) * (3 + (seed % 4))}px`,
+                '--dy': `${(seed % 3 ? -1 : 1) * (5 + (seed % 5))}px`,
+                '--dur': `${16 + ((seed * 7) % 11)}s`,
+                '--delay': `${(seed * 1.7) % 6}s`,
                 opacity: it.opacity ?? 1,
               }}
             >

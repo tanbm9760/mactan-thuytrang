@@ -543,6 +543,18 @@
   .env-card-ink { transition: opacity 0.4s ease-out; }
   .is-gone .env-card-ink { opacity: 0; }
 
+  /* Quãng bay của hoa từ bìa sang màn hình mở đầu. Chỉ đặt trong phạm vi bìa
+     thiệp: các lớp hoa khác trên trang không bao giờ đổi chỗ nên không cần
+     nhịp chuyển, mà có thì lại thành trôi nổi lúc đổi khổ máy.
+
+     1,15 giây và so le nhau - dài hơn hẳn quãng đường ngắn ngủi hoa phải đi,
+     vì thứ cần thấy không phải là hoa "chạy tới nơi" mà là hoa đang nở rộng
+     ra khỏi chiếc phong bì. */
+  .cover-stage [data-fl] {
+    transition: transform 1.15s var(--ease-cover);
+    transition-delay: var(--fly-delay, 0ms);
+  }
+
   .cover-hint { transition: opacity 0.45s ease-out; }
   .is-open .cover-hint { opacity: 0; }
 }
@@ -712,6 +724,7 @@
   .env-flap,
   .env-seal,
   .cover-hint { transition-duration: 0.25s; }
+  .cover-stage [data-fl] { transition-duration: 0.25s; transition-delay: 0ms; }
   .reveal-soft,
   .reveal-soft.is-visible { opacity: 1; transition: none; }
   .floral-drift { animation: none; }
