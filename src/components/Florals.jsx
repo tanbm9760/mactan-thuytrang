@@ -138,11 +138,37 @@ const SCALES = {
   /* Hoa ở màn hình mở đầu nhỏ hơn các phần khác một chút: nền ở đó là bầu
      trời chứ không phải giấy, hoa to quá sẽ tranh chỗ với hai bàn tay. */
   hero: '[--fl-scale:0.86] sm:[--fl-scale:1.05] md:[--fl-scale:1.35]',
+
+  /* Hai bộ của bìa thiệp. `cover` rải trên mặt bàn quanh chiếc phong bì,
+     `envelope` rải TRÊN chính tờ giấy phong bì - nên nhỏ hơn hẳn, vì nó phải
+     đúng tỉ lệ với một tờ giấy rộng chưa tới nửa mét chứ không phải với cả
+     màn hình. Đúng như tấm thiệp in: hoa nằm trên giấy, không nằm quanh giấy. */
+  /* Cả hai bộ của bìa thiệp đều đo theo bề ngang phong bì. Chiếc phong bì
+     là vật duy nhất trên màn ấy, nên hoa phải to nhỏ theo NÓ chứ không
+     theo khổ máy - máy để ngang chỉ cao 390px thì phong bì bị ép nhỏ lại,
+     mà hoa vẫn ăn cỡ `md` thì hoa to gần bằng chiếc phong bì. */
+  cover: '[--fl-unit:calc(var(--ew)*0.0025)]',
+  /* Hoa trên phong bì đo theo BỀ NGANG PHONG BÌ (--ew), không theo khổ máy:
+     máy để ngang rộng 820px vẫn ăn cỡ `md`, mà chiếc phong bì ở đó lại bị
+     chiều cao ép xuống chỉ còn 250px - hoa cỡ máy tính rơi lên tờ giấy bé
+     bằng nửa, to như hoa dán.
+
+     Đổi ĐƠN VỊ chứ không đổi hệ số: `--fl-scale` là một con số, mà --ew là
+     một độ dài, nhân hai thứ đó với nhau ra px² - CSS bỏ luôn cả dòng khai
+     báo và bông hoa nở ra cỡ mặc định của thẻ SVG. Nhân vào `--fl-unit`
+     (mặc định 1px) thì phép tính vẫn là số × độ dài. 1/560 để ở khổ giấy lớn
+     nhất hoa đúng bằng cỡ đã dựng trong bảng toạ độ. */
+  envelope: '[--fl-unit:calc(var(--ew)*0.001786)]',
 }
 const DEFAULT_SCALE = '[--fl-scale:0.74] sm:[--fl-scale:1.05] md:[--fl-scale:1.5]'
 
 const BOXES = {
   hero: 'max-w-none',
+  /* Hoa bám lấy chiếc phong bì chứ không bám mép màn hình: trên máy tính
+     rộng 1440px, rải theo mép thì hoa dạt ra tận hai rìa, cách phong bì
+     nửa mét và trông như lạc sang một trang khác. */
+  cover: 'max-w-[62rem]',
+  envelope: 'max-w-none',
   countdown: 'max-w-[62rem]',
   story: 'max-w-none',
   families: 'max-w-[54rem]',
@@ -152,6 +178,35 @@ const BOXES = {
 }
 
 const PRESETS = {
+  /* Mặt bàn quanh chiếc phong bì.
+
+     Trên điện thoại phong bì chiếm gần trọn bề ngang, chỉ còn hai mẩu ở đỉnh
+     và đáy màn hình - nên hầu hết bông chỉ hiện từ 640px trở lên. Hai bông
+     duy nhất luôn hiện nằm sát hai mép dưới, tránh xa dòng chữ "chạm để mở". */
+  cover: [
+    { top: 90, left: 5, size: 44, rot: -12, hue: 'tim', kind: 'a' },
+    { top: 92, left: 95, size: 46, rot: 16, hue: 'vang', kind: 'a' },
+    { top: 12, left: 8, size: 54, rot: -16, hue: 'vang', kind: 'a', sm: true },
+    { top: 9, left: 91, size: 48, rot: 18, hue: 'lam', kind: 'b', sm: true },
+    { top: 23, left: 3, size: 38, rot: 10, hue: 'hong', kind: 's', sm: true },
+    { top: 20, left: 97, size: 36, rot: -12, hue: 'tim', kind: 'b', sm: true },
+    { top: 78, left: 13, size: 34, rot: -8, hue: 'lam', kind: 's', sm: true },
+    { top: 80, left: 87, size: 36, rot: 12, hue: 'cam', kind: 'b', sm: true },
+  ],
+
+  /* Trên chính tờ giấy phong bì. Toạ độ tránh hai chỗ: dải chữ ở giữa, và
+     phần bị nắp che (tam giác từ đỉnh xuống 47%) - trừ hai bông cố ý đặt ở
+     hai vai, nơi tam giác không với tới nên vẫn thấy lúc phong bì còn kín. */
+  envelope: [
+    { top: 60, left: 8, size: 44, rot: -14, hue: 'vang', kind: 'a' },
+    { top: 68, left: 93, size: 46, rot: 16, hue: 'tim', kind: 'a' },
+    { top: 82, left: 15, size: 32, rot: 8, hue: 'lam', kind: 'b' },
+    { top: 53, left: 86, size: 30, rot: -10, hue: 'hong', kind: 's' },
+    { top: 88, left: 88, size: 34, rot: 12, hue: 'cam', kind: 'b' },
+    { top: 22, left: 6, size: 34, rot: 12, hue: 'hong', kind: 'b' },
+    { top: 26, left: 94, size: 30, rot: -16, hue: 'vang', kind: 's' },
+  ],
+
   /* Màn hình mở đầu.
 
      Chỉ rải trong DẢI TRỜI VẼ THÊM ở đỉnh khung (0-25%), tuyệt đối không đặt
@@ -257,8 +312,10 @@ export default function Florals({ preset, className = '' }) {
             style={{
               top: `${it.top}%`,
               left: `${it.left}%`,
-              width: `calc(${it.size}px * var(--fl-scale))`,
-              height: `calc(${it.size}px * var(--fl-scale))`,
+              /* `--fl-unit` mặc định 1px, nên với mọi phần khác thì đây vẫn
+                 là `size px × tỉ lệ` như cũ. Riêng phong bì đổi đơn vị ấy đi. */
+              width: `calc(${it.size} * var(--fl-unit, 1px) * var(--fl-scale, 1))`,
+              height: `calc(${it.size} * var(--fl-unit, 1px) * var(--fl-scale, 1))`,
               transform: 'translate(-50%, -50%)',
             }}
           >

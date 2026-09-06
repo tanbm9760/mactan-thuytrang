@@ -1,29 +1,60 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../lib/i18n'
 import { config, orderedNames } from '../config'
 import { guestName } from '../lib/guest'
 import Monogram from './Monogram'
+import Florals from './Florals'
 
 const SEEN_KEY = 'wedding-cover-seen'
-const OPEN_MS = 1650
 
 const pad = (n) => String(n).padStart(2, '0')
 
+const stillPreferred = () =>
+  typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+/* ── Nhịp của màn mở thiệp, tính bằng mili giây kể từ lúc chạm ──────────────
+   Bốn nhịp, và chúng CHỒNG LÊN NHAU chứ không nối đuôi nhau: nắp còn đang
+   ngả xuống thì tấm thiệp đã bắt đầu trồi lên. Đợi nhịp trước dứt hẳn mới
+   chạy nhịp sau là cách một hoạt ảnh dài 2,5 giây bị cảm thấy như 5 giây.
+
+   `flapBack` là nhịp kỹ thuật: nắp vừa lật quá 90°, phải cho nó xuống dưới
+   tấm thiệp, nếu không thiệp rút lên sẽ chui ra sau lưng cái nắp đang mở. */
+const BEATS = { flapBack: 380, card: 500, dissolve: 1680, done: 2520 }
+
+/* Khi khách tắt hiệu ứng chuyển động: vẫn đủ bốn nhịp theo đúng thứ tự ấy,
+   chỉ là gần như tức thì. Bỏ hẳn thì bìa biến mất đột ngột, còn khó chịu hơn. */
+const BEATS_STILL = { flapBack: 60, card: 100, dissolve: 240, done: 520 }
+
 /**
- * Bìa thiệp - dựng như một tấm thiệp in thật chứ không phải màn hình chờ.
+ * Bìa thiệp - một chiếc phong bì thật, đặt trên mặt giấy ngà.
  *
- * Khung kẻ đôi mảnh, monogram dập chìm, chữ giãn rộng, một lớp vân giấy riêng
- * (lớp vân của cả trang nằm dưới bìa nên không nhìn thấy). Chạm vào thì bìa
- * tách đôi và trượt ra rất chậm - mở một tấm thiệp, không phải mở một cánh cửa.
+ * Cùng vật liệu với tấm thiệp in của gia đình: giấy ngà, hoa màu nước rải
+ * trên giấy, mực đồng, một dấu triện ở mũi nắp. Khách chạm vào thì triện mờ
+ * đi, nắp phong bì ngả ra sau, tấm thiệp bên trong được rút lên - rồi chính
+ * tấm thiệp ấy nở ra thành trang web.
  *
- * Ngoài việc tạo nghi thức, nó còn che đúng khoảng thời gian ảnh mở đầu đang
- * tải - khách không bao giờ thấy màn hình trống.
+ * Bốn lớp giấy xếp chồng, đúng thứ tự của một chiếc phong bì thật:
  *
- * Chỉ hiện một lần mỗi phiên: cuộn lại trang giữa chừng không phải mở lại bìa.
+ *   .env-back    lòng phong bì, sẫm hơn mặt ngoài
+ *   .env-card    tấm thiệp nằm trong đó — tên hai người ở đây
+ *   .env-front   mặt trước, che tấm thiệp lại
+ *   .env-flap    nắp, gập xuống đè lên mặt trước
+ *
+ * Tên hai người CỐ TÌNH không đặt ở mặt ngoài phong bì. Phong bì kín chỉ có
+ * một dấu triện và dòng "trân trọng kính mời"; tên chỉ hiện ra khi tấm thiệp
+ * được rút lên. Có vậy thì việc mở thiệp mới đáng để mở.
+ *
+ * Ngoài việc tạo nghi thức, bìa còn che đúng khoảng thời gian ảnh mở đầu
+ * đang tải - khách không bao giờ thấy màn hình trống.
+ *
+ * Chỉ hiện một lần mỗi phiên: cuộn lại trang giữa chừng không phải mở lại.
  */
 export default function Cover() {
   const { t } = useLanguage()
   const [state, setState] = useState('hidden') // hidden | shown | opening | done
+  const [phase, setPhase] = useState(0) // 0 kín · 1 bật nắp · 2 rút thiệp · 3 tan
+  const [flapBack, setFlapBack] = useState(false)
+  const timers = useRef([])
 
   useEffect(() => {
     let seen = false
@@ -44,6 +75,8 @@ export default function Cover() {
     }
   }, [state])
 
+  useEffect(() => () => timers.current.forEach(clearTimeout), [])
+
   const open = () => {
     if (state !== 'shown') return
     setState('opening')
@@ -52,64 +85,34 @@ export default function Cover() {
     } catch {
       /* bỏ qua */
     }
-    setTimeout(() => setState('done'), OPEN_MS)
+
+    const beat = stillPreferred() ? BEATS_STILL : BEATS
+    setPhase(1)
+    timers.current = [
+      setTimeout(() => setFlapBack(true), beat.flapBack),
+      setTimeout(() => setPhase(2), beat.card),
+      setTimeout(() => setPhase(3), beat.dissolve),
+      setTimeout(() => setState('done'), beat.done),
+    ]
   }
 
   if (state === 'hidden' || state === 'done') return null
 
   const opening = state === 'opening'
   const date = config.weddingDate
-
-  /* Mỗi nửa bìa chứa cùng một mặt thiệp rộng bằng cả màn hình, chỉ khác là bị
-     cắt bởi khung của nửa đó — ghép lại thành một mặt bìa liền mạch. */
-  const face = (align) => (
-    <div className={`absolute inset-y-0 ${align} w-screen`}>
-      {/* Khung kẻ đôi, thụt vào như đường bế của một tấm thiệp in */}
-      <div
-        aria-hidden
-        className="absolute inset-[18px] border border-[#f0e9da]/16 sm:inset-7 md:inset-10"
-      />
-      <div
-        aria-hidden
-        className="absolute inset-[23px] border border-[#f0e9da]/8 sm:inset-9 md:inset-[3.25rem]"
-      />
-
-      <div
-        className={`cover-face absolute inset-0 flex flex-col items-center justify-center px-10 text-center ${
-          opening ? 'scale-[1.015] opacity-0' : 'scale-100 opacity-100'
-        }`}
-      >
-        <p className="t-eyebrow text-[#f0e9da]/58">{t('cover.ceremony')}</p>
-
-        <Monogram size={92} tone="light" ring className="my-9" />
-
-        <p className="t-display letterpress-dark text-[clamp(2rem,8.5vw,3.25rem)] text-[#f0e9da]">
-          {orderedNames[0]}
-        </p>
-        <p className="my-3 font-serif text-sm text-[#a98a53] italic">&amp;</p>
-        <p className="t-display letterpress-dark text-[clamp(2rem,8.5vw,3.25rem)] text-[#f0e9da]">
-          {orderedNames[1]}
-        </p>
-
-        <div aria-hidden className="my-9 h-px w-14 bg-[#a98a53]/60" />
-
-        <p className="t-eyebrow-lg text-[#f0e9da]/60">
-          {pad(date.getDate())} · {pad(date.getMonth() + 1)} · {date.getFullYear()}
-        </p>
-
-        {guestName && (
-          <div className="mt-12">
-            <p className="t-eyebrow text-[#f0e9da]/52">{t('cover.inviting')}</p>
-            <p className="mt-3 font-serif text-xl font-light text-[#f0e9da]/90">{guestName}</p>
-          </div>
-        )}
-      </div>
-    </div>
-  )
+  const dateStr = `${pad(date.getDate())} · ${pad(date.getMonth() + 1)} · ${date.getFullYear()}`
 
   return (
     <div
-      className="fixed inset-0 z-200 flex"
+      className={[
+        'cover-stage fixed inset-0 z-200 flex flex-col items-center justify-center gap-[clamp(2.25rem,7vh,4.5rem)] overflow-hidden',
+        phase >= 1 && 'is-open',
+        phase >= 2 && 'is-out',
+        phase >= 3 && 'is-gone',
+        flapBack && 'flap-back',
+      ]
+        .filter(Boolean)
+        .join(' ')}
       role={opening ? undefined : 'button'}
       tabIndex={opening ? -1 : 0}
       onClick={open}
@@ -121,47 +124,72 @@ export default function Cover() {
       }}
       aria-label={t('cover.open')}
     >
-      <div
-        className={`cover-panel relative h-full w-1/2 overflow-hidden bg-deep ${
-          opening ? '-translate-x-full opacity-90' : 'translate-x-0'
-        }`}
-      >
-        {face('left-0')}
+      {/* Hoa trên mặt bàn, quanh phong bì */}
+      <Florals preset="cover" />
+
+      <div className="cover-env">
+        <div aria-hidden className="env-sheet env-back" />
+
+        {/* Tấm thiệp bên trong. Chữ dồn lên nửa trên vì lúc được rút ra thì
+            phần dưới vẫn còn nằm trong phong bì - viết xuống dưới là viết vào
+            chỗ không ai đọc được. */}
+        <div className="env-sheet env-card">
+          <div aria-hidden className="absolute inset-[5.5%] border border-gold/25" />
+          <div className="env-card-ink absolute inset-x-0 top-0 flex flex-col items-center px-[10%] pt-[13%] text-center">
+            <p className="t-display env-name text-primary italic">{orderedNames[0]}</p>
+            <p className="env-amp my-[1.5%] font-serif text-gold italic">&amp;</p>
+            <p className="t-display env-name text-primary italic">{orderedNames[1]}</p>
+            <div aria-hidden className="my-[6%] h-px w-[18%] bg-gold/55" />
+            <p className="env-date text-muted-foreground">{dateStr}</p>
+          </div>
+        </div>
+
+        {/* Mặt trước phong bì: hoa in trên giấy, một dòng đề, và dòng kính mời
+            có nét chấm chấm để điền tên - đúng như phong bì in của gia đình. */}
+        <div className="env-sheet env-front">
+          <Florals preset="envelope" />
+
+          {/* Bắt đầu ở 62% chứ không phải ở mũi nắp (47%): dấu triện tròn đè
+              xuống quá mũi nắp một quãng, chữ đặt sát mũi sẽ chui vào gầm triện. */}
+          <div className="absolute inset-x-[9%] top-[62%] bottom-[7%] flex flex-col items-center justify-between text-center">
+            <p className="env-label text-foreground/75">{t('cover.ceremony')}</p>
+
+            <div className="w-full">
+              <p className="env-label text-muted-foreground/70">{t('cover.inviting')}</p>
+              <p className="env-guest mt-[0.45em] truncate border-b border-dotted border-foreground/25 pb-[0.3em] font-serif text-foreground/85 italic">
+                {guestName || ' '}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Nắp phong bì. Giấy nằm ở lớp con để cái bóng đổ không bị chính
+            đường cắt tam giác xén mất — xem ghi chú trong index.css. */}
+        <div className="env-flap">
+          <div aria-hidden className="env-flap-paper" />
+          <div className="env-seal">
+            <Monogram size={100} tone="gold" className="h-[56%] w-[56%]" />
+          </div>
+        </div>
       </div>
-      <div
-        className={`cover-panel relative h-full w-1/2 overflow-hidden bg-deep ${
-          opening ? 'translate-x-full opacity-90' : 'translate-x-0'
-        }`}
-      >
-        {face('right-0')}
+
+      {/* Dòng mời chạm đi liền dưới phong bì trong cùng một cột, KHÔNG neo vào
+          đáy màn hình: neo đáy thì trên máy tính nó rơi xuống tận mép dưới, cách
+          chiếc phong bì gần hai trăm pixel và thành một dòng chữ mồ côi. */}
+      <div className="cover-hint text-center">
+        <p className="t-eyebrow breathe text-muted-foreground">{t('cover.open')}</p>
       </div>
 
       {/* Vân giấy riêng cho bìa: lớp vân của cả trang nằm DƯỚI bìa nên không
-          nhìn thấy ở đây, mà một mặt olive phẳng lì thì lộ ngay là màn hình. */}
+          nhìn thấy ở đây, mà một mặt giấy phẳng lì thì lộ ngay là màn hình. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
+        className="pointer-events-none absolute inset-0 opacity-[0.045] mix-blend-multiply"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23c)'/%3E%3C/svg%3E\")",
         }}
       />
-
-      {/* Đường nối giữa hai nửa: mờ hẳn ở giữa để không cắt ngang qua tên và
-          monogram, nhưng vẫn thấy ở trên dưới nên khách đoán được bìa sẽ tách. */}
-      <div
-        aria-hidden
-        className={`pointer-events-none absolute inset-y-0 left-1/2 w-px -translate-x-1/2 bg-linear-to-b from-[#a98a53]/30 via-transparent to-[#a98a53]/30 transition-opacity duration-700 ${
-          opening ? 'opacity-0' : 'opacity-100'
-        }`}
-      />
-      <p
-        className={`t-eyebrow pointer-events-none absolute bottom-14 left-1/2 -translate-x-1/2 text-[#f0e9da] transition-opacity duration-500 ${
-          opening ? 'opacity-0' : 'breathe'
-        }`}
-      >
-        {t('cover.open')}
-      </p>
     </div>
   )
 }

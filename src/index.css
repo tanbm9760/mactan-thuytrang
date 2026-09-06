@@ -53,6 +53,9 @@
   --font-hero-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
 
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
+  /* Đường cong của iOS: bung ra rất nhanh rồi hãm lại rất dài, không nảy.
+     Dùng riêng cho màn mở phong bì - chuyển động vật lý, không phải hiệu ứng. */
+  --ease-cover: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @layer base {
@@ -371,32 +374,177 @@
     transform: rotate(var(--rot, 0deg));
   }
 
-  /* Bìa thiệp tách đôi. Chậm và có chủ ý - mở một tấm thiệp, không phải mở
-     một cánh cửa. Để ở CSS chứ không ở class Tailwind để reduced-motion tắt
-     được nó. */
-  /* Đường cong đối xứng: đứng yên một nhịp, tách ra, rồi tắt dần rất dài.
-     Đường cong cũ dồn hết quãng đường vào nửa đầu nên mới hơn nửa giây là bìa
-     đã bay hết - trông như cánh cửa bật ra chứ không như một tấm thiệp mở. */
-  /* ⚠️ Phải nêu cả `translate` và `scale`, không chỉ `transform`.
-     Tailwind v4 sinh ra `translate: -100% 0` / `scale: 1.015` (thuộc tính
-     riêng) chứ không còn gộp vào `transform` như v3 nữa. Chỉ khai
-     `transition: transform` thì trình duyệt không có gì để nội suy, và bìa
-     thiệp nhảy phắt sang hai bên trong một khung hình thay vì trượt ra
-     trong 1,6 giây. */
-  .cover-panel {
-    transition:
-      translate 1.6s cubic-bezier(0.72, 0, 0.18, 1),
-      transform 1.6s cubic-bezier(0.72, 0, 0.18, 1),
-      opacity 1.6s ease-out;
+  /* ── BÌA THIỆP: MỘT CHIẾC PHONG BÌ ──────────────────────────────────────
+     Cùng vật liệu với tấm thiệp in của gia đình: giấy ngà, hoa màu nước, mực
+     đồng. Không còn màn olive sẫm nữa - thứ khách nhìn thấy đầu tiên phải là
+     chính tấm thiệp họ sắp cầm trên tay.
+
+     MỌI cỡ chữ và cỡ hoa trong phong bì đều tính từ `--ew` (bề ngang phong
+     bì), không dùng cỡ px rời rạc. Nhờ vậy phong bì trên điện thoại và trên
+     máy tính là CÙNG một bản vẽ phóng to thu nhỏ, y như một tấm giấy thật -
+     chứ không phải hai bố cục khác nhau.
+
+     Xếp lớp bằng z-index chứ KHÔNG dùng transform-style: preserve-3d.
+     `perspective` đặt ngay trên .cover-env nên mỗi lớp con vẫn xoay trong
+     không gian ba chiều, nhưng thứ tự vẽ do z-index quyết định - đoán được ở
+     mọi trình duyệt. Với preserve-3d thì trình duyệt tự sắp xếp theo chiều
+     sâu, và Safari sắp sai đúng lúc nắp phong bì lật qua 90°.
+     ───────────────────────────────────────────────────────────────────── */
+  .cover-stage {
+    /* Bề ngang phong bì, và cũng là thước đo của MỌI thứ trong màn này - kể cả
+       hoa rải trên mặt bàn quanh nó. Khai ở đây chứ không khai ở .cover-env để
+       lớp hoa (nằm ngoài phong bì) cũng đọc được.
+
+       Ba giới hạn: theo bề ngang màn hình, theo một khổ giấy tối đa, và theo
+       CHIỀU CAO màn hình - vì lúc rút thiệp ra, cả cụm cao gấp rưỡi chiếc
+       phong bì, nên máy để ngang mà chỉ chặn theo bề ngang thì tấm thiệp trồi
+       lên khỏi mép trên màn hình. */
+    --ew: min(86vw, 560px, 62svh);
+    background: radial-gradient(118% 88% at 50% 2%, #faf5eb 0%, #f2eada 50%, #e8dcc4 100%);
+    transition: opacity 0.9s var(--ease-editorial);
   }
-  /* Mặt thiệp nhạt dần chậm hơn quãng trượt, để mắt còn kịp thấy tấm thiệp
-     tách làm đôi chứ không phải chỉ thấy nó biến mất. */
-  .cover-face {
-    transition:
-      opacity 1.15s ease-out,
-      scale 1.6s var(--ease-editorial),
-      transform 1.6s var(--ease-editorial);
+  .cover-stage.is-gone { opacity: 0; }
+
+  .cover-env {
+    position: relative;
+    width: var(--ew);
+    aspect-ratio: 1.3 / 1;
+    perspective: 1500px;
+    transform: translateY(var(--env-y, 0%)) scale(var(--env-s, 1));
+    transition: transform 1.25s var(--ease-cover);
   }
+  /* Phong bì chìm xuống trong lúc tấm thiệp được rút lên: hai chuyển động
+     ngược chiều nhau, mắt đọc ra ngay là "thiệp đang được lấy ra".
+
+     38% không phải con số chọn cho đẹp mà là con số để CẢ CỤM lúc rút xong
+     vẫn nằm giữa màn hình. Tấm thiệp trồi lên khỏi miệng phong bì 0,7 lần
+     chiều cao phong bì; phong bì đứng yên thì cụm ấy lệch hẳn lên trên và
+     đỉnh tấm thiệp bị mép trên màn hình cắt mất - thấy rõ nhất trên máy tính,
+     nơi phong bì to nhất so với chiều cao khung nhìn. */
+  .is-out  { --env-y: 38%; }
+  .is-gone { --env-s: 1.14; }
+
+  .env-sheet {
+    position: absolute;
+    border-radius: 3px;
+  }
+
+  /* Lòng phong bì: sẫm hơn mặt ngoài, và tối dần ở miệng - chiều sâu của
+     phần rỗng bên trong, thứ khiến tấm thiệp trông như đang nằm trong đó. */
+  .env-back {
+    inset: 0;
+    z-index: 1;
+    background: linear-gradient(180deg, #ddd0b3 0%, #e9deca 22%, #ece2ce 100%);
+    box-shadow: inset 0 8px 14px -8px rgb(52 44 28 / 0.55);
+  }
+
+  .env-card {
+    inset: auto 5.5% 5%;
+    height: 86%;
+    z-index: 2;
+    background: linear-gradient(180deg, #fdfbf5 0%, #f9f3e6 100%);
+    box-shadow: 0 10px 20px -14px rgb(52 44 28 / 0.5);
+    transform: translateY(var(--card-y, 0%)) scale(var(--card-s, 1));
+    transition: transform 1.35s var(--ease-cover);
+  }
+  .is-out  { --card-y: -92%; }
+  .is-gone { --card-s: 1.24; }
+
+  .env-front {
+    inset: 0;
+    z-index: 3;
+    background: linear-gradient(172deg, #fbf6ec 0%, #f5eddc 58%, #f1e7d2 100%);
+    box-shadow:
+      0 34px 60px -32px rgb(52 44 28 / 0.5),
+      0 3px 6px rgb(52 44 28 / 0.07);
+  }
+
+  /* Nắp phong bì lật quanh mép trên. -177° chứ không phải -180°: hở lại hai
+     độ thì nắp còn bắt được chút sáng, không dán phẳng lì vào nền. */
+  .env-flap {
+    position: absolute;
+    inset: 0 0 auto;
+    height: 47%;
+    z-index: 4;
+    transform-origin: 50% 0;
+    transform: rotateX(var(--flap, 0deg));
+    filter: drop-shadow(0 4px 5px rgb(52 44 28 / 0.2));
+    transition:
+      transform 1s var(--ease-cover),
+      filter 0.55s ease-out;
+  }
+  .is-open { --flap: -177deg; }
+  .is-open .env-flap { filter: drop-shadow(0 0 0 rgb(52 44 28 / 0)); }
+
+  /* ⚠️ clip-path nằm ở lớp giấy BÊN TRONG, drop-shadow ở lớp .env-flap bọc
+     ngoài. Đặt chung một chỗ thì trình duyệt lọc trước rồi mới cắt, nên cái
+     bóng của hình chữ nhật bị cắt mất sạch và nắp phong bì thành không bóng. */
+  .env-flap-paper {
+    position: absolute;
+    inset: 0;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    background: linear-gradient(176deg, #f8f1de 0%, #f0e6cd 100%);
+  }
+
+  /* Nắp vừa lật quá 90° thì phải nằm DƯỚI tấm thiệp. Không có dòng này, tấm
+     thiệp rút lên sẽ chui ra sau lưng cái nắp đang dựng - nhìn ra ngay là hai
+     mảnh giấy phẳng chồng nhau chứ không phải một chiếc phong bì. */
+  .flap-back .env-flap { z-index: 1; }
+
+  /* Dấu triện ở mũi nắp. Nằm ngoài vùng cắt của tam giác nên tròn trịa,
+     và mờ đi ngay nhịp đầu - triện vỡ thì thiệp mới mở được. */
+  .env-seal {
+    position: absolute;
+    left: 50%;
+    top: 100%;
+    width: calc(var(--ew) * 0.155);
+    aspect-ratio: 1;
+    translate: -50% -50%;
+    display: grid;
+    place-items: center;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 34% 28%, #fdf9f0 0%, #f4ead6 62%, #e9dcc0 100%);
+    box-shadow:
+      0 2px 5px rgb(52 44 28 / 0.2),
+      inset 0 0 0 1px rgb(169 138 83 / 0.45);
+    transition:
+      opacity 0.4s ease-out,
+      scale 0.55s var(--ease-cover);
+  }
+  .is-open .env-seal { opacity: 0; scale: 0.86; }
+
+  /* ── Chữ trên phong bì ──
+     Cỡ tính theo bề ngang phong bì, có sàn px để trên máy nhỏ nhất vẫn đọc
+     được. Đây là lý do cả khối chữ không bao giờ lệch khỏi tờ giấy. */
+  .env-label {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: max(6.4px, calc(var(--ew) * 0.0205));
+    line-height: 1.7;
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    text-transform: uppercase;
+  }
+  .env-name { font-size: calc(var(--ew) * 0.086); }
+  .env-amp  { font-size: calc(var(--ew) * 0.032); }
+  .env-date {
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: max(7px, calc(var(--ew) * 0.026));
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+  }
+  .env-guest { font-size: calc(var(--ew) * 0.044); }
+
+  /* Lúc tan, chữ trên tấm thiệp tắt nhanh hơn tờ giấy. Nếu để cả chữ mờ
+     cùng nhịp với giấy thì trong non một giây có hai lần tên hai người chồng
+     lên nhau ở hai cỡ khác nhau - trông như trang bị vẽ lỗi chứ không như một
+     tấm thiệp đang tan vào trang. */
+  .env-card-ink { transition: opacity 0.4s ease-out; }
+  .is-gone .env-card-ink { opacity: 0; }
+
+  .cover-hint { transition: opacity 0.45s ease-out; }
+  .is-open .cover-hint { opacity: 0; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -558,7 +706,12 @@
   .reveal-rule.is-visible { transform: none; transition: none; }
   .photo-card,
   .photo-card img { transition: none; }
-  .cover-panel, .cover-face { transition-duration: 0.3s; }
+  .cover-stage,
+  .cover-env,
+  .env-card,
+  .env-flap,
+  .env-seal,
+  .cover-hint { transition-duration: 0.25s; }
   .reveal-soft,
   .reveal-soft.is-visible { opacity: 1; transition: none; }
   .floral-drift { animation: none; }
