@@ -48,6 +48,10 @@
   --font-serif: "Fraunces", "Playfair Display", Georgia, serif;
   --font-sans: "Be Vietnam Pro", ui-sans-serif, system-ui, sans-serif;
 
+  /* Bộ chữ của màn hình mở đầu, dựng theo đúng trang mẫu bạn gửi */
+  --font-hero-serif: "Playfair Display", Georgia, serif;
+  --font-hero-sans: "Montserrat", ui-sans-serif, system-ui, sans-serif;
+
   --ease-editorial: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -193,6 +197,49 @@
     font-variant-numeric: tabular-nums lining-nums;
     line-height: 0.86;
     letter-spacing: -0.03em;
+  }
+
+  /* ══ Màn hình mở đầu dựng theo trang mẫu ══
+     Thông số đo thẳng từ trang mẫu ở khổ 1440x900:
+       chữ nhỏ  Montserrat 16px  w500  giãn 4.8px (0.3em)  hoa
+       tên      Playfair   128px w500  giãn 0     leading 1.0
+       ngày     Playfair   24px  w400  nghiêng    giãn 0.6px
+       nơi chốn Montserrat 18px  w400  giãn 1.8px (0.1em)  hoa
+       nút      Montserrat 14px  w500  giãn 1.4px (0.1em)  hoa, nền trắng
+     Riêng leading của tên nới từ 1.0 lên 1.06: tiếng Việt có dấu chồng tầng
+     (Ạ, Ù) nên hai dòng sát nhau ở 1.0 sẽ chạm dấu vào nhau. */
+  .t-hero-name {
+    font-family: var(--font-hero-serif);
+    font-weight: 500;
+    line-height: 1.06;
+    letter-spacing: 0;
+  }
+  .t-hero-date {
+    font-family: var(--font-hero-serif);
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: 0.025em;
+  }
+  .t-hero-eyebrow {
+    font-family: var(--font-hero-sans);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    text-indent: 0.3em;
+  }
+  .t-hero-city {
+    font-family: var(--font-hero-sans);
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-indent: 0.1em;
+  }
+  .t-hero-btn {
+    font-family: var(--font-hero-sans);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-indent: 0.1em;
   }
 
   .measure      { max-width: 36ch; }

@@ -2,52 +2,35 @@ import { useLanguage } from '../lib/i18n'
 import { config, orderedNames } from '../config'
 import { heroImage } from '../lib/assets'
 import { useParallax } from '../hooks/useParallax'
+import { local } from '../lib/local'
 import { RevealGroup } from './Reveal'
 
-const pad = (n) => String(n).padStart(2, '0')
-
 /**
- * Trang bìa của một số tạp chí, không phải màn hình đầu của một website.
+ * Màn hình mở đầu, dựng theo đúng trang mẫu:
  *
- * Bức ảnh có ba tầng sáng rất rõ: trời ngà sáng ở trên, hai bàn tay thành
- * bóng ở giữa, dãy đồi gần như đen ở dưới. Chữ được đặt vào đúng hai vùng
- * trống ấy - mực sẫm nằm trên trời, chữ ngà nằm trên đồi - nên KHÔNG cần
- * phủ tối lên ảnh, và cũng không cần quầng bóng dày quanh chữ. Bức ảnh giữ
- * nguyên vẹn từ đầu đến cuối.
+ *   một khối duy nhất, canh giữa cả chiều ngang lẫn chiều dọc
+ *   chữ nhỏ → tên (hai dòng) → ngày kẹp giữa hai nét kẻ → nơi chốn → nút đặc
  *
- * Vùng trời đo được là rgb(253,234,196), gần đúng bằng màu giấy của trang.
- * Nhờ vậy mép trên tấm ảnh tan hẳn vào trang: thanh nav trôi trên giấy chứ
- * không nằm trên một tấm ảnh dán vào.
+ * Chữ Playfair Display cho tên và ngày, Montserrat cho các dòng chữ hoa.
  *
- * ══ Vì sao mọi cỡ chữ ở đây tính theo svh chứ không theo px ══
+ * Ba chỗ khác trang mẫu, đều vì bức ảnh của mình có chủ thể cần giữ:
  *
- * Đo trên chính file ảnh: bóng bàn tay bắt đầu ở đúng 30% chiều cao ảnh, và
- * vì ảnh luôn được cắt theo chiều cao (khung đứng bao giờ cũng hẹp hơn ảnh),
- * 30% ấy rơi vào một TỈ LỆ cố định của khung hero - khoảng 28% - dù màn hình
- * cao bao nhiêu. Nghĩa là dải trời sạch tính bằng pixel co lại theo màn hình:
- * 236px trên máy cao 844, nhưng chỉ 197px trên máy 703 (iPhone có thanh địa
- * chỉ Safari chiếm chỗ).
- *
- * Khối chữ trước đây đặt bằng px nên nó KHÔNG co theo, và trên máy thấp thì
- * tràn xuống đè lên tay. Giờ mọi cỡ chữ và mọi khoảng cách ở đây đều bị chặn
- * trên bởi svh, nên khối chữ luôn nằm gọn trong dải trời.
+ *   - Dải trời nối thêm 21% ở đỉnh, đẩy hai bàn tay xuống sâu để tên nằm
+ *     trọn trên nền trời sạch.
+ *   - Nút xác nhận để nền trong suốt, chỉ còn một nét viền. Nút nền trắng
+ *     đặc của trang mẫu là một khối kín che mất phần ảnh nó nằm lên.
+ *   - Chữ dùng mực sẫm chứ không dùng chữ trắng. Đo được: nền dưới nét chữ
+ *     ở đây sáng 160-168, chữ trắng đặt lên chỉ đạt 2,5:1 - dưới xa ngưỡng
+ *     đọc được, mà muốn cứu thì phải phủ tối rất dày và mất cả ráng chiều.
+ *     Trang mẫu dùng được chữ trắng vì ảnh của họ là một khung tối. Đổi sang
+ *     mực sẫm thì đạt 11:1 và KHÔNG cần phủ gì lên ảnh cả.
+ *   - Khối chữ không canh giữa khung mà đặt theo phần trăm, chỉnh riêng cho
+ *     khổ đứng và khổ ngang - hai khổ cắt bức ảnh ra hai bố cục khác nhau.
  */
 export default function Hero() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const { wrapRef, imgRef } = useParallax(3)
-  const date = config.weddingDate
-
-  /* Tên trải một dòng khi khung nhìn thấp hoặc rộng; xếp chồng khi khung cao.
-     Hai dòng chồng nhau chiếm gấp đôi chiều cao mà dải trời thì không đủ.
-
-     Trên máy thấp, khối tên còn được đẩy xuống sâu hơn (`squat:pt-…`): dải
-     trời ở đó hẹp, nếu cứ dùng chung một khoảng đệm với máy cao thì tên dính
-     ngay dưới thanh nav và đọc ra như một dòng chú thích chứ không phải tiêu
-     đề. Đẩy xuống cho nó nằm giữa khoảng trời, giữa thanh nav và hai bàn tay. */
-  const nameSize =
-    'text-[clamp(1.75rem,min(10.5vw,7svh),3.9rem)] ' +
-    'squat:text-[clamp(1.35rem,min(8.4vw,8.6svh),2.9rem)] ' +
-    'md:text-[clamp(3rem,4.9vw,5rem)]'
+  const dateStr = t('details.dateFormat')(config.weddingDate)
 
   return (
     <section
@@ -55,109 +38,73 @@ export default function Hero() {
       ref={wrapRef}
       className="relative h-svh min-h-[520px] overflow-hidden bg-background"
     >
-      {/* Khung ảnh phóng lên 120% và neo lên trên (chỉ thò lên 4%).
+      {/* ══ Dải trời nối thêm ở đỉnh khung ══
 
-          Đây là cách duy nhất hạ được hai bàn tay xuống: khung đứng bao giờ
-          cũng hẹp hơn ảnh nên ảnh luôn cắt theo CHIỀU CAO, và khi đó
-          `object-position` theo trục dọc không có tác dụng gì cả - cả chiều
-          cao ảnh đã nằm gọn trong khung rồi. Muốn dời ảnh theo chiều dọc thì
-          phải phóng nó to hơn khung rồi mới trượt được.
+          Không cắt ảnh, không phóng ảnh - chỉ đẩy cả bức ảnh xuống 14% rồi
+          vẽ tiếp bầu trời vào chỗ vừa trống ra. Nhờ vậy hai bàn tay tụt
+          xuống mà vẫn giữ NGUYÊN kích thước; phóng ảnh thì tay xuống được
+          nhưng lại to nhỏ theo, còn cách này thì không.
 
-          Phóng lên còn được thêm hai thứ: dải trời cho tên rộng ra, và
-          khoảng nắng giữa hai bàn tay với dãy đồi cũng giãn ra - đúng chỗ
-          đang đặt ngày cưới và nút xác nhận. Đổi lại là mất phần đáy ảnh,
-          nhưng đó chỉ là dãy đồi tối, không mất chi tiết nào. */}
+          Màu lấy đúng từ mép trên bức ảnh: #F9E3C1 khi khung ngang cắt gần
+          hết bề ngang, #FDE9C8 ở dải giữa mà điện thoại nhìn thấy. Dải này
+          chạy tới #FBE6C5 - nằm giữa hai giá trị ấy - rồi một đoạn tan dần
+          phủ lên mép ảnh để mối nối không bao giờ thành một đường kẻ ngang,
+          dù khung máy cắt bức ảnh kiểu gì. */}
+      <div
+        aria-hidden
+        className="absolute inset-x-0 top-0 h-[25%] bg-[linear-gradient(to_bottom,#F3D9AE_0%,#F8E0BB_45%,#FBE6C5_100%)]"
+      />
+
       <img
         ref={imgRef}
         src={heroImage}
         alt=""
         aria-hidden
         fetchPriority="high"
-        className="parallax-img hero-zoom absolute inset-x-0 top-[-4%] h-[120%] w-full object-cover object-[50%_50%]"
+        className="parallax-img hero-zoom absolute inset-x-0 top-[24%] h-[120%] w-full object-cover object-[50%_50%]"
       />
 
-      {/* Mép trên tan vào giấy. Đây là lớp làm SÁNG, không phải lớp phủ tối. */}
+      {/* Đoạn tan dần che mối nối giữa dải trời vẽ thêm và mép ảnh thật */}
       <div
         aria-hidden
-        className="absolute inset-x-0 top-0 h-[26%] bg-linear-to-b from-background via-background/45 to-transparent"
+        className="absolute inset-x-0 top-[23%] h-[9%] bg-[linear-gradient(to_bottom,#FBE6C5_0%,rgba(251,230,197,0.55)_45%,transparent_100%)]"
       />
-      <div className="relative z-10 gutter pt-[clamp(4.5rem,9.5svh,7rem)] squat:pt-[clamp(5rem,13svh,8rem)]">
-        {/* ── Trên trời: mực sẫm ────────────────────────────────────────── */}
-        <RevealGroup step={150} className="text-center">
-          <p className="t-eyebrow text-foreground/65">{t('hero.subtitle')}</p>
 
-          {/* Hai khổ máy cắt bức ảnh ra hai bố cục khác hẳn nhau, nên tên
-              cũng phải xếp khác nhau:
-
-              Khung cao cắt dọc, hai bàn tay tụt xuống quá nửa khung - trên
-              đầu còn nguyên một mảng trời cao, đủ chỗ cho tên xếp chồng.
-
-              Khung thấp hoặc khung ngang giữ nguyên bề ngang ảnh, hai bàn tay
-              vắt ngang chính giữa và dải trời sạch chỉ còn mỏng ở trên. Tên
-              xếp chồng sẽ đè thẳng lên tay, nên ở đây tên trải thành MỘT dòng -
-              vốn cũng là cách một trang bìa khổ ngang xử lý dòng tít của nó. */}
-          <h1 className="t-display mt-[clamp(0.7rem,2.4svh,1.75rem)] text-foreground">
-            <span className="flex flex-col items-center squat:flex-row squat:items-baseline squat:justify-center squat:gap-3 md:flex-row md:items-baseline md:justify-center md:gap-7">
-              <span className={`whitespace-nowrap ${nameSize}`}>{orderedNames[0]}</span>
-              <span className="my-[0.22em] font-serif text-[clamp(0.9rem,min(5.2vw,3.5svh),1.95rem)] text-primary italic squat:my-0 squat:text-[clamp(0.7rem,min(4.2vw,4.3svh),1.45rem)] md:my-0 md:text-[clamp(1.5rem,2.45vw,2.5rem)]">
-                &amp;
-              </span>
-              <span className={`whitespace-nowrap ${nameSize}`}>{orderedNames[1]}</span>
-            </span>
-          </h1>
-        </RevealGroup>
-      </div>
-
-      {/* ── Ngay dưới hai bàn tay ──────────────────────────────────────────
-          Trước đây khối này bị đẩy xuống sát đáy khung, cách khối tên gần nửa
-          màn hình - thành ra hai cụm chữ rời nhau với một mảng trống rất lớn
-          ở giữa. Nay nó lên nằm ngay dưới hai bàn tay, khoảng trống ấy biến
-          mất và cả khung hình đọc thành MỘT khối.
-
-          Đổi luôn sang mực sẫm: chỗ này là vệt nắng sáng nhất của bức ảnh,
-          chữ mực đặt lên đó tương phản rất mạnh. Nhờ vậy bỏ được hẳn lớp phủ
-          tối ở chân ảnh - giờ trên bức ảnh không còn một lớp phủ nào, ráng
-          chiều nguyên vẹn từ đầu đến cuối.
-
-          Vị trí đặt theo PHẦN TRĂM chiều cao khung: ảnh luôn cắt theo chiều
-          cao nên hai bàn tay bao giờ cũng kết thúc ở cùng một tỉ lệ, dù màn
-          hình cao bao nhiêu. */}
-      <div className="absolute inset-x-0 top-[71%] z-10 gutter text-center">
-        <RevealGroup start={520} step={130} className="text-foreground">
-          <p className="t-eyebrow-lg text-foreground/80">
-            {pad(date.getDate())} · {pad(date.getMonth() + 1)} · {date.getFullYear()}
+      <div className="absolute inset-x-0 top-[15%] z-10 gutter text-center text-foreground md:top-[11%]">
+        <RevealGroup step={140}>
+          <p className="t-hero-eyebrow text-[clamp(0.7rem,3.1vw,1rem)] text-foreground/70">
+            {t('hero.subtitle')}
           </p>
 
-          <p className="t-eyebrow mt-[clamp(0.3rem,0.8svh,0.55rem)] text-foreground/55">
-            {config.venue.city}
+          <h1 className="t-hero-name mt-[clamp(0.6rem,1.8svh,1.5rem)] text-[clamp(2.5rem,14.5vw,3.75rem)] md:text-[clamp(3.5rem,7.4vw,6.75rem)]">
+            <span className="block">{orderedNames[0]} &amp;</span>
+            <span className="block">{orderedNames[1]}</span>
+          </h1>
+
+          <div className="mt-[clamp(0.7rem,2.2svh,1.6rem)] flex items-center justify-center gap-5 md:gap-7">
+            <span aria-hidden className="h-px w-10 bg-foreground/30 md:w-20" />
+            <p className="t-hero-date text-[clamp(1.1rem,4.3vw,1.5rem)] whitespace-nowrap">
+              {dateStr}
+            </p>
+            <span aria-hidden className="h-px w-10 bg-foreground/30 md:w-20" />
+          </div>
+
+          <p className="t-hero-city mt-[clamp(0.7rem,1.9svh,1.4rem)] text-[clamp(0.8rem,3.4vw,1.125rem)] text-foreground/60">
+            {local(config.venue, 'city', language)}
           </p>
 
           {config.sections.rsvp && (
-            <div className="mt-[clamp(0.9rem,2svh,1.5rem)]">
+            <div className="mt-[clamp(1.1rem,3svh,2.25rem)]">
               <button
                 onClick={() => document.querySelector('#rsvp')?.scrollIntoView({ behavior: 'smooth' })}
-                className="inline-flex min-h-11 cursor-pointer items-center border border-foreground/40 px-8 text-foreground transition-colors duration-500 hover:border-foreground hover:bg-foreground hover:text-background"
+                className="t-hero-btn inline-flex h-[clamp(2.9rem,6svh,4rem)] cursor-pointer items-center border border-foreground/45 px-9 text-[clamp(0.72rem,2.9vw,0.875rem)] text-foreground transition-colors duration-300 hover:border-foreground hover:bg-foreground hover:text-background md:px-12"
               >
-                <span className="t-eyebrow">{t('hero.cta')}</span>
+                {t('hero.cta')}
               </button>
             </div>
           )}
         </RevealGroup>
       </div>
-
-      {/* Nét kẻ dọc thay cho mũi tên nảy lên nảy xuống. Nét chỉ rộng 1px
-          nhưng vùng bấm rộng 44px - đúng cỡ đầu ngón tay. Ẩn trên máy thấp,
-          ở đó phần tiếp theo vốn đã ở rất gần rồi. */}
-      <button
-        onClick={() =>
-          document.querySelector('#countdown, #story')?.scrollIntoView({ behavior: 'smooth' })
-        }
-        aria-label={t('hero.scroll')}
-        className="absolute bottom-[clamp(0.75rem,2svh,1.5rem)] left-1/2 z-10 flex h-11 w-11 -translate-x-1/2 cursor-pointer items-end justify-center squat:hidden"
-      >
-        <span aria-hidden className="block h-8 w-px bg-linear-to-b from-transparent to-[#f2ecdd]/70" />
-      </button>
-
     </section>
   )
 }

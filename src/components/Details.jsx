@@ -6,6 +6,7 @@ import { useReveal } from '../hooks/useReveal'
 import Schedule from './Schedule'
 import { RevealGroup } from './Reveal'
 import SectionMark from './SectionMark'
+import { local } from '../lib/local'
 import Florals from './Florals'
 
 const pad = (n) => String(n).padStart(2, '0')
@@ -18,13 +19,13 @@ const pad = (n) => String(n).padStart(2, '0')
  * thành các dòng kẻ tóc như một tờ chương trình - không phải ba cái thẻ.
  */
 export default function Details() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const dateRef = useReveal({ threshold: 0.35 })
   const date = config.weddingDate
 
   const rows = [
     { label: t('details.time'), lines: [t('details.timeFormat')(date)] },
-    { label: t('details.where'), lines: [config.venue.name, config.venue.subName, config.venue.hall] },
+    { label: t('details.where'), lines: [config.venue.name, config.venue.subName, local(config.venue, 'hall', language)] },
     { label: t('details.address'), lines: [config.venue.address] },
   ]
     .map((row) => ({ ...row, lines: row.lines.filter(Boolean) }))
@@ -69,7 +70,9 @@ export default function Details() {
             </p>
 
             {config.lunarDate && (
-              <p className="t-caption mt-6 text-muted-foreground/85 italic">{config.lunarDate}</p>
+              <p className="t-caption mt-6 text-muted-foreground/85 italic">
+                {local(config, 'lunarDate', language)}
+              </p>
             )}
           </div>
 
@@ -118,7 +121,7 @@ export default function Details() {
  * nó ở đó để dùng, không phải để nhìn.
  */
 function Location() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const ref = useReveal({ threshold: 0.2 })
 
   return (
@@ -140,7 +143,7 @@ function Location() {
           <p className="t-caption mt-6 text-muted-foreground">
             {config.venue.hall && (
               <>
-                {config.venue.hall}
+                {local(config.venue, 'hall', language)}
                 <span aria-hidden className="mx-2 text-gold">·</span>
               </>
             )}

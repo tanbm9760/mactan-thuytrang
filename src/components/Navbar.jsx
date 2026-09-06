@@ -21,6 +21,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [onDeep, setOnDeep] = useState(false)
+  const [onHero, setOnHero] = useState(false)
 
   /* Đoạn kết của trang là một khối olive sẫm chạy tới hết chân trang. Một
      thanh giấy sáng trôi ngang qua giữa khối đó thì lộ hẳn ra là giao diện
@@ -33,16 +34,21 @@ export default function Navbar() {
      nằm vẫn là giấy sáng. Nên đây là một phép đo toạ độ, không phải một
      IntersectionObserver. Chỉ có hai khối để đo nên đo mỗi lần cuộn vẫn rẻ. */
   useEffect(() => {
-    const blocks = [...document.querySelectorAll('[data-deep]')]
+    /* Hai loại nền sẫm, xử lý khác nhau:
+         [data-hero] - ảnh mở đầu đã phủ tối: chữ sáng, nhưng nav KHÔNG tô nền,
+                       để nó trôi trên ảnh đúng như trang mẫu.
+         [data-deep] - đoạn kết nền olive đặc: chữ sáng và nav tô đúng màu ấy
+                       để chìm hẳn vào. */
+    const blocks = [...document.querySelectorAll('[data-deep],[data-hero]')]
+    const under = (el) => {
+      const rect = el.getBoundingClientRect()
+      return rect.top <= NAV_HEIGHT && rect.bottom > 0
+    }
 
     const onScroll = () => {
       setScrolled(window.scrollY > 40)
-      setOnDeep(
-        blocks.some((block) => {
-          const rect = block.getBoundingClientRect()
-          return rect.top <= NAV_HEIGHT && rect.bottom > 0
-        }),
-      )
+      setOnDeep(blocks.some((b) => b.hasAttribute('data-deep') && under(b)))
+      setOnHero(blocks.some((b) => b.hasAttribute('data-hero') && under(b)))
     }
 
     onScroll()
@@ -86,11 +92,13 @@ export default function Navbar() {
     <>
       <nav
         className={`fixed inset-x-0 top-0 z-50 gutter py-4 transition-all duration-700 ${
-          onDeep
-            ? 'border-b border-transparent bg-deep'
-            : scrolled
-              ? 'border-b border-border/70 bg-background/88 backdrop-blur-md'
-              : 'border-b border-transparent'
+          onHero
+            ? 'border-b border-transparent'
+            : onDeep
+              ? 'border-b border-transparent bg-deep'
+              : scrolled
+                ? 'border-b border-border/70 bg-background/88 backdrop-blur-md'
+                : 'border-b border-transparent'
         }`}
       >
         <div className="mx-auto flex max-w-[88rem] items-center justify-between">
@@ -104,7 +112,7 @@ export default function Navbar() {
             className="-my-2 block py-2 transition-opacity duration-500 hover:opacity-60"
             aria-label={t('nav.home')}
           >
-            <Monogram size={36} tone={onDeep ? 'light' : 'gold'} />
+            <Monogram size={36} tone={onDeep || onHero ? 'light' : 'gold'} />
           </a>
 
           {/* ── Máy tính ──────────────────────────────────────────────────
@@ -118,8 +126,8 @@ export default function Navbar() {
                 key={link.href}
                 onClick={() => goTo(link.href)}
                 className={`t-eyebrow rule-link cursor-pointer whitespace-nowrap transition-colors duration-500 ${
-                  onDeep
-                    ? 'text-deep-foreground/60 hover:text-deep-foreground'
+                  onDeep || onHero
+                    ? 'text-white/75 hover:text-white'
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
@@ -128,20 +136,20 @@ export default function Navbar() {
             ))}
             <span
               aria-hidden
-              className={`h-3 w-px ${onDeep ? 'bg-deep-foreground/20' : 'bg-border'}`}
+              className={`h-3 w-px ${onDeep || onHero ? 'bg-white/25' : 'bg-border'}`}
             />
             <LanguageSwitch
               language={language}
               setLanguage={setLanguage}
               langs={languages}
-              onDeep={onDeep}
+              onDeep={onDeep || onHero}
             />
           </div>
 
           {/* ── Điện thoại ───────────────────────────────────────────────── */}
           <button
             className={`t-eyebrow -mr-2 flex min-h-11 cursor-pointer items-center px-2 lg:hidden ${
-              onDeep ? 'text-deep-foreground/70' : 'text-muted-foreground'
+              onDeep || onHero ? 'text-white/85' : 'text-muted-foreground'
             }`}
             onClick={() => setMenuOpen(true)}
             aria-expanded={menuOpen}
@@ -192,9 +200,9 @@ export default function Navbar() {
 }
 
 function LanguageSwitch({ language, setLanguage, langs, onDeep = false }) {
-  const active = onDeep ? 'text-deep-foreground' : 'text-foreground'
+  const active = onDeep ? 'text-white' : 'text-foreground'
   const idle = onDeep
-    ? 'text-deep-foreground/40 hover:text-deep-foreground/75'
+    ? 'text-white/50 hover:text-white/85'
     : 'text-muted-foreground/60 hover:text-muted-foreground'
 
   return (
@@ -202,7 +210,7 @@ function LanguageSwitch({ language, setLanguage, langs, onDeep = false }) {
       {langs.map((lang, i) => (
         <span key={lang.code} className="flex items-center gap-3">
           {i > 0 && (
-            <span aria-hidden className={onDeep ? 'text-deep-foreground/25' : 'text-border'}>
+            <span aria-hidden className={onDeep ? 'text-white/30' : 'text-border'}>
               /
             </span>
           )}

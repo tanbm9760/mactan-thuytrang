@@ -5,6 +5,7 @@ import { RevealGroup } from './Reveal'
 import LotusIcon from './LotusIcon'
 import SectionMark from './SectionMark'
 import Florals from './Florals'
+import { local } from '../lib/local'
 
 /**
  * Lời mời của hai gia đình, dựng theo đúng thứ tự trên tấm thiệp in: tên cha
@@ -15,7 +16,7 @@ import Florals from './Florals'
  * rất rộng, vài nét kẻ tóc, và chữ được xếp cân đúng trục giữa.
  */
 export default function Families() {
-  const { t } = useLanguage()
+  const { t, language } = useLanguage()
   const announceRef = useReveal()
   const honourRef = useReveal()
   const { groom, bride } = config.families
@@ -46,9 +47,9 @@ export default function Families() {
           step={170}
           className="mt-16 grid gap-12 md:mt-20 md:grid-cols-[1fr_auto_1fr] md:items-center md:gap-10"
         >
-          <FamilySide family={sides[0].family} />
+          <FamilySide family={sides[0].family} language={language} />
           <div aria-hidden className="mx-auto h-px w-16 bg-border md:h-24 md:w-px" />
-          <FamilySide family={sides[1].family} />
+          <FamilySide family={sides[1].family} language={language} />
         </RevealGroup>
 
         {/* ── Câu báo tin ────────────────────────────────────────────────── */}
@@ -81,10 +82,10 @@ export default function Families() {
   )
 }
 
-function FamilySide({ family, className = '', ...rest }) {
+function FamilySide({ family, language, className = '', ...rest }) {
   return (
     <div className={`space-y-2 ${className}`} {...rest}>
-      <p className="t-eyebrow mb-5 text-primary">{family.title}</p>
+      <p className="t-eyebrow mb-5 text-primary">{local(family, 'title', language)}</p>
 
       <p className="flex items-center justify-center gap-1.5 font-serif text-[1.0625rem] font-light text-foreground">
         <span>{family.father}</span>

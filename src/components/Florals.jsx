@@ -148,7 +148,7 @@ const BOXES = {
 
 const PRESETS = {
   countdown: [
-    { top: 22, left: 6, size: 46, rot: 14, hue: 'hong', kind: 'b' },
+    { top: 68, left: 5, size: 46, rot: 14, hue: 'hong', kind: 'b' },
     { top: 70, left: 95, size: 54, rot: -18, hue: 'tim', kind: 'a' },
     { top: 26, left: 89, size: 38, rot: 8, hue: 'vang', kind: 's', sm: true },
   ],
@@ -156,7 +156,7 @@ const PRESETS = {
     { top: 10, left: 94, size: 58, rot: 16, hue: 'tim', kind: 'a', sm: true },
     { top: 20, left: 97, size: 42, rot: -20, hue: 'vang', kind: 'b', sm: true },
     { top: 55, left: 96, size: 46, rot: 10, hue: 'lam', kind: 's', sm: true },
-    { top: 86, left: 91, size: 52, rot: -12, hue: 'hong', kind: 'b' },
+    { top: 96, left: 95, size: 52, rot: -12, hue: 'hong', kind: 'b' },
     { top: 36, left: 5, size: 44, rot: -14, hue: 'cam', kind: 'b', sm: true },
   ],
   families: [
@@ -164,7 +164,7 @@ const PRESETS = {
     { top: 15, left: 90, size: 48, rot: 24, hue: 'lam', kind: 'b' },
     { top: 31, left: 7, size: 40, rot: 12, hue: 'tim', kind: 'b' },
     { top: 47, left: 93, size: 36, rot: 8, hue: 'cam', kind: 's' },
-    { top: 64, left: 9, size: 44, rot: -8, hue: 'hong', kind: 'a' },
+    { top: 56, left: 5, size: 44, rot: -8, hue: 'hong', kind: 'a' },
     { top: 80, left: 91, size: 42, rot: 18, hue: 'vang', kind: 'b' },
     { top: 90, left: 12, size: 34, rot: -10, hue: 'lam', kind: 's', sm: true },
     { top: 40, left: 96, size: 32, rot: -14, hue: 'hong', kind: 'b', sm: true },
@@ -172,9 +172,9 @@ const PRESETS = {
   details: [
     { top: 9, left: 8, size: 50, rot: 20, hue: 'lam', kind: 'b' },
     { top: 13, left: 92, size: 44, rot: -16, hue: 'hong', kind: 'a' },
-    { top: 33, left: 5, size: 36, rot: -10, hue: 'vang', kind: 's' },
+    { top: 24, left: 3, size: 36, rot: -10, hue: 'vang', kind: 's' },
     { top: 55, left: 94, size: 48, rot: 14, hue: 'tim', kind: 'a' },
-    { top: 76, left: 7, size: 38, rot: 6, hue: 'cam', kind: 'b' },
+    { top: 84, left: 4, size: 38, rot: 6, hue: 'cam', kind: 'b' },
     { top: 89, left: 93, size: 34, rot: -8, hue: 'vang', kind: 'b', sm: true },
   ],
   gallery: [
@@ -213,6 +213,7 @@ export default function Florals({ preset, className = '' }) {
         return (
           <span
             key={i}
+            data-fl={`${preset}-${i}`}
             className={`absolute block ${it.sm ? 'hidden sm:block' : ''}`}
             style={{
               top: `${it.top}%`,

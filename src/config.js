@@ -16,16 +16,21 @@ export const config = {
   /* --- Ngày giờ ----------------------------------------------------------- */
   /* Dùng cho đồng hồ đếm ngược và nút "Thêm vào lịch".
      Định dạng: năm, tháng-1 (0 = tháng 1), ngày, giờ, phút */
+  /* Trường nào cũng có thể có một trường sinh đôi tên `<trường>En` - khi khách
+     xem bản tiếng Anh thì dùng bản ấy. Xem src/lib/local.js. */
   weddingDate: new Date(2026, 8, 29, 10, 30), // ⇢ 10:30 sáng 29/09/2026
   lunarDate: 'Tức ngày 19 tháng 8 năm Bính Ngọ', // để '' nếu không muốn hiện
+  lunarDateEn: 'The 19th day of the 8th lunar month, Year of Bính Ngọ',
 
   /* --- Địa điểm ----------------------------------------------------------- */
   venue: {
     name: 'Trung tâm Hội nghị Quốc tế',
     subName: 'Văn phòng Chính phủ', // dòng phụ dưới tên
     hall: 'Sảnh Tầng 2', // sảnh cụ thể trong toà nhà, để '' nếu không cần
+    hallEn: '2nd Floor Hall',
     address: '35 Hùng Vương, Ba Đình, Hà Nội', // cổng khách vào
     city: 'Hà Nội, Việt Nam',
+    cityEn: 'Hanoi, Vietnam',
 
     /* Để trống cả hai dòng dưới → bản đồ tự tìm theo `name` + `address` ở trên.
        Ở đây điền sẵn vì đã có link chính xác của địa điểm. */
@@ -53,6 +58,7 @@ export const config = {
        của thiệp cưới Việt Nam cho cha mẹ đã khuất. Bỏ dòng đó đi nếu không cần. */
     groom: {
       title: 'NHÀ TRAI',
+      titleEn: "THE GROOM'S FAMILY",
       father: 'Ông Bùi Trần Tuyến',
       fatherLotus: true,
       mother: 'Bà Trần Thị Mai',
@@ -60,6 +66,7 @@ export const config = {
     },
     bride: {
       title: 'NHÀ GÁI',
+      titleEn: "THE BRIDE'S FAMILY",
       father: 'Ông Đỗ Thế Hường',
       mother: 'Bà Hoàng Thị Hồng Ánh',
       address: 'P. Vĩnh Hưng, Hà Nội',
