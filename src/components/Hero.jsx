@@ -3,6 +3,7 @@ import { config, orderedNames } from '../config'
 import { heroImage } from '../lib/assets'
 import { useParallax } from '../hooks/useParallax'
 import { RevealGroup } from './Reveal'
+import Florals from './Florals'
 
 const pad = (n) => String(n).padStart(2, '0')
 
@@ -69,23 +70,24 @@ export default function Hero() {
         aria-hidden
         className="absolute inset-x-0 top-0 h-[26%] bg-linear-to-b from-background via-background/45 to-transparent"
       />
-      {/* Nền cho chữ ngà ở chân ảnh.
+      {/* Luống hoa ở chân khung - xem chú thích preset `hero` trong Florals */}
+      <Florals preset="hero" />
 
-          Dãy đồi vốn đã gần như đen, nhưng ngay trên nó là vệt nắng vàng rực -
-          mà chỗ đó nông sâu bao nhiêu thì tuỳ chiều cao màn hình. Nên lớp này
-          phải đủ dày để chữ bám được ở cả máy cao lẫn máy thấp. Nó chỉ chạm
-          vào 44% dưới cùng và tắt hẳn trước khi tới hai bàn tay: ráng chiều ở
-          giữa khung hình không bị đụng tới. */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 bottom-0 h-[44%] bg-[linear-gradient(to_top,rgb(20_18_12/0.80)_0%,rgb(20_18_12/0.64)_26%,rgb(20_18_12/0.36)_54%,rgb(20_18_12/0.12)_78%,transparent_100%)]"
-      />
-
-      <div className="relative z-10 flex h-full flex-col justify-between gutter pt-[clamp(4.5rem,9.5svh,7rem)] pb-[clamp(0.9rem,2.2svh,1.75rem)] squat:pt-[clamp(5rem,13svh,8rem)]">
+      <div className="relative z-10 gutter pt-[clamp(4.5rem,9.5svh,7rem)] squat:pt-[clamp(5rem,13svh,8rem)]">
         {/* ── Trên trời: mực sẫm ────────────────────────────────────────── */}
         <RevealGroup step={150} className="text-center">
           <p className="t-eyebrow text-foreground/65">{t('hero.subtitle')}</p>
 
+          {/* Hai khổ máy cắt bức ảnh ra hai bố cục khác hẳn nhau, nên tên
+              cũng phải xếp khác nhau:
+
+              Khung cao cắt dọc, hai bàn tay tụt xuống quá nửa khung - trên
+              đầu còn nguyên một mảng trời cao, đủ chỗ cho tên xếp chồng.
+
+              Khung thấp hoặc khung ngang giữ nguyên bề ngang ảnh, hai bàn tay
+              vắt ngang chính giữa và dải trời sạch chỉ còn mỏng ở trên. Tên
+              xếp chồng sẽ đè thẳng lên tay, nên ở đây tên trải thành MỘT dòng -
+              vốn cũng là cách một trang bìa khổ ngang xử lý dòng tít của nó. */}
           <h1 className="t-display mt-[clamp(0.7rem,2.4svh,1.75rem)] text-foreground">
             <span className="flex flex-col items-center squat:flex-row squat:items-baseline squat:justify-center squat:gap-3 md:flex-row md:items-baseline md:justify-center md:gap-7">
               <span className={`whitespace-nowrap ${nameSize}`}>{orderedNames[0]}</span>
@@ -95,58 +97,59 @@ export default function Hero() {
               <span className={`whitespace-nowrap ${nameSize}`}>{orderedNames[1]}</span>
             </span>
           </h1>
-
         </RevealGroup>
+      </div>
 
-        {/* ── Dưới đồi: chữ ngà ─────────────────────────────────────────── */}
-        {/* Trên trời chỉ còn đúng hai thứ: dòng chữ nhỏ và tên. Ngày cưới và
-            nơi chốn xuống nằm ngay trên nút xác nhận - vừa gom hết thông tin
-            "khi nào, ở đâu, bấm vào đâu" vào một chỗ, vừa nhường lại cho tên
-            cả dải trời. */}
-        {/* Khối này bị siết rất chặt là có lý do: ngày cưới là dòng TRÊN CÙNG
-            của nó, nên chỉ cần khối cao thêm vài chục pixel là dòng ấy trôi
-            khỏi dãy đồi tối và rơi vào vệt nắng - lúc đó chữ ngà không còn
-            bám được nữa. Mọi khoảng hở bên dưới ngày cưới đều được cắt tới
-            mức tối thiểu để đẩy nó xuống nền tối. */}
-        <RevealGroup start={560} step={130} className="text-center text-[#f2ecdd]">
-          <p className="t-eyebrow-lg on-photo">
+      {/* ── Ngay dưới hai bàn tay ──────────────────────────────────────────
+          Trước đây khối này bị đẩy xuống sát đáy khung, cách khối tên gần nửa
+          màn hình - thành ra hai cụm chữ rời nhau với một mảng trống rất lớn
+          ở giữa. Nay nó lên nằm ngay dưới hai bàn tay, khoảng trống ấy biến
+          mất và cả khung hình đọc thành MỘT khối.
+
+          Đổi luôn sang mực sẫm: chỗ này là vệt nắng sáng nhất của bức ảnh,
+          chữ mực đặt lên đó tương phản rất mạnh. Nhờ vậy bỏ được hẳn lớp phủ
+          tối ở chân ảnh - giờ trên bức ảnh không còn một lớp phủ nào, ráng
+          chiều nguyên vẹn từ đầu đến cuối.
+
+          Vị trí đặt theo PHẦN TRĂM chiều cao khung: ảnh luôn cắt theo chiều
+          cao nên hai bàn tay bao giờ cũng kết thúc ở cùng một tỉ lệ, dù màn
+          hình cao bao nhiêu. */}
+      <div className="absolute inset-x-0 top-[62%] z-10 gutter text-center">
+        <RevealGroup start={520} step={130} className="text-foreground">
+          <p className="t-eyebrow-lg text-foreground/80">
             {pad(date.getDate())} · {pad(date.getMonth() + 1)} · {date.getFullYear()}
           </p>
 
-          <p className="t-eyebrow on-photo mt-[clamp(0.3rem,0.8svh,0.55rem)] text-[#f2ecdd]/80">
+          <p className="t-eyebrow mt-[clamp(0.3rem,0.8svh,0.55rem)] text-foreground/55">
             {config.venue.city}
           </p>
 
           {config.sections.rsvp && (
-            <div className="mt-[clamp(0.7rem,1.6svh,1.15rem)]">
+            <div className="mt-[clamp(0.9rem,2svh,1.5rem)]">
               <button
                 onClick={() => document.querySelector('#rsvp')?.scrollIntoView({ behavior: 'smooth' })}
-                className="inline-flex min-h-11 cursor-pointer items-center border border-[#f2ecdd]/45 px-8 text-[#f2ecdd] transition-colors duration-500 hover:border-[#f2ecdd] hover:bg-[#f2ecdd] hover:text-foreground"
+                className="inline-flex min-h-11 cursor-pointer items-center border border-foreground/40 px-8 text-foreground transition-colors duration-500 hover:border-foreground hover:bg-foreground hover:text-background"
               >
                 <span className="t-eyebrow">{t('hero.cta')}</span>
               </button>
             </div>
           )}
-
-          {/* Nét kẻ dọc thay cho mũi tên nảy lên nảy xuống. Nét chỉ rộng 1px
-              nhưng vùng bấm rộng 44px - đúng cỡ đầu ngón tay.
-
-              Ẩn đi trên máy thấp: ở đó cả khối chữ dưới bị đẩy lên khỏi dãy
-              đồi tối và trôi vào vệt nắng, chữ ngà không còn bám được. Bỏ nét
-              này lấy lại 48px, đủ để ngày cưới và nơi chốn tụt xuống nằm trên
-              nền tối. Trên máy thấp thì phần tiếp theo vốn cũng đã ở rất gần
-              rồi, không cần ai nhắc cuộn tiếp. */}
-          <button
-            onClick={() =>
-              document.querySelector('#countdown, #story')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            aria-label={t('hero.scroll')}
-            className="mx-auto mt-1 flex h-11 w-11 cursor-pointer items-end justify-center squat:hidden md:mt-2"
-          >
-            <span aria-hidden className="block h-8 w-px bg-linear-to-b from-transparent to-[#f2ecdd]/70" />
-          </button>
         </RevealGroup>
       </div>
+
+      {/* Nét kẻ dọc thay cho mũi tên nảy lên nảy xuống. Nét chỉ rộng 1px
+          nhưng vùng bấm rộng 44px - đúng cỡ đầu ngón tay. Ẩn trên máy thấp,
+          ở đó phần tiếp theo vốn đã ở rất gần rồi. */}
+      <button
+        onClick={() =>
+          document.querySelector('#countdown, #story')?.scrollIntoView({ behavior: 'smooth' })
+        }
+        aria-label={t('hero.scroll')}
+        className="absolute bottom-[clamp(0.75rem,2svh,1.5rem)] left-1/2 z-10 flex h-11 w-11 -translate-x-1/2 cursor-pointer items-end justify-center squat:hidden"
+      >
+        <span aria-hidden className="block h-8 w-px bg-linear-to-b from-transparent to-[#f2ecdd]/70" />
+      </button>
+
     </section>
   )
 }

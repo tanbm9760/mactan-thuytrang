@@ -133,7 +133,16 @@ const SHAPES = { a: BlossomA, b: BlossomB, s: Sprig }
    màn hình: tấm thiệp in là khổ đứng, hoa nằm ngay sát chữ; còn màn hình máy
    tính rộng gấp đôi, rải theo mép thì hoa dạt ra tận rìa và trông như lạc chỗ.
    Số ở đây khớp với bề ngang nội dung của từng phần. */
+/* Cỡ hoa theo khổ máy. Mặc định hoa nhỏ lại trên điện thoại; riêng luống hoa
+   ở chân ảnh mở đầu thì KHÔNG - nó phải đủ lớn để thành một luống, chứ vài
+   chấm nhỏ rải rác thì trông như hoa dán lên ảnh. */
+const SCALES = {
+  hero: '[--fl-scale:1.12] sm:[--fl-scale:1.2] md:[--fl-scale:1.34]',
+}
+const DEFAULT_SCALE = '[--fl-scale:0.74] sm:[--fl-scale:1.05] md:[--fl-scale:1.5]'
+
 const BOXES = {
+  hero: 'max-w-none',
   countdown: 'max-w-[62rem]',
   story: 'max-w-none',
   families: 'max-w-[54rem]',
@@ -143,6 +152,27 @@ const BOXES = {
 }
 
 const PRESETS = {
+  /* Luống hoa dưới chân ảnh mở đầu.
+
+     Dãy đồi ở đáy khung là mảng tối đặc, trước đây bỏ trống. Vài bông hoa
+     nằm ở đó vừa lấp chỗ trống ấy, vừa nối bức ảnh với tấm thiệp in - và
+     hoa màu phấn trên nền olive sẫm thì sáng lên rất đẹp.
+
+     Cố ý đặt lấn xuống dưới mép khung (top > 100%) để hoa bị cắt như một
+     luống hoa thật, không phải mấy bông dán lên ảnh. Chừa hẳn khoảng giữa
+     cho nét kẻ "cuộn xuống", và không bông nào chạm tới hai bàn tay. */
+  hero: [
+    { top: 90, left: 7, size: 72, rot: -16, hue: 'hong', kind: 'a' },
+    { top: 98, left: 19, size: 60, rot: 12, hue: 'vang', kind: 'b' },
+    { top: 92, left: 31, size: 52, rot: -8, hue: 'tim', kind: 'b' },
+    { top: 101, left: 43, size: 64, rot: 6, hue: 'lam', kind: 'b' },
+    { top: 97, left: 57, size: 48, rot: -16, hue: 'vang', kind: 'b' },
+    { top: 93, left: 69, size: 56, rot: 18, hue: 'vang', kind: 'a' },
+    { top: 99, left: 81, size: 68, rot: -12, hue: 'hong', kind: 'b' },
+    { top: 90, left: 93, size: 74, rot: 10, hue: 'tim', kind: 'a' },
+    { top: 85, left: 2, size: 46, rot: 8, hue: 'cam', kind: 's' },
+    { top: 86, left: 64, size: 44, rot: -14, hue: 'cam', kind: 's' },
+  ],
   countdown: [
     { top: 22, left: 6, size: 46, rot: 14, hue: 'hong', kind: 'b' },
     { top: 70, left: 95, size: 54, rot: -18, hue: 'tim', kind: 'a' },
@@ -200,7 +230,7 @@ export default function Florals({ preset, className = '' }) {
           nguyên cỡ px thì trên máy tính hoa nhỏ như hạt bụi, mà trên điện
           thoại lại to quá và tràn cả ra mép - một bộ toạ độ, ba cỡ. */}
       <div
-        className={`relative mx-auto h-full w-full [--fl-scale:0.74] sm:[--fl-scale:1.05] md:[--fl-scale:1.5] ${
+        className={`relative mx-auto h-full w-full ${SCALES[preset] ?? DEFAULT_SCALE} ${
           BOXES[preset] ?? 'max-w-none'
         }`}
       >
