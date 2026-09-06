@@ -25,7 +25,11 @@ export default function Details() {
 
   const rows = [
     { label: t('details.time'), lines: [t('details.timeFormat')(date)] },
-    { label: t('details.where'), lines: [config.venue.name, config.venue.subName, local(config.venue, 'hall', language)] },
+    { label: t('details.where'), lines: [
+        local(config.venue, 'name', language),
+        local(config.venue, 'subName', language),
+        local(config.venue, 'hall', language),
+      ] },
     { label: t('details.address'), lines: [config.venue.address] },
   ]
     .map((row) => ({ ...row, lines: row.lines.filter(Boolean) }))
@@ -131,12 +135,12 @@ function Location() {
           <p className="t-eyebrow text-muted-foreground">{t('details.where')}</p>
 
           <h3 className="t-head mt-6 text-[clamp(1.85rem,6vw,3.25rem)] text-foreground">
-            {config.venue.name}
+            {local(config.venue, 'name', language)}
           </h3>
 
           {config.venue.subName && (
             <p className="t-quote mt-3 text-[1.0625rem] text-primary md:text-xl">
-              {config.venue.subName}
+              {local(config.venue, 'subName', language)}
             </p>
           )}
 

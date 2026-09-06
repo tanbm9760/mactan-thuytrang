@@ -88,12 +88,12 @@ function FamilySide({ family, language, className = '', ...rest }) {
       <p className="t-eyebrow mb-5 text-primary">{local(family, 'title', language)}</p>
 
       <p className="flex items-center justify-center gap-1.5 font-serif text-[1.0625rem] font-light text-foreground">
-        <span>{family.father}</span>
+        <span>{local(family, 'father', language)}</span>
         {family.fatherLotus && <LotusIcon className="shrink-0 text-gold" />}
       </p>
 
       <p className="flex items-center justify-center gap-1.5 font-serif text-[1.0625rem] font-light text-foreground">
-        <span>{family.mother}</span>
+        <span>{local(family, 'mother', language)}</span>
         {family.motherLotus && <LotusIcon className="shrink-0 text-gold" />}
       </p>
 

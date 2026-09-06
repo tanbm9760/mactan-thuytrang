@@ -4,6 +4,7 @@ import { heroImage } from '../lib/assets'
 import { useParallax } from '../hooks/useParallax'
 import { local } from '../lib/local'
 import { RevealGroup } from './Reveal'
+import Florals from './Florals'
 
 /**
  * Màn hình mở đầu, dựng theo đúng trang mẫu:
@@ -69,6 +70,10 @@ export default function Hero() {
         aria-hidden
         className="absolute inset-x-0 top-[23%] h-[9%] bg-[linear-gradient(to_bottom,#FBE6C5_0%,rgba(251,230,197,0.55)_45%,transparent_100%)]"
       />
+
+      {/* Hoa rải ở dải trời và hai bên lề khối chữ. Đặt SAU thẻ ảnh trong
+          DOM để nằm trên ảnh, nhưng khối chữ có z-10 nên vẫn nằm trên hoa. */}
+      <Florals preset="hero" />
 
       <div className="absolute inset-x-0 top-[15%] z-10 gutter text-center text-foreground md:top-[11%]">
         <RevealGroup step={140}>

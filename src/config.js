@@ -25,7 +25,9 @@ export const config = {
   /* --- Địa điểm ----------------------------------------------------------- */
   venue: {
     name: 'Trung tâm Hội nghị Quốc tế',
+    nameEn: 'International Convention Centre', // đúng như trên biển tên toà nhà
     subName: 'Văn phòng Chính phủ', // dòng phụ dưới tên
+    subNameEn: 'Government Office',
     hall: 'Sảnh Tầng 2', // sảnh cụ thể trong toà nhà, để '' nếu không cần
     hallEn: '2nd Floor Hall',
     address: '35 Hùng Vương, Ba Đình, Hà Nội', // cổng khách vào
@@ -60,15 +62,19 @@ export const config = {
       title: 'NHÀ TRAI',
       titleEn: "THE GROOM'S FAMILY",
       father: 'Ông Bùi Trần Tuyến',
+      fatherEn: 'Mr. Bùi Trần Tuyến',
       fatherLotus: true,
       mother: 'Bà Trần Thị Mai',
+      motherEn: 'Mrs. Trần Thị Mai',
       address: 'P. Lĩnh Nam, Hà Nội',
     },
     bride: {
       title: 'NHÀ GÁI',
       titleEn: "THE BRIDE'S FAMILY",
       father: 'Ông Đỗ Thế Hường',
+      fatherEn: 'Mr. Đỗ Thế Hường',
       mother: 'Bà Hoàng Thị Hồng Ánh',
+      motherEn: 'Mrs. Hoàng Thị Hồng Ánh',
       address: 'P. Vĩnh Hưng, Hà Nội',
     },
   },

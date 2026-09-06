@@ -134,10 +134,15 @@ const SHAPES = { a: BlossomA, b: BlossomB, s: Sprig }
    tính rộng gấp đôi, rải theo mép thì hoa dạt ra tận rìa và trông như lạc chỗ.
    Số ở đây khớp với bề ngang nội dung của từng phần. */
 /* Cỡ hoa theo khổ máy: nhỏ lại trên điện thoại, to lên trên máy tính. */
-const SCALES = {}
+const SCALES = {
+  /* Hoa ở màn hình mở đầu nhỏ hơn các phần khác một chút: nền ở đó là bầu
+     trời chứ không phải giấy, hoa to quá sẽ tranh chỗ với hai bàn tay. */
+  hero: '[--fl-scale:0.86] sm:[--fl-scale:1.05] md:[--fl-scale:1.35]',
+}
 const DEFAULT_SCALE = '[--fl-scale:0.74] sm:[--fl-scale:1.05] md:[--fl-scale:1.5]'
 
 const BOXES = {
+  hero: 'max-w-none',
   countdown: 'max-w-[62rem]',
   story: 'max-w-none',
   families: 'max-w-[54rem]',
@@ -147,6 +152,28 @@ const BOXES = {
 }
 
 const PRESETS = {
+  /* Màn hình mở đầu.
+     Chỉ rải ở dải trời phía trên và hai bên lề khối chữ. Không bông nào chạm
+     tới hai bàn tay, và không bông nào đè lên chữ - có phép đo tự động kiểm
+     lại chuyện đó ở mọi khổ máy. */
+  hero: [
+    { top: 11, left: 5, size: 62, rot: -16, hue: 'vang', kind: 'a' },
+    { top: 10, left: 95, size: 54, rot: 20, hue: 'lam', kind: 'b' },
+    { top: 19, left: 15, size: 40, rot: 8, hue: 'cam', kind: 's', sm: true },
+    { top: 60, left: 4, size: 38, rot: 8, hue: 'cam', kind: 's' },
+    { top: 18, left: 86, size: 42, rot: -10, hue: 'hong', kind: 's', sm: true },
+    { top: 61, left: 96, size: 40, rot: -10, hue: 'hong', kind: 's' },
+    { top: 30, left: 3, size: 50, rot: 10, hue: 'hong', kind: 'b' },
+    { top: 32, left: 97, size: 46, rot: -14, hue: 'tim', kind: 'b' },
+    { top: 40, left: 10, size: 36, rot: 14, hue: 'lam', kind: 'b' },
+    { top: 41, left: 91, size: 38, rot: -6, hue: 'cam', kind: 'b' },
+    { top: 49, left: 4, size: 54, rot: -8, hue: 'tim', kind: 'a' },
+    { top: 48, left: 96, size: 58, rot: 16, hue: 'vang', kind: 'a' },
+    { top: 6, left: 20, size: 34, rot: 12, hue: 'tim', kind: 'b', sm: true },
+    { top: 5, left: 80, size: 36, rot: -18, hue: 'vang', kind: 'b', sm: true },
+    { top: 57, left: 11, size: 34, rot: 6, hue: 'hong', kind: 's', sm: true },
+    { top: 56, left: 89, size: 32, rot: -12, hue: 'lam', kind: 's', sm: true },
+  ],
   countdown: [
     { top: 68, left: 5, size: 46, rot: 14, hue: 'hong', kind: 'b' },
     { top: 70, left: 95, size: 54, rot: -18, hue: 'tim', kind: 'a' },
