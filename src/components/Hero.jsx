@@ -30,7 +30,7 @@ import Florals from './Florals'
  */
 export default function Hero() {
   const { t, language } = useLanguage()
-  const { wrapRef, imgRef } = useParallax(3)
+  const { wrapRef, imgRef } = useParallax(1.5)
   const dateStr = t('details.dateFormat')(config.weddingDate)
 
   return (

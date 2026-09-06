@@ -153,38 +153,39 @@ const BOXES = {
 
 const PRESETS = {
   /* Màn hình mở đầu.
-     Chỉ rải ở dải trời phía trên và hai bên lề khối chữ. Không bông nào chạm
-     tới hai bàn tay, và không bông nào đè lên chữ - có phép đo tự động kiểm
-     lại chuyện đó ở mọi khổ máy. */
+
+     Chỉ rải trong DẢI TRỜI VẼ THÊM ở đỉnh khung (0-25%), tuyệt đối không đặt
+     lên bức ảnh. Cả phần dưới 25% là ảnh thật - hoa nằm lên đó trông như dán
+     sticker lên ảnh cưới, nhất là chỗ hai bàn tay và tay áo.
+
+     Dải trời lại mỏng, nên hoa ở đây ít hơn các phần khác. Bù lại phần đếm
+     ngược ngay bên dưới - toàn nền giấy, không có ảnh - được rải dày hơn. */
   hero: [
-    { top: 11, left: 5, size: 62, rot: -16, hue: 'vang', kind: 'a' },
-    { top: 10, left: 95, size: 54, rot: 20, hue: 'lam', kind: 'b' },
-    { top: 19, left: 15, size: 40, rot: 8, hue: 'cam', kind: 's', sm: true },
-    { top: 60, left: 4, size: 38, rot: 8, hue: 'cam', kind: 's' },
-    { top: 18, left: 86, size: 42, rot: -10, hue: 'hong', kind: 's', sm: true },
-    { top: 61, left: 96, size: 40, rot: -10, hue: 'hong', kind: 's' },
-    { top: 30, left: 3, size: 50, rot: 10, hue: 'hong', kind: 'b' },
-    { top: 32, left: 97, size: 46, rot: -14, hue: 'tim', kind: 'b' },
-    { top: 40, left: 10, size: 36, rot: 14, hue: 'lam', kind: 'b' },
-    { top: 41, left: 91, size: 38, rot: -6, hue: 'cam', kind: 'b' },
-    { top: 49, left: 4, size: 54, rot: -8, hue: 'tim', kind: 'a' },
-    { top: 48, left: 96, size: 58, rot: 16, hue: 'vang', kind: 'a' },
-    { top: 6, left: 20, size: 34, rot: 12, hue: 'tim', kind: 'b', sm: true },
-    { top: 5, left: 80, size: 36, rot: -18, hue: 'vang', kind: 'b', sm: true },
-    { top: 57, left: 11, size: 34, rot: 6, hue: 'hong', kind: 's', sm: true },
-    { top: 56, left: 89, size: 32, rot: -12, hue: 'lam', kind: 's', sm: true },
+    { top: 11, left: 5, size: 54, rot: -16, hue: 'vang', kind: 'a' },
+    { top: 10, left: 95, size: 50, rot: 20, hue: 'lam', kind: 'b' },
+    { top: 16, left: 13, size: 38, rot: 8, hue: 'cam', kind: 's' },
+    { top: 15, left: 88, size: 40, rot: -10, hue: 'hong', kind: 's' },
+    { top: 16, left: 3, size: 38, rot: 10, hue: 'hong', kind: 'b' },
+    { top: 17, left: 97, size: 36, rot: -14, hue: 'tim', kind: 'b' },
+    { top: 11, left: 22, size: 34, rot: 12, hue: 'tim', kind: 'b', sm: true },
+    { top: 10, left: 78, size: 36, rot: -18, hue: 'vang', kind: 'b', sm: true },
   ],
   countdown: [
     { top: 68, left: 5, size: 46, rot: 14, hue: 'hong', kind: 'b' },
     { top: 70, left: 95, size: 54, rot: -18, hue: 'tim', kind: 'a' },
-    { top: 26, left: 89, size: 38, rot: 8, hue: 'vang', kind: 's', sm: true },
+    { top: 26, left: 89, size: 38, rot: 8, hue: 'vang', kind: 's' },
+    { top: 46, left: 7, size: 40, rot: -12, hue: 'cam', kind: 'b' },
+    { top: 88, left: 16, size: 34, rot: 6, hue: 'lam', kind: 's', sm: true },
+    { top: 86, left: 84, size: 36, rot: -8, hue: 'vang', kind: 'b', sm: true },
   ],
   story: [
-    { top: 10, left: 94, size: 58, rot: 16, hue: 'tim', kind: 'a', sm: true },
-    { top: 20, left: 97, size: 42, rot: -20, hue: 'vang', kind: 'b', sm: true },
-    { top: 55, left: 96, size: 46, rot: 10, hue: 'lam', kind: 's', sm: true },
-    { top: 96, left: 95, size: 52, rot: -12, hue: 'hong', kind: 'b' },
-    { top: 36, left: 5, size: 44, rot: -14, hue: 'cam', kind: 'b', sm: true },
+    /* Phần này ảnh chiếm cả cột trái trên máy tính và cả bề ngang khi xếp
+       dọc, nên chỉ còn dải cuối phần là chỗ trống chung cho mọi khổ máy. */
+    { top: 96, left: 2, size: 44, rot: 16, hue: 'tim', kind: 'a' },
+    { top: 96, left: 20, size: 38, rot: -20, hue: 'vang', kind: 'b' },
+    { top: 98, left: 79, size: 40, rot: 10, hue: 'lam', kind: 's' },
+    { top: 95, left: 95, size: 46, rot: -12, hue: 'hong', kind: 'b' },
+    { top: 97, left: 50, size: 34, rot: -14, hue: 'cam', kind: 'b', sm: true },
   ],
   families: [
     { top: 10, left: 10, size: 58, rot: -18, hue: 'vang', kind: 'a' },
@@ -201,11 +202,11 @@ const PRESETS = {
     { top: 13, left: 92, size: 44, rot: -16, hue: 'hong', kind: 'a' },
     { top: 24, left: 3, size: 36, rot: -10, hue: 'vang', kind: 's' },
     { top: 55, left: 94, size: 48, rot: 14, hue: 'tim', kind: 'a' },
-    { top: 84, left: 4, size: 38, rot: 6, hue: 'cam', kind: 'b' },
-    { top: 89, left: 93, size: 34, rot: -8, hue: 'vang', kind: 'b', sm: true },
+    { top: 70, left: 4, size: 38, rot: 6, hue: 'cam', kind: 'b' },
+    { top: 78, left: 96, size: 34, rot: -8, hue: 'vang', kind: 'b', sm: true },
   ],
   gallery: [
-    { top: 14, left: 6, size: 44, rot: -14, hue: 'cam', kind: 'b' },
+    { top: 7, left: 6, size: 44, rot: -14, hue: 'cam', kind: 'b' },
     { top: 10, left: 94, size: 50, rot: 18, hue: 'vang', kind: 'a' },
   ],
   gift: [
