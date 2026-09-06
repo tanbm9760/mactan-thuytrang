@@ -19,11 +19,20 @@ const stillPreferred = () =>
 
    `flapBack` là nhịp kỹ thuật: nắp vừa lật quá 90°, phải cho nó xuống dưới
    tấm thiệp, nếu không thiệp rút lên sẽ chui ra sau lưng cái nắp đang mở. */
-const BEATS = { flapBack: 380, card: 500, fly: 700, dissolve: 1900, done: 2860 }
+/* `flapBack` = 285ms không phải con số chọn bừa: nắp chờ 120ms cho dấu triện
+   tan, rồi lật trong 1 giây theo đường cong cubic-bezier(0.32, 0.72, 0, 1) -
+   với đường cong ấy thì 165ms sau khi khởi hành là ĐÚNG lúc nắp đi qua mốc
+   90°. Ngay khoảnh khắc đó nắp mỏng như một sợi chỉ, nên đổi thứ tự lớp thì
+   không ai thấy được. Đổi muộn hơn thì có một quãng mặt sau của nắp nằm đè
+   lên mặt trước phong bì. */
+const BEATS = { flapBack: 285, card: 500, fly: 700, dissolve: 1900, done: 2860 }
 
-/* Khi khách tắt hiệu ứng chuyển động: vẫn đủ các nhịp theo đúng thứ tự ấy,
-   chỉ là gần như tức thì. Bỏ hẳn thì bìa biến mất đột ngột, còn khó chịu hơn. */
-const BEATS_STILL = { flapBack: 60, card: 100, fly: 110, dissolve: 260, done: 540 }
+/* Khách tắt hiệu ứng chuyển động thì không có nhịp nào cả: bìa không tách nắp,
+   không rút thiệp, hoa không bay - cả tấm bìa mờ đi trong 0,7 giây rồi thôi.
+   Trước đây vẫn chạy đủ các nhịp nhưng nén xuống một phần tư giây; đó không
+   phải là ít chuyển động hơn, đó là cùng ngần ấy chuyển động nhồi vào một
+   khoảnh khắc - đúng thứ mà người bật cài đặt này muốn tránh. */
+const STILL_MS = 800
 
 /**
  * Bìa thiệp - một chiếc phong bì thật, đặt trên mặt giấy ngà.
@@ -131,14 +140,21 @@ export default function Cover() {
       /* bỏ qua */
     }
 
-    const beat = stillPreferred() ? BEATS_STILL : BEATS
+    if (stillPreferred()) {
+      /* Nhảy thẳng tới nhịp cuối. Các biến chuyển động bị khoá lại ở
+         @media (prefers-reduced-motion) nên chỉ còn độ mờ chạy. */
+      setPhase(3)
+      timers.current = [setTimeout(() => setState('done'), STILL_MS)]
+      return
+    }
+
     setPhase(1)
     timers.current = [
-      setTimeout(() => setFlapBack(true), beat.flapBack),
-      setTimeout(() => setPhase(2), beat.card),
-      setTimeout(() => setFlying(true), beat.fly),
-      setTimeout(() => setPhase(3), beat.dissolve),
-      setTimeout(() => setState('done'), beat.done),
+      setTimeout(() => setFlapBack(true), BEATS.flapBack),
+      setTimeout(() => setPhase(2), BEATS.card),
+      setTimeout(() => setFlying(true), BEATS.fly),
+      setTimeout(() => setPhase(3), BEATS.dissolve),
+      setTimeout(() => setState('done'), BEATS.done),
     ]
   }
 
@@ -229,10 +245,14 @@ export default function Cover() {
       </div>
 
       {/* Vân giấy riêng cho bìa: lớp vân của cả trang nằm DƯỚI bìa nên không
-          nhìn thấy ở đây, mà một mặt giấy phẳng lì thì lộ ngay là màn hình. */}
+          nhìn thấy ở đây, mà một mặt giấy phẳng lì thì lộ ngay là màn hình.
+
+          Không hoà trộn (mix-blend): lớp này phủ lên đúng cảnh đang chạy ba
+          chiều, mà hoà trộn thì mỗi khung hình trình duyệt phải gom cả cảnh
+          lại rồi trộn - đắt gấp nhiều lần một lớp mờ chồng lên bình thường. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-[0.045] mix-blend-multiply"
+        className="pointer-events-none absolute inset-0 opacity-[0.05]"
         style={{
           backgroundImage:
             "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='c'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23c)'/%3E%3C/svg%3E\")",

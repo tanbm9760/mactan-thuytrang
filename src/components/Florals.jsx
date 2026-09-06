@@ -308,9 +308,15 @@ const PRESETS = {
     { top: 70, left: 4, size: 38, rot: 6, hue: 'cam', kind: 'b' },
     { top: 78, left: 96, size: 34, rot: -8, hue: 'vang', kind: 'b', sm: true },
   ],
+  /* Album là phần DUY NHẤT có vật cản biết đi: dải ảnh tự chạy, nên một chỗ
+     hôm nay trống thì mười giây nữa đã có ảnh trôi qua. Vì vậy hoa chỉ đặt ở
+     những dải KHÔNG BAO GIỜ có ảnh dù dải ảnh chạy tới đâu: padding đầu phần,
+     và khoảng hở giữa hai album. */
   gallery: [
-    { top: 7, left: 6, size: 44, rot: -14, hue: 'cam', kind: 'b' },
-    { top: 10, left: 94, size: 50, rot: 18, hue: 'vang', kind: 'a' },
+    { top: 4, left: 7, size: 44, rot: -14, hue: 'cam', kind: 'b' },
+    { top: 3, left: 93, size: 50, rot: 18, hue: 'vang', kind: 'a' },
+    { top: 54, left: 5, size: 38, rot: 12, hue: 'lam', kind: 's', sm: true },
+    { top: 54, left: 95, size: 40, rot: -10, hue: 'hong', kind: 'b', sm: true },
   ],
   gift: [
     { top: 20, left: 8, size: 50, rot: -22, hue: 'cam', kind: 'a' },

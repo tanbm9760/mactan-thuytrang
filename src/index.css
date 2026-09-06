@@ -429,6 +429,15 @@
     border-radius: 3px;
   }
 
+  /* Báo trước cho trình duyệt: bốn thứ này sắp chạy, hãy tách sẵn thành lớp
+     riêng. Không báo thì lớp được tạo ĐÚNG LÚC chuyển động bắt đầu, và khung
+     hình đầu tiên của cả màn mở thiệp bị rớt - trên điện thoại thấy rõ là một
+     cái nháy. Bìa thiệp sống chưa tới ba giây rồi gỡ nên không tốn bộ nhớ lâu. */
+  .cover-stage { will-change: opacity; }
+  .cover-env,
+  .env-card,
+  .env-flap { will-change: transform; }
+
   /* Lòng phong bì: sẫm hơn mặt ngoài, và tối dần ở miệng - chiều sâu của
      phần rỗng bên trong, thứ khiến tấm thiệp trông như đang nằm trong đó. */
   .env-back {
@@ -469,11 +478,20 @@
     transform-origin: 50% 0;
     transform: rotateX(var(--flap, 0deg));
     filter: drop-shadow(0 4px 5px rgb(52 44 28 / 0.2));
+    /* Nắp CHỜ 0,12 giây rồi mới lật - đúng quãng để dấu triện kịp tan.
+       Không chờ thì triện đang mờ dở lại bị mặt phẳng nghiêng ép thành một
+       vệt bầu dục méo, và cái méo ấy chính là thứ nhìn ra thành "nháy". Chờ
+       một nhịp thì đọc ra được thành hai việc nối nhau: triện vỡ, rồi nắp mở. */
     transition:
-      transform 1s var(--ease-cover),
-      filter 0.55s ease-out;
+      transform 1s var(--ease-cover) 0.12s,
+      filter 0.12s linear;
   }
   .is-open { --flap: -177deg; }
+
+  /* Bóng đổ tắt đúng trong quãng chờ ấy, xong trước khi nắp nhúc nhích.
+     `filter` trên một mặt phẳng đang xoay trong không gian ba chiều là thứ đắt
+     nhất trong cả màn này: trình duyệt phải dựng lại cái bóng theo hình chiếu
+     mới ở từng khung hình. Giữ nó suốt quãng lật thì trên điện thoại thấy nháy. */
   .is-open .env-flap { filter: drop-shadow(0 0 0 rgb(52 44 28 / 0)); }
 
   /* ⚠️ clip-path nằm ở lớp giấy BÊN TRONG, drop-shadow ở lớp .env-flap bọc
@@ -508,10 +526,10 @@
       0 2px 5px rgb(52 44 28 / 0.2),
       inset 0 0 0 1px rgb(169 138 83 / 0.45);
     transition:
-      opacity 0.4s ease-out,
-      scale 0.55s var(--ease-cover);
+      opacity 0.2s ease-out,
+      scale 0.35s var(--ease-cover);
   }
-  .is-open .env-seal { opacity: 0; scale: 0.86; }
+  .is-open .env-seal { opacity: 0; scale: 0.82; }
 
   /* ── Chữ trên phong bì ──
      Cỡ tính theo bề ngang phong bì, có sàn px để trên máy nhỏ nhất vẫn đọc
@@ -563,6 +581,27 @@
    VẬT LIỆU
    ═════════════════════════════════════════════════════════════════════════ */
 @layer utilities {
+  /* Lớp vân giấy phủ toàn trang.
+
+     ⚠️ Một lớp phủ FIXED có mix-blend-mode buộc trình duyệt gom toàn bộ nền
+     phía dưới thành một tấm ảnh rồi mới trộn - và làm lại từ đầu ở MỖI KHUNG
+     HÌNH trong lúc cuộn, vì nền dưới nó thì trôi còn nó thì đứng yên. Trên máy
+     tính không thấy gì, trên điện thoại đó là cả một nhịp giật.
+
+     Nên máy cảm ứng bỏ hẳn chế độ hoà trộn. Ở độ mờ 3-5% trên nền giấy ngà,
+     "nhân" với "chồng lên" gần như không phân biệt được bằng mắt - mà cuộn thì
+     mượt hẳn. */
+  .paper-grain {
+    opacity: 0.032;
+    mix-blend-mode: multiply;
+  }
+  @media (pointer: coarse) {
+    .paper-grain {
+      opacity: 0.05;
+      mix-blend-mode: normal;
+    }
+  }
+
   /* Chữ dập chìm trên giấy sáng: một vệt sáng mảnh phía dưới nét, một vệt
      tối cực nhạt phía trên. Gần như không thấy, nhưng đủ để chữ có vẻ được
      ép vào giấy chứ không phải in đè lên. */
@@ -718,13 +757,26 @@
   .reveal-rule.is-visible { transform: none; transition: none; }
   .photo-card,
   .photo-card img { transition: none; }
-  .cover-stage,
+  /* Bìa thiệp chỉ mờ đi, không cử động. Khoá luôn các biến chuyển động ở giá
+     trị đứng yên: Cover.jsx nhảy thẳng tới nhịp cuối, mà nhịp cuối kéo theo cả
+     ba class is-open / is-out / is-gone - không khoá thì nắp vẫn lật, thiệp vẫn
+     trồi, chỉ khác là dồn hết vào một khoảnh khắc. Đúng thứ cần tránh.
+
+     Khai SAU các rule kia trong file nên cùng độ ưu tiên thì bản này thắng. */
+  .cover-stage {
+    --flap: 0deg;
+    --env-y: 0%;
+    --env-s: 1;
+    --card-y: 0%;
+    --card-s: 1;
+    transition-duration: 0.7s;
+  }
   .cover-env,
   .env-card,
   .env-flap,
   .env-seal,
-  .cover-hint { transition-duration: 0.25s; }
-  .cover-stage [data-fl] { transition-duration: 0.25s; transition-delay: 0ms; }
+  .cover-hint { transition-duration: 0.2s; }
+  .cover-stage [data-fl] { transition-duration: 0.2s; transition-delay: 0ms; }
   .reveal-soft,
   .reveal-soft.is-visible { opacity: 1; transition: none; }
   .floral-drift { animation: none; }

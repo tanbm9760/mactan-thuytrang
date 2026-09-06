@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { viewportHeight } from '../lib/viewport'
 
 /**
  * Ảnh trôi chậm hơn trang khi cuộn. Phần tử bọc ngoài phải có overflow-hidden,
@@ -36,7 +37,10 @@ export function useParallax(strength = 12) {
     const update = () => {
       frame = 0
       const rect = wrap.getBoundingClientRect()
-      const viewport = window.innerHeight || 1
+      /* Không đọc `innerHeight` ở đây: trong trình duyệt của Messenger, thanh
+         địa chỉ co lại giữa lúc cuộn làm con số ấy nhảy 60-120px, và bức ảnh
+         giật đúng một cái theo. Xem lib/viewport. */
+      const viewport = viewportHeight()
 
       // -1 khi khung vừa chạm đáy màn hình, +1 khi vừa rời khỏi đỉnh
       const progress = (rect.top + rect.height / 2 - viewport / 2) / (viewport / 2 + rect.height / 2)
