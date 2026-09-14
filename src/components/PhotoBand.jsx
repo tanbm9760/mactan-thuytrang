@@ -34,7 +34,7 @@ export default function PhotoBand({ index = 0 }) {
   if (!image) return null
 
   return (
-    <section className="relative h-[88svh] max-h-[880px] min-h-[520px] overflow-hidden bg-sand wide:h-screen wide:max-h-none wide:min-h-[40rem]">
+    <section className="relative h-[calc(var(--screen)*0.88)] max-h-[880px] min-h-[520px] overflow-hidden bg-sand wide:h-screen wide:max-h-none wide:min-h-[40rem]">
       <figure
         ref={wrapRef}
         className="absolute inset-0 overflow-hidden wide:left-auto wide:w-[46vw]"
@@ -60,7 +60,7 @@ export default function PhotoBand({ index = 0 }) {
       {quote && (
         <div
           ref={ref}
-          className="reveal absolute inset-x-0 top-0 gutter pt-[clamp(4.75rem,13vh,7.5rem)] wide:inset-y-0 wide:right-auto wide:flex wide:w-[54vw] wide:flex-col wide:justify-center wide:pt-0 wide:pr-[clamp(2rem,6vw,7rem)]"
+          className="reveal absolute inset-x-0 top-0 gutter pt-[clamp(4.75rem,calc(var(--screen)*0.13),7.5rem)] wide:inset-y-0 wide:right-auto wide:flex wide:w-[54vw] wide:flex-col wide:justify-center wide:pt-0 wide:pr-[clamp(2rem,6vw,7rem)]"
         >
           <span aria-hidden className="hidden h-px w-16 bg-gold wide:mb-10 wide:block" />
           <p className="t-quote mx-auto max-w-2xl text-balance text-center text-[clamp(1.4rem,4.4vw,2.5rem)] text-foreground wide:mx-0 wide:max-w-none wide:text-left wide:text-[clamp(2rem,3.4vw,3.4rem)]">

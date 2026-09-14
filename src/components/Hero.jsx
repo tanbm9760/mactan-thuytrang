@@ -37,7 +37,7 @@ export default function Hero() {
     <section
       id="top"
       ref={wrapRef}
-      className="relative h-svh min-h-[520px] overflow-hidden bg-background"
+      className="relative h-[var(--screen)] min-h-[520px] overflow-hidden bg-background"
     >
       {/* ══ Dải trời nối thêm ở đỉnh khung ══
 
@@ -88,12 +88,12 @@ export default function Hero() {
             {t('hero.subtitle')}
           </p>
 
-          <h1 className="t-hero-name mt-[clamp(0.6rem,1.8svh,1.5rem)] text-[clamp(2.5rem,14.5vw,3.75rem)] md:text-[clamp(3.5rem,7.4vw,6.75rem)]">
+          <h1 className="t-hero-name mt-[clamp(0.6rem,calc(var(--screen)*0.018),1.5rem)] text-[clamp(2.5rem,14.5vw,3.75rem)] md:text-[clamp(3.5rem,7.4vw,6.75rem)]">
             <span className="block">{orderedNames[0]} &amp;</span>
             <span className="block">{orderedNames[1]}</span>
           </h1>
 
-          <div className="mt-[clamp(0.7rem,2.2svh,1.6rem)] flex items-center justify-center gap-5 md:gap-7">
+          <div className="mt-[clamp(0.7rem,calc(var(--screen)*0.022),1.6rem)] flex items-center justify-center gap-5 md:gap-7">
             <span aria-hidden className="h-px w-10 bg-foreground/30 md:w-20" />
             <p className="t-hero-date text-[clamp(1.1rem,4.3vw,1.5rem)] whitespace-nowrap">
               {dateStr}
@@ -101,15 +101,15 @@ export default function Hero() {
             <span aria-hidden className="h-px w-10 bg-foreground/30 md:w-20" />
           </div>
 
-          <p className="t-hero-city mt-[clamp(0.7rem,1.9svh,1.4rem)] text-[clamp(0.8rem,3.4vw,1.125rem)] text-foreground/60">
+          <p className="t-hero-city mt-[clamp(0.7rem,calc(var(--screen)*0.019),1.4rem)] text-[clamp(0.8rem,3.4vw,1.125rem)] text-foreground/60">
             {local(config.venue, 'city', language)}
           </p>
 
           {config.sections.rsvp && (
-            <div className="mt-[clamp(1.1rem,3svh,2.25rem)]">
+            <div className="mt-[clamp(1.1rem,calc(var(--screen)*0.03),2.25rem)]">
               <button
                 onClick={() => document.querySelector('#rsvp')?.scrollIntoView({ behavior: 'smooth' })}
-                className="t-hero-btn inline-flex h-[clamp(2.9rem,6svh,4rem)] cursor-pointer items-center border border-foreground/45 px-9 text-[clamp(0.72rem,2.9vw,0.875rem)] text-foreground transition-colors duration-300 hover:border-foreground hover:bg-foreground hover:text-background md:px-12"
+                className="t-hero-btn inline-flex h-[clamp(2.9rem,calc(var(--screen)*0.06),4rem)] cursor-pointer items-center border border-foreground/45 px-9 text-[clamp(0.72rem,2.9vw,0.875rem)] text-foreground transition-colors duration-300 hover:border-foreground hover:bg-foreground hover:text-background md:px-12"
               >
                 {t('hero.cta')}
               </button>

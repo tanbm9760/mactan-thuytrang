@@ -59,6 +59,18 @@
 }
 
 @layer base {
+  /* Chiều cao màn hình ĐỨNG YÊN. Phần nào cao theo màn hình thì dùng biến này,
+     KHÔNG dùng `svh` / `vh`.
+
+     Safari và Chrome giữ `svh` đứng yên, nhưng trình duyệt trong Zalo /
+     Messenger thì không: thanh công cụ trượt ra vào là `svh` co giãn theo, và
+     cả trang dài ngắn theo ngay giữa lúc cuộn. `--screen-h` là chiều cao đo
+     lúc mở trang, chỉ đo lại khi xoay máy (lib/viewport). Trước khi JS chạy
+     thì chưa có số đo, và nó lùi về `100svh`. */
+  :root {
+    --screen: var(--screen-h, 100svh);
+  }
+
   html {
     scroll-behavior: smooth;
     scroll-padding-top: 4.5rem;

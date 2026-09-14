@@ -90,6 +90,11 @@ export default function Navbar() {
 
   return (
     <>
+      {/* Máy cảm ứng bỏ lớp làm mờ nền, bù bằng nền đặc hơn. Cùng lý do với lớp
+          vân giấy (xem .paper-grain): một thanh `fixed` làm mờ thứ nằm dưới nó
+          thì phải làm mờ lại từ đầu ở MỖI khung hình khi cuộn, vì nội dung bên
+          dưới trôi còn thanh thì đứng yên. Ở độ đặc 96% thì phần mờ phía sau
+          vốn cũng chẳng còn thấy được. */}
       <nav
         className={`fixed inset-x-0 top-0 z-50 gutter py-4 transition-all duration-700 ${
           onHero
@@ -97,7 +102,7 @@ export default function Navbar() {
             : onDeep
               ? 'border-b border-transparent bg-deep'
               : scrolled
-                ? 'border-b border-border/70 bg-background/88 backdrop-blur-md'
+                ? 'border-b border-border/70 bg-background/88 backdrop-blur-md pointer-coarse:bg-background/96 pointer-coarse:backdrop-blur-none'
                 : 'border-b border-transparent'
         }`}
       >
