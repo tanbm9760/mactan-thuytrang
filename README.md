@@ -55,6 +55,10 @@ src/assets/
 └── music/      → nhạc nền (.mp3)
 ```
 
+`story/`, `band/`, `gallery/` để trống thì trang hiện **ảnh giữ chỗ** - một tờ
+giấy da bò có hình mặt trời lặn - đúng khổ và đúng vị trí của ảnh thật. Bỏ ảnh
+vào là ảnh giữ chỗ tự mất.
+
 **Ảnh hero** nên là ảnh ngang có vùng tối ở nửa dưới, vì tên hai bạn đặt ở đó.
 
 **Ảnh story** bị cắt thành khung vòm (nửa trên bo tròn), nên hãy chọn ảnh dọc

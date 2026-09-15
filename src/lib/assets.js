@@ -48,16 +48,33 @@ const sortedEntries = (files) =>
 /* --- Ảnh dự phòng khi thư mục còn trống, để trang vẫn chạy được ngay ------- */
 const FALLBACK = {
   hero: 'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=2400&auto=format&fit=crop',
-  story:
-    'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1600&auto=format&fit=crop',
-  gallery: [
-    'https://images.unsplash.com/photo-1520854221256-17451cc331bf?q=80&w=1200&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?q=80&w=1200&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1522673607200-164d1b6ce486?q=80&w=1200&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1591604466107-ec97de577aff?q=80&w=1200&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1537633552985-df8429e8048b?q=80&w=1200&auto=format&fit=crop',
-    'https://images.unsplash.com/photo-1519225421980-715cb0215aed?q=80&w=1200&auto=format&fit=crop',
-  ],
+}
+
+/**
+ * Ảnh giữ chỗ cho story, dải ảnh và album khi thư mục còn trống.
+ *
+ * Trước đây chỗ trống được lấp bằng ảnh cưới mẫu trên Unsplash - tức là ảnh
+ * cưới của người khác, nằm trong thiệp của mình. Giờ là một tờ giấy da bò khổ
+ * 2:3 (đúng khổ ảnh dọc của album) với đường chỉ mảnh và một mặt trời lặn trên
+ * mặt hồ: nhìn là biết chỗ này đang chờ ảnh, và vẫn cùng vật liệu với thiệp.
+ *
+ * `label` là số thứ tự trong album. Ngoài việc cho biết thứ tự, nó làm mỗi tấm
+ * có một địa chỉ riêng - album dùng địa chỉ ảnh làm khoá của React.
+ */
+function placeholder(label = '') {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='1000' height='1500' viewBox='0 0 1000 1500'>
+    <defs><linearGradient id='p' x2='0' y2='1'><stop offset='0' stop-color='#efe8d8'/><stop offset='1' stop-color='#e3d9c4'/></linearGradient></defs>
+    <rect width='1000' height='1500' fill='url(#p)'/>
+    <rect x='44' y='44' width='912' height='1412' fill='none' stroke='#a98a53' stroke-opacity='.3' stroke-width='2'/>
+    <g fill='none' stroke='#a98a53' stroke-opacity='.6' stroke-width='5' stroke-linecap='round'>
+      <path d='M430 760 A70 70 0 0 1 570 760'/>
+      <path d='M380 760 H620'/>
+      <path d='M445 792 H555'/>
+      <path d='M470 822 H530'/>
+    </g>
+    ${label ? `<text x='500' y='930' text-anchor='middle' font-family='Georgia, serif' font-size='50' letter-spacing='10' fill='#7f6234' fill-opacity='.55'>${label}</text>` : ''}
+  </svg>`
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`
 }
 
 const firstOr = (files, fallback) => {
@@ -66,7 +83,7 @@ const firstOr = (files, fallback) => {
 }
 
 export const heroImage = firstOr(heroFiles, FALLBACK.hero)
-export const storyImage = firstOr(storyFiles, firstOr(heroFiles, FALLBACK.hero))
+export const storyImage = firstOr(storyFiles, placeholder())
 
 /**
  * Album ảnh. Ảnh trong thư mục con → mỗi thư mục là một album;
@@ -80,7 +97,10 @@ export const galleryAlbums = (() => {
     return [
       {
         key: 'default',
-        photos: FALLBACK.gallery.map((src, i) => ({ src, alt: `Ảnh cưới ${i + 1}` })),
+        photos: Array.from({ length: 6 }, (_, i) => ({
+          src: placeholder(String(i + 1).padStart(2, '0')),
+          alt: `Ảnh ${i + 1}`,
+        })),
       },
     ]
   }
@@ -114,5 +134,8 @@ export const qrGroom = findQr('groom') ?? findQr('trai')
 export const qrBride = findQr('bride') ?? findQr('gai')
 export const musicTrack = firstOr(musicFiles, null)
 
-/** Ảnh cho các dải tràn viền, theo thứ tự tên file (01-…, 02-…) */
-export const bandImages = sortedEntries(bandFiles).map(([, src]) => src)
+/** Ảnh cho các dải tràn viền, theo thứ tự tên file (01-…, 02-…). Thư mục
+ *  trống thì vẫn giữ một tấm giữ chỗ - bỏ hẳn dải ảnh là mất luôn nhịp "lật
+ *  trang" giữa hai chương, và câu đề đi kèm cũng biến mất theo. */
+const bands = sortedEntries(bandFiles).map(([, src]) => src)
+export const bandImages = bands.length ? bands : [placeholder()]
