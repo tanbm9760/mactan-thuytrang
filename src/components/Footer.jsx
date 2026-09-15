@@ -8,8 +8,9 @@ import Monogram from './Monogram'
  * sẫm, không có đường cắt nào ở giữa. Cả trang sáng lên rồi tắt dần đúng một
  * lần, ở cuối.
  *
- * Chỉ còn bốn thứ: dấu triện, lời cảm ơn, tên hai người, và số điện thoại đặt
- * rất nhỏ. Không hàng nút, không cột liên kết.
+ * Chỉ còn ba thứ: dấu triện, số điện thoại của hai người, và một dòng tên rất
+ * nhỏ. Lời cảm ơn và dòng tên cỡ lớn đã bỏ trong bản gọn - tên hai người đã in
+ * ba lần phía trên, còn số điện thoại là thông tin duy nhất ở đây khách cần.
  */
 export default function Footer() {
   const { t } = useLanguage()
@@ -21,20 +22,12 @@ export default function Footer() {
   ].filter((c) => c.phone)
 
   return (
-    <footer data-deep className="gutter bg-deep pt-4 pb-16 text-center text-deep-foreground md:pb-20">
+    <footer data-deep className="gutter bg-deep pt-2 pb-12 text-center text-deep-foreground md:pb-16">
       <div ref={ref} className="reveal mx-auto max-w-xl">
-        <Monogram size={72} tone="light" ring className="mx-auto" />
-
-        <p className="t-quote mx-auto mt-10 max-w-sm text-pretty text-[clamp(1.05rem,3vw,1.3rem)] text-deep-foreground/80">
-          {t('footer.thanks')}
-        </p>
-
-        <p className="t-display mt-10 text-[clamp(1.35rem,4.5vw,1.85rem)] text-deep-foreground">
-          {coupleNames}
-        </p>
+        <Monogram size={56} tone="light" ring className="mx-auto" />
 
         {contacts.length > 0 && (
-          <div className="mt-14 flex flex-col items-center justify-center gap-5 sm:flex-row sm:gap-12">
+          <div className="mt-8 flex flex-col items-center justify-center gap-2 sm:flex-row sm:gap-12">
             {contacts.map((contact) => (
               <a
                 key={contact.phone}
@@ -53,7 +46,7 @@ export default function Footer() {
           </div>
         )}
 
-        <p className="t-eyebrow mt-16 text-deep-foreground/40">
+        <p className="t-eyebrow mt-10 text-deep-foreground/40">
           {new Date().getFullYear()} · {coupleNames}
         </p>
       </div>

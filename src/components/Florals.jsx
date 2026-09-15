@@ -290,14 +290,19 @@ const PRESETS = {
     { top: 74, left: 98, size: 38, rot: -16, hue: 'tim', kind: 'a', sm: true },
     { top: 86, left: 98, size: 34, rot: 14, hue: 'cam', kind: 'b', sm: true },
   ],
+  /* Bản gọn: hai bên nội ngoại đặt cạnh nhau nên trên điện thoại chữ chạy gần
+     hết bề ngang ở nửa trên, và câu báo tin cũng vậy. Chỗ trống thật chỉ còn
+     ba dải: padding đầu phần, hai bên hàng tên cô dâu chú rể (tên đứng giữa,
+     hẹp), và padding cuối phần. Hai bông `sm` ở giữa chiều cao chỉ hiện trên
+     máy rộng, nơi cột chữ không chạm tới lề. */
   families: [
-    { top: 10, left: 10, size: 58, rot: -18, hue: 'vang', kind: 'a' },
-    { top: 15, left: 90, size: 48, rot: 24, hue: 'lam', kind: 'b' },
-    { top: 31, left: 7, size: 40, rot: 12, hue: 'tim', kind: 'b' },
-    { top: 47, left: 93, size: 36, rot: 8, hue: 'cam', kind: 's' },
-    { top: 56, left: 5, size: 44, rot: -8, hue: 'hong', kind: 'a' },
-    { top: 80, left: 91, size: 42, rot: 18, hue: 'vang', kind: 'b' },
-    { top: 90, left: 12, size: 34, rot: -10, hue: 'lam', kind: 's', sm: true },
+    { top: 9, left: 10, size: 58, rot: -18, hue: 'vang', kind: 'a' },
+    { top: 12, left: 90, size: 48, rot: 24, hue: 'lam', kind: 'b' },
+    { top: 66, left: 12, size: 40, rot: 12, hue: 'tim', kind: 'b' },
+    { top: 62, left: 88, size: 36, rot: 8, hue: 'cam', kind: 's' },
+    { top: 90, left: 20, size: 44, rot: -8, hue: 'hong', kind: 'a' },
+    { top: 86, left: 84, size: 42, rot: 18, hue: 'vang', kind: 'b' },
+    { top: 45, left: 4, size: 34, rot: -10, hue: 'lam', kind: 's', sm: true },
     { top: 40, left: 96, size: 32, rot: -14, hue: 'hong', kind: 'b', sm: true },
   ],
   details: [

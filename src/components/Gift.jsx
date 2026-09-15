@@ -17,10 +17,12 @@ export default function Gift() {
   const ref = useReveal()
   const [openSide, setOpenSide] = useState(null)
 
+  /* Bên chưa có số tài khoản thì không hiện nút: một nút bấm vào chỉ thấy ô
+     trống thì còn tệ hơn không có nút. */
   const sides = [
     { key: 'groom', label: t('gift.groomBtn'), qr: qrGroom, info: config.gift.groom },
     { key: 'bride', label: t('gift.brideBtn'), qr: qrBride, info: config.gift.bride },
-  ]
+  ].filter((side) => side.info?.account)
 
   const active = sides.find((side) => side.key === openSide)
 
@@ -119,7 +121,11 @@ function GiftCard({ side, onClose }) {
 
           <p className="t-eyebrow mt-6 text-muted-foreground">{t('gift.scanHint')}</p>
 
-          <p className="t-num mt-7 text-[1.5rem] text-foreground">{side.info.account}</p>
+          {/* Hiện theo nhóm bốn số như app ngân hàng cho dễ dò; nút sao chép
+              vẫn chép dãy số liền để dán thẳng vào app. */}
+          <p className="t-num mt-7 text-[1.5rem] text-foreground">
+            {side.info.account.replace(/(\d{4})(?=\d)/g, '$1 ')}
+          </p>
           <p className="t-eyebrow mt-3 text-muted-foreground">{side.info.holder}</p>
 
           <div className="mt-8 flex flex-col items-center gap-5">

@@ -75,7 +75,7 @@ export default function Rsvp() {
   }
 
   return (
-    <section id="rsvp" data-deep className="sec-lg gutter bg-deep text-deep-foreground">
+    <section id="rsvp" data-deep className="sec gutter bg-deep text-deep-foreground">
       <div ref={ref} className="reveal mx-auto max-w-xl">
         <div className="text-center">
           <span aria-hidden className="mx-auto block h-px w-10 bg-gold" />
@@ -106,8 +106,8 @@ export default function Rsvp() {
             </button>
           </div>
         ) : (
-          <form onSubmit={onSubmit} noValidate className="mt-16 md:mt-20">
-            <RevealGroup step={90} className="space-y-12">
+          <form onSubmit={onSubmit} noValidate className="mt-12 md:mt-16">
+            <RevealGroup step={90} className="space-y-9">
               <Field label={t('rsvp.nameLabel')} error={errors.name} htmlFor="rsvp-name">
                 <input
                   id="rsvp-name"
@@ -195,7 +195,7 @@ export default function Rsvp() {
             <button
               type="submit"
               disabled={status === 'sending'}
-              className="t-eyebrow mt-16 w-full cursor-pointer border border-deep-foreground/40 py-5 text-deep-foreground transition-colors duration-500 hover:border-deep-foreground hover:bg-deep-foreground hover:text-deep disabled:cursor-default disabled:opacity-45 md:mt-20"
+              className="t-eyebrow mt-12 w-full cursor-pointer border border-deep-foreground/40 py-5 text-deep-foreground transition-colors duration-500 hover:border-deep-foreground hover:bg-deep-foreground hover:text-deep disabled:cursor-default disabled:opacity-45 md:mt-16"
             >
               {status === 'sending' ? t('rsvp.submitting') : t('rsvp.submit')}
             </button>
@@ -214,7 +214,7 @@ function Field({ label, error, htmlFor, children }) {
   const Tag = htmlFor ? 'label' : 'div'
   return (
     <Tag className="block" {...(htmlFor ? { htmlFor } : { role: 'group', 'aria-label': label })}>
-      <span className="t-eyebrow mb-4 block text-deep-foreground/60">{label}</span>
+      <span className="t-eyebrow mb-3 block text-deep-foreground/60">{label}</span>
       {children}
       {error && <span className="t-caption mt-3 block text-[#e0a996]">{error}</span>}
     </Tag>
@@ -225,10 +225,14 @@ function Field({ label, error, htmlFor, children }) {
  * Lựa chọn dạng radio, vẽ lại hoàn toàn: một vòng tròn kẻ tóc, tâm đặc dần
  * khi được chọn. Ô radio thật vẫn nằm đó nhưng trong suốt và phủ kín vùng
  * bấm - nhờ vậy bàn phím, trình đọc màn hình và việc gửi form vẫn nguyên vẹn.
+ *
+ * Các lựa chọn nằm cùng một hàng nếu đủ chỗ ("Nhà trai / Nhà gái"), và tự
+ * xuống dòng khi nhãn dài ("Rất tiếc, mình không đến được") - không ép cả hai
+ * kiểu xếp chồng trên điện thoại như trước.
  */
 function Choices({ name, value, onChange, options }) {
   return (
-    <div className="flex flex-col gap-5 sm:flex-row sm:gap-10">
+    <div className="flex flex-wrap gap-x-10 gap-y-1">
       {options.map((option) => {
         const checked = value === option.value
         return (

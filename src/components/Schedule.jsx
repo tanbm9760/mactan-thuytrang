@@ -15,14 +15,14 @@ export default function Schedule() {
   if (items.length === 0) return null
 
   return (
-    <div className="mx-auto mt-24 max-w-2xl md:mt-32">
+    <div className="mx-auto mt-14 max-w-2xl md:mt-20">
       <p className="t-eyebrow text-center text-muted-foreground">{t('schedule.title')}</p>
 
-      <RevealGroup as="ol" step={140} className="mt-10 border-t border-border">
+      <RevealGroup as="ol" step={140} className="mt-7 border-t border-border">
         {items.map((item) => (
           <li
             key={item.time}
-            className="grid grid-cols-[4.5rem_1fr] items-baseline gap-x-6 border-b border-border py-6 md:grid-cols-[6rem_1fr] md:gap-x-10 md:py-7"
+            className="grid grid-cols-[4.5rem_1fr] items-baseline gap-x-6 border-b border-border py-4 md:grid-cols-[6rem_1fr] md:gap-x-10 md:py-6"
           >
             <span className="t-num text-right text-[1.25rem] text-primary md:text-[1.5rem]">
               {item.time}

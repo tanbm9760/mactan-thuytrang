@@ -80,15 +80,18 @@ export const config = {
   },
 
   /* --- Bật / tắt từng phần ------------------------------------------------ */
+  /* Thiệp gọn: chỉ giữ thông tin chính - ai cưới, hai gia đình, ngày giờ, địa
+     điểm, xác nhận tham dự, mừng cưới. Các phần tắt dưới đây vẫn còn nguyên,
+     bật lại là hiện. */
   sections: {
-    countdown: true,
-    story: true,
+    countdown: false,
+    story: false,
     families: true,
-    gallery: true,
+    gallery: false,
     gift: true,
     cover: true,      // bìa thiệp phải chạm để mở
     schedule: true,   // chương trình trong ngày
-    photoBands: true, // dải ảnh tràn viền xen giữa các phần
+    photoBands: false, // dải ảnh tràn viền xen giữa các phần
     rsvp: true,
     music: false, // bật lên sau khi bỏ file nhạc vào src/assets/music/
   },
@@ -96,9 +99,10 @@ export const config = {
   /* --- Quà cưới (mã QR chuyển khoản) -------------------------------------- */
   /* Bỏ ảnh QR vào src/assets/qr/ và đặt tên có chữ "groom" / "bride"
      ví dụ: qr-groom.jpg, qr-bride.png */
+  /* Bên nào để trống `account` thì nút mừng cưới của bên ấy không hiện. */
   gift: {
-    groom: { label: 'Mừng cưới nhà trai', bank: 'Vietcombank', account: '0123456789', holder: 'BUI MAC TAN' },
-    bride: { label: 'Mừng cưới nhà gái', bank: 'Techcombank', account: '9876543210', holder: 'DO THUY TRANG' },
+    groom: { label: 'Mừng cưới nhà trai', bank: 'Techcombank', account: '19038457939017', holder: 'BUI MAC TAN' },
+    bride: { label: 'Mừng cưới nhà gái', bank: '', account: '', holder: 'DO THUY TRANG' },
   },
 
   /* --- Form xác nhận tham dự (RSVP) --------------------------------------- */
@@ -107,7 +111,7 @@ export const config = {
        Hướng dẫn lấy URL: xem file README.md, mục "Kết nối Google Sheets". */
     endpoint:
       'https://script.google.com/macros/s/AKfycbxmKteLt7lFj606bu12Es1gSiYnOnymG6YK7I4JLHf1LenGkw8-BWiPzF2lrF55YApd_g/exec',
-    deadline: new Date(2026, 8, 15), // hạn phản hồi: 15/09/2026
+    deadline: new Date(2026, 8, 22), // hạn phản hồi: 22/09/2026
     maxGuests: 6,
   },
 
