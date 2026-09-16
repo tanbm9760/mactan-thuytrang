@@ -80,18 +80,18 @@ export const config = {
   },
 
   /* --- Bật / tắt từng phần ------------------------------------------------ */
-  /* Thiệp gọn: chỉ giữ thông tin chính - ai cưới, hai gia đình, ngày giờ, địa
-     điểm, xác nhận tham dự, mừng cưới. Các phần tắt dưới đây vẫn còn nguyên,
-     bật lại là hiện. */
+  /* Phần nào tắt ở đây thì code vẫn còn nguyên, bật lại là hiện. Câu chuyện,
+     dải ảnh và album đang dùng ảnh giữ chỗ - bỏ ảnh thật vào src/assets/ là
+     ảnh giữ chỗ tự mất. */
   sections: {
     countdown: false,
-    story: false,
-    families: true,
-    gallery: false,
+    story: true,
+    families: false,
+    gallery: true,
     gift: true,
     cover: true,      // bìa thiệp phải chạm để mở
     schedule: true,   // chương trình trong ngày
-    photoBands: false, // dải ảnh tràn viền xen giữa các phần
+    photoBands: true, // dải ảnh tràn viền xen giữa các phần
     rsvp: true,
     music: false, // bật lên sau khi bỏ file nhạc vào src/assets/music/
   },

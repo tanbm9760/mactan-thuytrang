@@ -5,6 +5,7 @@ import { mapUrl } from '../lib/venue'
 import { useReveal } from '../hooks/useReveal'
 import Schedule from './Schedule'
 import { RevealGroup } from './Reveal'
+import SectionMark from './SectionMark'
 import { local } from '../lib/local'
 import Florals from './Florals'
 
@@ -30,8 +31,10 @@ export default function Details() {
       <Florals preset="details" />
       <div className="gutter">
         <div className="mx-auto max-w-4xl">
+          <SectionMark numeral="II" align="center" />
+
           {/* ── Ngày cưới, dựng như một khối đồ hoạ ────────────────────── */}
-          <div ref={dateRef} className="reveal text-center">
+          <div ref={dateRef} className="reveal mt-14 text-center md:mt-20">
             <p className="t-eyebrow text-muted-foreground">
               {t('details.weekdays')[date.getDay()]}
             </p>

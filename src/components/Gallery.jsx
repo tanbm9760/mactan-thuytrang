@@ -36,7 +36,7 @@ export default function Gallery() {
       <Florals preset="gallery" />
       <div ref={headRef} className="reveal gutter">
         <div className="mx-auto max-w-4xl text-center">
-          <SectionMark numeral="IV" align="center" />
+          <SectionMark numeral="III" align="center" />
           <h2 className="t-head mt-9 text-[clamp(2rem,6vw,3.5rem)] text-foreground">
             {t('gallery.title')}
           </h2>
