@@ -80,9 +80,11 @@ export const config = {
   },
 
   /* --- Bật / tắt từng phần ------------------------------------------------ */
-  /* Phần nào tắt ở đây thì code vẫn còn nguyên, bật lại là hiện. Câu chuyện,
-     dải ảnh và album đang dùng ảnh giữ chỗ - bỏ ảnh thật vào src/assets/ là
-     ảnh giữ chỗ tự mất. */
+  /* Phần nào tắt ở đây thì code vẫn còn nguyên, bật lại là hiện. Câu chuyện
+     và album đang dùng ảnh giữ chỗ - bỏ ảnh thật vào src/assets/ là ảnh giữ
+     chỗ tự mất. Dải ảnh tắt vì không còn câu đề: nó cao gần một màn hình mà
+     bên trong chỉ có mỗi ảnh. Có ảnh thật thì bỏ vào src/assets/band/ rồi bật
+     `photoBands` lên. */
   sections: {
     countdown: false,
     story: true,
@@ -91,7 +93,7 @@ export const config = {
     gift: true,
     cover: true,      // bìa thiệp phải chạm để mở
     schedule: true,   // chương trình trong ngày
-    photoBands: true, // dải ảnh tràn viền xen giữa các phần
+    photoBands: false, // dải ảnh tràn viền xen giữa các phần
     rsvp: true,
     music: false, // bật lên sau khi bỏ file nhạc vào src/assets/music/
   },
@@ -102,7 +104,7 @@ export const config = {
   /* Bên nào để trống `account` thì nút mừng cưới của bên ấy không hiện. */
   gift: {
     groom: { label: 'Mừng cưới nhà trai', bank: 'Techcombank', account: '19038457939017', holder: 'BUI MAC TAN' },
-    bride: { label: 'Mừng cưới nhà gái', bank: '', account: '', holder: 'DO THUY TRANG' },
+    bride: { label: 'Mừng cưới nhà gái', bank: 'Techcombank', account: '1112986666', holder: 'DO THUY TRANG' },
   },
 
   /* --- Form xác nhận tham dự (RSVP) --------------------------------------- */

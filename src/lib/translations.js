@@ -13,7 +13,9 @@ export const translations = {
     schedule: {
       title: 'Chương trình ngày vui',
     },
-    bands: ['Ngày vui sẽ trọn vẹn hơn nếu có bạn ở đó.'],
+    /* Câu đề đặt trên dải ảnh, mỗi dải một câu. Để trống thì dải ảnh chỉ còn
+       bức ảnh, không một chữ nào. */
+    bands: [],
     nav: {
       home: 'Về đầu trang',
       menu: 'Mục lục',
@@ -143,7 +145,7 @@ export const translations = {
     schedule: {
       title: 'Schedule of the day',
     },
-    bands: ['The day will be complete with you there.'],
+    bands: [],
     nav: {
       home: 'Back to top',
       menu: 'Menu',

@@ -50,12 +50,16 @@ export default function PhotoBand({ index = 0 }) {
         />
       </figure>
 
-      {/* Chỉ trên điện thoại: một lớp giấy rất nhạt ở đỉnh để nét chữ tách khỏi
-          nền trời cam. Vẫn là lớp làm SÁNG, không phải lớp phủ tối. */}
-      <div
-        aria-hidden
-        className="absolute inset-x-0 top-0 h-[40%] bg-linear-to-b from-background/80 via-background/30 to-transparent wide:hidden"
-      />
+      {/* Chỉ trên điện thoại, và chỉ khi có câu đề: một lớp giấy rất nhạt ở đỉnh
+          để nét chữ tách khỏi nền trời cam. Vẫn là lớp làm SÁNG, không phải lớp
+          phủ tối. Không có chữ thì không cần - để nguyên thì nó làm nhạt mất
+          đỉnh bức ảnh mà chẳng để làm gì. */}
+      {quote && (
+        <div
+          aria-hidden
+          className="absolute inset-x-0 top-0 h-[40%] bg-linear-to-b from-background/80 via-background/30 to-transparent wide:hidden"
+        />
+      )}
 
       {quote && (
         <div
