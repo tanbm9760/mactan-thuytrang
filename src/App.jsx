@@ -6,7 +6,6 @@ import Hero from './components/Hero'
 import Countdown from './components/Countdown'
 import Families from './components/Families'
 import Story from './components/Story'
-import PhotoBand from './components/PhotoBand'
 import Details from './components/Details'
 import Gallery from './components/Gallery'
 import Gift from './components/Gift'
@@ -44,7 +43,6 @@ export default function App() {
         <Hero />
         {sections.countdown && <Countdown />}
         {sections.story && <Story />}
-        {sections.photoBands && <PhotoBand index={0} />}
         {sections.families && config.families && <Families />}
         <Details />
         {sections.gallery && <Gallery />}

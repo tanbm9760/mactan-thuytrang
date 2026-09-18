@@ -49,13 +49,12 @@ Bỏ file vào đúng thư mục là xong, không phải khai báo gì thêm:
 src/assets/
 ├── hero/       → ảnh mở đầu, ảnh NGANG (lấy 1 file đầu tiên)
 ├── story/      → 1 ảnh ở phần "Chuyện của chúng mình", ảnh DỌC
-├── band/       → dải ảnh tràn viền trước phần xác nhận, ảnh NGANG
 ├── gallery/    → album cuối trang (chia thư mục con thành nhiều bộ)
 ├── qr/         → mã QR chuyển khoản
 └── music/      → nhạc nền (.mp3)
 ```
 
-`story/`, `band/`, `gallery/` để trống thì trang hiện **ảnh giữ chỗ** - một tờ
+`story/` và `gallery/` để trống thì trang hiện **ảnh giữ chỗ** - một tờ
 giấy da bò có hình mặt trời lặn - đúng khổ và đúng vị trí của ảnh thật. Bỏ ảnh
 vào là ảnh giữ chỗ tự mất.
 
@@ -247,7 +246,6 @@ src/
     ├── SectionMark.jsx       dấu mở chương: số La Mã + kẻ tóc
     ├── LotusIcon.jsx         bông sen cạnh tên cha mẹ đã khuất
     ├── PaperGrain.jsx        lớp vân giấy phủ toàn trang
-    ├── PhotoBand.jsx         ảnh tràn viền, dùng như một lần lật trang
     ├── Schedule.jsx          chương trình trong ngày
     ├── Navbar.jsx            thanh điều hướng + đổi ngôn ngữ
     ├── Hero.jsx              màn hình đầu tiên

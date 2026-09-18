@@ -13,9 +13,6 @@ export const translations = {
     schedule: {
       title: 'Chương trình ngày vui',
     },
-    /* Câu đề đặt trên dải ảnh, mỗi dải một câu. Để trống thì dải ảnh chỉ còn
-       bức ảnh, không một chữ nào. */
-    bands: [],
     nav: {
       home: 'Về đầu trang',
       menu: 'Mục lục',
@@ -145,7 +142,6 @@ export const translations = {
     schedule: {
       title: 'Schedule of the day',
     },
-    bands: [],
     nav: {
       home: 'Back to top',
       menu: 'Menu',

@@ -27,10 +27,6 @@ const galleryFiles = import.meta.glob(
   '../assets/gallery/**/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,avif,AVIF}',
   { eager: true, query: '?url', import: 'default' },
 )
-const bandFiles = import.meta.glob(
-  '../assets/band/**/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,avif,AVIF}',
-  { eager: true, query: '?url', import: 'default' },
-)
 const qrFiles = import.meta.glob(
   '../assets/qr/**/*.{jpg,JPG,jpeg,JPEG,png,PNG,webp,WEBP,avif,AVIF}',
   { eager: true, query: '?url', import: 'default' },
@@ -51,7 +47,7 @@ const FALLBACK = {
 }
 
 /**
- * Ảnh giữ chỗ cho story, dải ảnh và album khi thư mục còn trống.
+ * Ảnh giữ chỗ cho story và album khi thư mục còn trống.
  *
  * Trước đây chỗ trống được lấp bằng ảnh cưới mẫu trên Unsplash - tức là ảnh
  * cưới của người khác, nằm trong thiệp của mình. Giờ là một tờ giấy da bò khổ
@@ -133,9 +129,3 @@ const findQr = (keyword) => {
 export const qrGroom = findQr('groom') ?? findQr('trai')
 export const qrBride = findQr('bride') ?? findQr('gai')
 export const musicTrack = firstOr(musicFiles, null)
-
-/** Ảnh cho các dải tràn viền, theo thứ tự tên file (01-…, 02-…). Thư mục
- *  trống thì vẫn giữ một tấm giữ chỗ - bỏ hẳn dải ảnh là mất luôn nhịp "lật
- *  trang" giữa hai chương, và câu đề đi kèm cũng biến mất theo. */
-const bands = sortedEntries(bandFiles).map(([, src]) => src)
-export const bandImages = bands.length ? bands : [placeholder()]
