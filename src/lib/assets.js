@@ -106,7 +106,9 @@ export const galleryAlbums = (() => {
     const rest = path.replace('../assets/gallery/', '')
     const key = rest.includes('/') ? rest.slice(0, rest.indexOf('/')) : 'default'
     if (!grouped.has(key)) grouped.set(key, [])
-    grouped.get(key).push({ src, alt: rest.split('/').pop().replace(/\.[^.]+$/, '') })
+    /* Lời mô tả cho trình đọc màn hình. Lấy theo số thứ tự chứ không lấy tên
+       file: tên file là mã máy ảnh (NDL09189), đọc lên chẳng ai hiểu gì. */
+    grouped.get(key).push({ src, alt: `Ảnh cưới ${grouped.get(key).length + 1}` })
   }
 
   // Thứ tự album = thứ tự bạn khai trong config.albums; album lạ xếp cuối
