@@ -10,7 +10,10 @@ import Florals from './Florals'
  * Trang đôi của một quyển tạp chí, không phải một section "ảnh | chữ".
  *
  * Ba thứ làm nên điều đó:
- *  1. Ảnh chạy tràn ra khỏi mép trái màn hình, không nằm gọn trong container.
+ *  1. Ảnh bo thành CỔNG VÒM - nửa trên là một nửa hình tròn, đúng khuôn ảnh
+ *     trên thiệp cưới in. Ảnh lùi vào khỏi mép màn hình đúng bằng lề của cột
+ *     chữ bên kia, nên hai khối cùng đứng trên một khung giấy chứ không phải
+ *     một tấm ảnh dán tràn ra ngoài.
  *  2. Cột chữ hẹp (34 ký tự) và bắt đầu THẤP hơn đỉnh ảnh - hai khối lệch
  *     nhau theo chiều dọc thay vì cùng bắt đầu ở một đường ngang.
  *  3. Tiêu đề chồng nhẹ lên chữ số chương cỡ lớn phía sau nó.
@@ -26,14 +29,14 @@ export default function Story() {
   const paragraphs = t('story.paragraphs') ?? []
 
   return (
-    <section id="story" className="relative sec-lg overflow-hidden bg-background">
+    <section id="story" className="relative sec overflow-hidden bg-background">
       <Florals preset="story" />
       <div className="grid items-start gap-12 lg:grid-cols-12 lg:gap-0">
-        {/* ── Ảnh, tràn ra mép trái ──────────────────────────────────────── */}
-        <div className="lg:col-span-6 lg:pt-[6vw]">
+        {/* ── Ảnh trong khuôn vòm ───────────────────────────────────────── */}
+        <div className="gutter lg:col-span-6 lg:pt-[2vw] lg:pr-0 lg:pl-[clamp(1.5rem,5vw,7rem)]">
           <figure
             ref={imageRef}
-            className="reveal-mask aspect-4/5 w-full overflow-hidden lg:aspect-3/4"
+            className="reveal-mask aspect-4/5 w-full overflow-hidden rounded-t-full lg:aspect-3/4"
           >
             <img
               src={storyImage}
