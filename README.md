@@ -147,26 +147,7 @@ Ba điều giữ cho nó không thành rườm rà, sửa `PRESETS` thì nhớ g
 
 ---
 
-## 4. Thiệp mời đích danh
-
-Thêm `?guest=` vào cuối link là bìa thiệp hiện tên khách và form RSVP tự điền sẵn:
-
-```
-https://thiep-cuoi.com/?guest=Anh%20Ch%E1%BB%8B%20Nam
-                        →  "Trân trọng kính mời Anh Chị Nam"
-
-https://thiep-cuoi.com/?guest=B%C3%A1c%20Hoa&side=gai
-                        →  thêm: chọn sẵn "khách của nhà gái"
-```
-
-Tên có dấu và dấu cách phải được mã hoá URL. Cách nhanh nhất để tạo hàng loạt
-link: dùng công thức `=ENCODEURL(A2)` trong Google Sheets, rồi nối vào link gốc.
-
-`side` nhận `trai` hoặc `gai`. Bỏ qua tham số nào thì phần đó về mặc định.
-
----
-
-## 5. Kết nối Google Sheets (nhận danh sách khách)
+## 4. Kết nối Google Sheets (nhận danh sách khách)
 
 Form "Xác nhận tham dự" gửi thẳng vào một Google Sheet của bạn — miễn phí, không cần server.
 
@@ -202,7 +183,7 @@ khách của nhà trai/nhà gái, có tham dự không, số người, lời ch�
 
 ---
 
-## 6. Đưa thiệp lên mạng
+## 5. Đưa thiệp lên mạng
 
 ```bash
 npm run build     # kết quả nằm trong thư mục dist/
@@ -220,12 +201,16 @@ rồi đẩy thư mục `dist/` lên nhánh `gh-pages`.
 
 ### Ảnh hiện khi gửi link qua Zalo / Facebook
 
-Bỏ một ảnh tên `opengraph.jpg` (kích thước 1200×630) vào thư mục `public/`,
-rồi sửa `og:title` và `og:description` trong `index.html`.
+Ảnh là `public/og.jpg` (1200×630). Đổi ảnh thì thay file ấy; đổi chữ thì sửa
+`og:title` và `og:description` trong `index.html`.
+
+Facebook nhớ kết quả quét rất dai. Sau khi đổi, vào
+[Sharing Debugger](https://developers.facebook.com/tools/debug/), dán link rồi
+bấm **Scrape Again**, nếu không thì gửi lại vẫn ra thẻ xem trước cũ.
 
 ---
 
-## 7. Cấu trúc dự án
+## 6. Cấu trúc dự án
 
 ```
 src/
@@ -236,7 +221,6 @@ src/
 │   ├── assets.js             tự động nạp ảnh từ src/assets/
 │   ├── rsvp.js               gửi phản hồi lên Google Sheets
 │   └── calendar.js           link "Thêm vào lịch"
-│   ├── guest.js              đọc ?guest= và ?side= từ link
 │   └── venue.js              link bản đồ suy ra từ địa chỉ
 ├── hooks/useReveal.js        hiệu ứng hiện dần khi cuộn
 └── components/
@@ -278,7 +262,7 @@ MỪNG CƯỚI  nhỏ tiếng     thấp nhất trang
 XÁC NHẬN   đoạn kết      tắt đèn: nền olive sẫm cho tới hết trang
 ```
 
-## 8. Đổi màu và font chữ
+## 7. Đổi màu và font chữ
 
 Bảng màu **"Hoàng hôn"** được rút từ chính ảnh cưới của bạn — đồng và olive
 sẫm của ảnh mở đầu lúc hoàng hôn, nền ngà ấm của bộ studio. Cả trang chỉ dùng

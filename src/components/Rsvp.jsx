@@ -2,15 +2,13 @@ import { useState } from 'react'
 import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { submitRsvp } from '../lib/rsvp'
-import { guestName, guestSide } from '../lib/guest'
 import { useReveal } from '../hooks/useReveal'
 import { RevealGroup } from './Reveal'
 
-/* Link đích danh (?guest=…&side=trai) điền sẵn giúp khách hai ô đầu tiên */
 const EMPTY_FORM = {
-  name: guestName,
+  name: '',
   phone: '',
-  side: guestSide ?? 'groom',
+  side: 'groom',
   attending: 'yes',
   guests: '1',
   message: '',

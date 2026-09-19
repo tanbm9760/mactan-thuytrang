@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLanguage } from '../lib/i18n'
 import { config, orderedNames } from '../config'
-import { guestName } from '../lib/guest'
 import Monogram from './Monogram'
 import Florals, { COVER_TWINS } from './Florals'
 
@@ -220,8 +219,11 @@ export default function Cover() {
 
             <div className="w-full">
               <p className="env-label text-muted-foreground/70">{t('cover.inviting')}</p>
+              {/* Dòng chấm chấm để trống, đúng như phong bì in sẵn của gia
+                  đình: chỗ chờ điền tên khách. Trước đây `?guest=` trên link
+                  điền vào đây, nay bỏ tính năng ấy nên dòng luôn trống. */}
               <p className="env-guest mt-[0.45em] truncate border-b border-dotted border-foreground/25 pb-[0.3em] font-serif text-foreground/85 italic">
-                {guestName || ' '}
+                &nbsp;
               </p>
             </div>
           </div>
