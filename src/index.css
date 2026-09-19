@@ -564,7 +564,6 @@
     letter-spacing: 0.3em;
     text-indent: 0.3em;
   }
-  .env-guest { font-size: calc(var(--ew) * 0.044); }
 
   /* Lúc tan, chữ trên tấm thiệp tắt nhanh hơn tờ giấy. Nếu để cả chữ mờ
      cùng nhịp với giấy thì trong non một giây có hai lần tên hai người chồng

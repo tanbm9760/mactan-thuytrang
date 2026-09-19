@@ -7,7 +7,6 @@ export const translations = {
   vi: {
     cover: {
       ceremony: 'Thiệp mời lễ thành hôn',
-      inviting: 'Trân trọng kính mời',
       open: 'Chạm để mở thiệp',
     },
     schedule: {
@@ -136,7 +135,6 @@ export const translations = {
   en: {
     cover: {
       ceremony: 'The wedding of',
-      inviting: 'You are warmly invited',
       open: 'Tap to open',
     },
     schedule: {

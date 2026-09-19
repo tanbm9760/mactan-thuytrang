@@ -207,25 +207,16 @@ export default function Cover() {
           </div>
         </div>
 
-        {/* Mặt trước phong bì: hoa in trên giấy, một dòng đề, và dòng kính mời
-            có nét chấm chấm để điền tên - đúng như phong bì in của gia đình. */}
+        {/* Mặt trước phong bì: hoa in trên giấy và một dòng đề duy nhất.
+            Dòng "trân trọng kính mời" cùng nét chấm chấm điền tên đã bỏ: nét
+            ấy sinh ra để đỡ tên khách, mà tên khách thì không còn. */}
         <div className="env-sheet env-front">
           <Florals preset="envelope" />
 
-          {/* Bắt đầu ở 62% chứ không phải ở mũi nắp (47%): dấu triện tròn đè
-              xuống quá mũi nắp một quãng, chữ đặt sát mũi sẽ chui vào gầm triện. */}
-          <div className="absolute inset-x-[9%] top-[62%] bottom-[7%] flex flex-col items-center justify-between text-center">
+          {/* Đặt ở 70% chiều cao phong bì: dưới dấu triện một quãng thoáng,
+              và hơi cao hơn mép dưới - đúng chỗ dòng đề nằm trên phong bì in. */}
+          <div className="absolute inset-x-[9%] top-[70%] text-center">
             <p className="env-label text-foreground/75">{t('cover.ceremony')}</p>
-
-            <div className="w-full">
-              <p className="env-label text-muted-foreground/70">{t('cover.inviting')}</p>
-              {/* Dòng chấm chấm để trống, đúng như phong bì in sẵn của gia
-                  đình: chỗ chờ điền tên khách. Trước đây `?guest=` trên link
-                  điền vào đây, nay bỏ tính năng ấy nên dòng luôn trống. */}
-              <p className="env-guest mt-[0.45em] truncate border-b border-dotted border-foreground/25 pb-[0.3em] font-serif text-foreground/85 italic">
-                &nbsp;
-              </p>
-            </div>
           </div>
         </div>
 
