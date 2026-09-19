@@ -640,21 +640,16 @@
 
   /* Giữ để xem kỹ: ảnh nhấc lên và phóng nhẹ khi giữ ngón tay, như khi cầm
      một tấm ảnh in lên xem. */
-  .photo-card {
-    transition:
-      transform 0.55s var(--ease-editorial),
-      box-shadow 0.55s var(--ease-editorial);
-    -webkit-touch-callout: none; /* chặn menu "lưu ảnh" khi giữ lâu */
+  /* Ảnh chỉ nhích lên khi có con trỏ chuột thật. Trên máy cảm ứng, `:hover`
+     dính lại sau cú chạm và tấm ảnh nằm im ở trạng thái phóng to; mà máy cảm
+     ứng cũng là nơi người ta VUỐT, nên mọi thứ nhúc nhích trong lúc vuốt đều
+     chỉ làm vướng. */
+  @media (hover: hover) {
+    .photo-card img {
+      transition: transform 0.8s var(--ease-editorial);
+    }
+    .photo-card:hover img { transform: scale(1.04); }
   }
-  .photo-card.is-held {
-    transform: scale(1.035);
-    box-shadow: 0 30px 60px -28px rgb(35 33 26 / 0.55);
-    z-index: 10;
-  }
-  .photo-card img { transition: transform 0.8s var(--ease-editorial), filter 0.6s var(--ease-editorial); }
-  .photo-card:hover img { transform: scale(1.04); }
-  /* đặt sau :hover để lúc vừa rê vừa giữ thì "giữ" thắng */
-  .photo-card.is-held img { transform: scale(1.09); filter: saturate(1.05); }
 
   /* Ô nhập của thiệp RSVP: một nét kẻ tóc, không hộp. Nét dày lên và sáng
      lên khi con trỏ vào - giống viết lên một tấm thiệp có dòng kẻ sẵn. */
@@ -767,7 +762,6 @@
   }
   .reveal-rule,
   .reveal-rule.is-visible { transform: none; transition: none; }
-  .photo-card,
   .photo-card img { transition: none; }
   /* Bìa thiệp chỉ mờ đi, không cử động. Khoá luôn các biến chuyển động ở giá
      trị đứng yên: Cover.jsx nhảy thẳng tới nhịp cuối, mà nhịp cuối kéo theo cả

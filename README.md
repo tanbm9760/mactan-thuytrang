@@ -82,8 +82,7 @@ Album chỉ dùng **ảnh đứng** cho đều khổ. Thẻ ảnh cao cố đị
 sau này bạn thêm ảnh ngang thì nó vẫn hiện đủ khung chứ không bị cắt, chỉ là
 thẻ sẽ rộng hơn các thẻ còn lại.
 
-**Chạm** vào ảnh để xem lớn, **giữ** ngón tay để nhấc ảnh lên xem kỹ. Vuốt ngang
-để lướt.
+**Chạm** vào ảnh để xem lớn, vuốt ngang để lướt.
 
 **Nhạc nền**: bỏ 1 file mp3 vào `src/assets/music/`, rồi bật `sections.music: true`.
 

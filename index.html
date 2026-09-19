@@ -6,11 +6,19 @@
     <title>Mạc Tân & Thuỳ Trang - Thiệp mời cưới</title>
     <meta name="description" content="Trân trọng kính mời bạn đến chung vui trong ngày hạnh phúc của chúng mình." />
 
-    <!-- Không cho Google lập chỉ mục: ai có link vẫn mở bình thường, nhưng
-         tìm tên hai bạn trên Google sẽ không ra thiệp cưới.
+    <!-- Không cho máy tìm kiếm lập chỉ mục: ai có link vẫn mở bình thường,
+         nhưng tìm tên hai bạn trên Google sẽ không ra thiệp cưới.
          (robots.txt vô dụng ở đây vì GitHub Pages phục vụ trang ở đường dẫn
-         con, mà robots.txt chỉ có hiệu lực khi nằm ở gốc tên miền.) -->
-    <meta name="robots" content="noindex, nofollow" />
+         con, mà robots.txt chỉ có hiệu lực khi nằm ở gốc tên miền.)
+
+         ⚠️ Gọi ĐÍCH DANH từng máy tìm kiếm, KHÔNG dùng `name="robots"`.
+         Thẻ `robots` nói với mọi con bot, mà con bot đi lấy ảnh xem trước của
+         Facebook / Messenger / Zalo cũng đọc nó - thấy `noindex` là nó bỏ đi
+         tay không, và link gửi trong Messenger hiện ra trơ một dòng chữ xanh
+         không ảnh, không tiêu đề. Gọi đích danh thì máy tìm kiếm vẫn tránh xa
+         còn bot lấy ảnh xem trước thì không việc gì. -->
+    <meta name="googlebot" content="noindex, nofollow" />
+    <meta name="bingbot" content="noindex, nofollow" />
 
     <!-- Ảnh & tiêu đề khi share link qua Zalo / Facebook / Messenger.
          Bắt buộc dùng đường dẫn tuyệt đối - Zalo và Facebook không hiểu
@@ -22,6 +30,10 @@
     <meta property="og:image" content="https://tanbm9760.github.io/mactan-thuytrang/og.jpg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:alt" content="Mạc Tân và Thuỳ Trang - hai bàn tay tìm nhau trên nền hoàng hôn" />
+    <meta property="og:site_name" content="Thiệp cưới Mạc Tân & Thuỳ Trang" />
+    <meta property="og:locale" content="vi_VN" />
     <meta name="twitter:card" content="summary_large_image" />
 
     <!-- Màu giấy đặt thẳng ở đây, trước cả tệp CSS: nếu không, khách thấy

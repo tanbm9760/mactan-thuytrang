@@ -4,7 +4,6 @@ import { useLanguage } from '../lib/i18n'
 import { config } from '../config'
 import { galleryAlbums } from '../lib/assets'
 import { useReveal } from '../hooks/useReveal'
-import { usePressHold } from '../hooks/usePressHold'
 import Lightbox from './Lightbox'
 import SectionMark from './SectionMark'
 import Florals from './Florals'
@@ -191,21 +190,24 @@ function StripButton({ label, glyph, disabled, onClick }) {
   )
 }
 
-/** Một tấm ảnh trong album. Chạm để xem lớn, giữ để nhấc ảnh lên xem kỹ. */
+/**
+ * Một tấm ảnh trong album. Chạm để xem lớn.
+ *
+ * Trước đây giữ ngón tay 170ms thì tấm ảnh nhấc lên phóng to. Nhưng vuốt để
+ * lướt album cũng bắt đầu bằng đúng cú chạm ấy: ngón tay tì lại một nhịp
+ * trước khi kéo là ảnh nảy lên rồi thụt xuống ngay giữa lúc đang vuốt. Không
+ * có cách nào tách hai thao tác ấy bằng thời gian mà không hy sinh cái còn
+ * lại, nên bỏ hẳn phần phóng to - lướt quan trọng hơn.
+ */
 function Plate({ photo, eager, onOpen }) {
   const { t } = useLanguage()
-  const { held, handlers, consumeHold } = usePressHold()
 
   return (
     <div className={`min-w-0 shrink-0 grow-0 ${PLATE_WIDTH}`}>
       <button
-        {...handlers}
-        onClick={() => {
-          // vừa giữ xong thì thôi, không mở ảnh lớn
-          if (!consumeHold()) onOpen()
-        }}
+        onClick={onOpen}
         aria-label={t('gallery.viewLarger')}
-        className={`photo-card block w-full cursor-pointer select-none ${held ? 'is-held' : ''}`}
+        className="photo-card block w-full cursor-pointer select-none"
       >
         {/* Khung 2:3 khớp đúng tỉ lệ ảnh gốc nên object-cover không cắt mất
             phần nào.
